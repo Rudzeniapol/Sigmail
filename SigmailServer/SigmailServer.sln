@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailServer.API", "SigmailServer.API\SigmailServer.API.csproj", "{5C5BAF06-D73C-4A27-AB3C-7BF370F2F993}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailServer.Application", "SigmailServer.Application\SigmailServer.Application.csproj", "{D3DA36E9-C4B6-4D20-8DFC-9BF6DA9F3BC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailClient.Domain", "SigmailClient.Domain\SigmailClient.Domain.csproj", "{01BE6230-FD34-4D6B-BEA0-80D88CC2F231}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailClient.Persistence", "SigmailClient.Persistence\SigmailClient.Persistence.csproj", "{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C5BAF06-D73C-4A27-AB3C-7BF370F2F993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C5BAF06-D73C-4A27-AB3C-7BF370F2F993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C5BAF06-D73C-4A27-AB3C-7BF370F2F993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C5BAF06-D73C-4A27-AB3C-7BF370F2F993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3DA36E9-C4B6-4D20-8DFC-9BF6DA9F3BC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3DA36E9-C4B6-4D20-8DFC-9BF6DA9F3BC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3DA36E9-C4B6-4D20-8DFC-9BF6DA9F3BC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3DA36E9-C4B6-4D20-8DFC-9BF6DA9F3BC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01BE6230-FD34-4D6B-BEA0-80D88CC2F231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01BE6230-FD34-4D6B-BEA0-80D88CC2F231}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01BE6230-FD34-4D6B-BEA0-80D88CC2F231}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01BE6230-FD34-4D6B-BEA0-80D88CC2F231}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

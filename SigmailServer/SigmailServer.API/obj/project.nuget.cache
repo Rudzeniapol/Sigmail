@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "2QNhxMHAJKs=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.API\\SigmailServer.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ffgg9\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.5\\microsoft.aspnetcore.openapi.9.0.5.nupkg.sha512",
+    "C:\\Users\\ffgg9\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
