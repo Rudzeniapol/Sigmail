@@ -1,11 +1,22 @@
-﻿namespace SigmailClient.Domain.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using SigmailClient.Domain.Enums; // Добавлено
+
+namespace SigmailClient.Domain.Models;
 
 public class ChatMember
 {
+    // Составной первичный ключ (настраивается в DbContext через HasKey)
     public Guid ChatId { get; set; }
     public Guid UserId { get; set; }
-    public string Role { get; set; } = "member";
+
+    [Required]
+    [Column(TypeName = "varchar(20)")] // Для PostgreSQL
+    public ChatMemberRole Role { get; set; } = ChatMemberRole.Member; // Используем enum
+
     public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
-    public Chat Chat { get; set; }
-    public User User { get; set; }
+
+    // Навигационные свойства
+    public virtual Chat Chat { get; set; }
+    public virtual User User { get; set; }
 }

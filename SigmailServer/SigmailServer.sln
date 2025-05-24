@@ -8,6 +8,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailClient.Domain", "Sig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailClient.Persistence", "SigmailClient.Persistence\SigmailClient.Persistence.csproj", "{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SigmailCore", "SigmailCore", "{90CE5116-2818-4D9E-8EFF-22DF60BFE54A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SigmailInfrastructure", "SigmailInfrastructure", "{430A4200-3280-489B-B18E-D56310679825}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SigmailPresentation", "SigmailPresentation", "{05539851-5AD3-44CB-9BA9-D34D0418098C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +36,11 @@ Global
 		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01BE6230-FD34-4D6B-BEA0-80D88CC2F231} = {90CE5116-2818-4D9E-8EFF-22DF60BFE54A}
+		{D3DA36E9-C4B6-4D20-8DFC-9BF6DA9F3BC1} = {90CE5116-2818-4D9E-8EFF-22DF60BFE54A}
+		{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B} = {430A4200-3280-489B-B18E-D56310679825}
+		{5C5BAF06-D73C-4A27-AB3C-7BF370F2F993} = {05539851-5AD3-44CB-9BA9-D34D0418098C}
 	EndGlobalSection
 EndGlobal

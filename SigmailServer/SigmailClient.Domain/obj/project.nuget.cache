@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "njrRaAsDJ0s=",
+  "dgSpecHash": "5QhhcRM/3e0=",
   "success": true,
   "projectFilePath": "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailClient.Domain\\SigmailClient.Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\ffgg9\\.nuget\\packages\\mongodb.bson\\2.25.0\\mongodb.bson.2.25.0.nupkg.sha512",
+    "C:\\Users\\ffgg9\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\ffgg9\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

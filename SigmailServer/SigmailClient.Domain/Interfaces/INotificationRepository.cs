@@ -2,9 +2,12 @@
 
 namespace SigmailClient.Domain.Interfaces;
 
-public interface INotificationRepository : IRepository<Notification>
+public interface INotificationRepository
 {
-    Task<IEnumerable<Notification>> GetUnreadForUserAsync(Guid userId);
-    Task MarkAllAsReadAsync(Guid userId);
-    Task DeleteOldNotificationsAsync(DateTime cutoffDate);
+    Task<Notification?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
+    // Измененный метод с пагинацией
+    Task<IEnumerable<Notification>> GetForUserAsync(Guid userId, bool unreadOnly = false, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default);
+    Task AddAsync(Notification notification, CancellationToken cancellationToken = default);
+    Task MarkAsReadAsync(string id, CancellationToken cancellationToken = default);
+    Task DeleteOldNotificationsAsync(DateTime cutoffDate, CancellationToken cancellationToken = default);
 }
