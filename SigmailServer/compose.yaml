@@ -1,0 +1,89 @@
+﻿version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:15
+    container_name: sigmail_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: SigmailDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck: # <-- ДОБАВЛЕНО
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d SigmailDb -q" ] # Проверяем готовность БД SigmailDb пользователем postgres
+      interval: 10s # Интервал между проверками
+      timeout: 5s   # Таймаут проверки
+      retries: 5
+  
+  mongo_db:
+    image: mongo:6
+    container_name: sigmail_mongo
+    # Если вы настроили аутентификацию для MongoDB, раскомментируйте и настройте:
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root_user # Замените
+    #   MONGO_INITDB_ROOT_PASSWORD: root_password # Замените
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    container_name: sigmail_minio
+    environment:
+      MINIO_ROOT_USER: minioadmin # Ваш Access Key ID для MinIO
+      MINIO_ROOT_PASSWORD: minioadmin # Ваш Secret Access Key для MinIO
+    ports:
+      - "9000:9000" # API порт
+      - "9001:9001" # Консоль MinIO
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  app:
+    build:
+      context: . # Предполагается, что Dockerfile находится в корневой директории проекта
+      dockerfile: SigmailServer.API/Dockerfile # Имя вашего Dockerfile для приложения
+    container_name: sigmail_app
+    ports:
+      - "5000:5000" # HTTP порт вашего приложения
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development # Или Production для боевого режима
+      - ASPNETCORE_URLS=http://+:5000 # Убедитесь, что порты соответствуют EXPOSE в Dockerfile
+      # Строки подключения и настройки сервисов
+      - ConnectionStrings__PostgreSQLConnection=Host=postgres_db;Port=5432;Database=SigmailDb;Username=postgres;Password=postgres
+      - MongoDbSettings__ConnectionString=mongodb://mongo_db:27017 # Если настроена аутентификация: mongodb://root_user:root_password@mongo_db:27017
+      - MongoDbSettings__DatabaseName=SigmailMongoDb # Имя вашей MongoDB
+      - S3StorageSettings__BucketName=sigmail-bucket # Имя вашего бакета в MinIO
+      - S3StorageSettings__AWSAccessKeyId=minioadmin
+      - S3StorageSettings__AWSSecretAccessKey=minioadmin
+      - S3StorageSettings__Region=us-east-1 # Формальный регион для MinIO
+      - S3StorageSettings__ServiceURL=http://minio:9000 # URL для MinIO внутри Docker сети
+      # Настройки JWT (ОБЯЗАТЕЛЬНО ЗАМЕНИТЕ НА СВОИ СЕКРЕТЫ!)
+      - JwtSettings__Secret=super_mega_secret_key_1234567890
+      - JwtSettings__Issuer=SigmailApp
+      - JwtSettings__Audience=SigmailAppClient
+      - JwtSettings__AccessTokenExpirationMinutes=15
+      - JwtSettings__RefreshTokenExpirationDays=7
+      # Настройки для вложений
+      - AttachmentSettings__MaxFileSizeMB=25
+      - AttachmentSettings__AllowedFileExtensions=.jpg,.jpeg,.png,.gif,.mp4,.mov,.avi,.mp3,.wav,.pdf,.doc,.docx,.txt
+    depends_on: # <-- ИЗМЕНЕНО
+      postgres_db:
+        condition: service_healthy # Ждать, пока postgres_db не станет healthy
+      mongo_db: # Для mongo_db тоже можно добавить healthcheck, если нужно
+        condition: service_started # Или service_healthy, если есть healthcheck
+      minio:
+        condition: service_started # MinIO обычно быстро стартует
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  mongo_data:
+  minio_data:

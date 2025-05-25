@@ -68,7 +68,7 @@ public class AuthService : IAuthService
         
         // Обновляем пользователя с RT. Если AddAsync уже вызвал SaveChanges (в MongoDB), то Update может быть не нужен,
         // но для EF Core (PostgreSQL) - нужен. UnitOfWork должен это разрулить.
-        await _unitOfWork.Users.UpdateAsync(user); 
+        // await _unitOfWork.Users.UpdateAsync(user); 
         await _unitOfWork.CommitAsync(); // Финальный коммит
 
         _logger.LogInformation("User {Username} registered successfully with ID {UserId}", dto.Username, user.Id);

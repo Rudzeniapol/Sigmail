@@ -4,15 +4,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailServer.API", "Sigmai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailServer.Application", "SigmailServer.Application\SigmailServer.Application.csproj", "{D3DA36E9-C4B6-4D20-8DFC-9BF6DA9F3BC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailClient.Domain", "SigmailClient.Domain\SigmailClient.Domain.csproj", "{01BE6230-FD34-4D6B-BEA0-80D88CC2F231}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailServer.Domain", "SigmailServer.Domain\SigmailServer.Domain.csproj", "{01BE6230-FD34-4D6B-BEA0-80D88CC2F231}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailClient.Persistence", "SigmailClient.Persistence\SigmailClient.Persistence.csproj", "{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigmailServer.Persistence", "SigmailServer.Persistence\SigmailServer.Persistence.csproj", "{8CF84C35-5AEB-4803-A2C7-45D3A9F4894B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SigmailCore", "SigmailCore", "{90CE5116-2818-4D9E-8EFF-22DF60BFE54A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SigmailInfrastructure", "SigmailInfrastructure", "{430A4200-3280-489B-B18E-D56310679825}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SigmailPresentation", "SigmailPresentation", "{05539851-5AD3-44CB-9BA9-D34D0418098C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CC87B90A-7A62-4064-BD2D-82F8D4F1F913}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

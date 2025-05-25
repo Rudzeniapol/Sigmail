@@ -2,7 +2,11 @@
 using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
-using SigmailClient.Domain.Enums;
+using SigmailClient.Domain.Enums; // Required for ChatMemberRole
+using System; // Required for Guid, DateTime
+using System.Collections.Generic; // Required for List, IEnumerable
+using System.Linq; // Required for Select, Any, ToList
+using System.Threading.Tasks; // Required for Task
 
 namespace SigmailServer.Application.Services;
 
@@ -10,7 +14,6 @@ public class SignalRNotifier : IRealTimeNotifier
 {
     private readonly IHubContext<SignalRChatHub, IChatHubClient> _hubContext;
     private readonly ILogger<SignalRNotifier> _logger;
-    // IMapper здесь обычно не нужен, так как сервисы уже передают готовые DTO
 
     public SignalRNotifier(IHubContext<SignalRChatHub, IChatHubClient> hubContext, ILogger<SignalRNotifier> logger)
     {
@@ -120,9 +123,10 @@ public class SignalRNotifier : IRealTimeNotifier
         _logger.LogInformation("SignalR: Notifying users ({UserCount}) that member {LeaverUserId} left chat {ChatId} ('{ChatName}')", 
             usersToNotify.Length, leaverUserId, chatDto.Id, chatDto.Name);
         
-        // Исправленный вызов: передаем chatDto.Id вместо всего chatDto
-        // Убедитесь, что аргументы соответствуют вашему IChatHubClient.MemberLeftChat
-        await _hubContext.Clients.Users(usersToNotify).MemberLeftChat(chatDto.Id, leaverUserId); 
+        // IChatHubClient.MemberLeftChat(Guid chatId, Guid userId, Guid? removedByUserId = null)
+        // Здесь removedByUserId не передается, так как метод NotifyMemberLeftChatAsync его не имеет.
+        // Это корректно для сценария "пользователь сам вышел".
+        await _hubContext.Clients.Users(usersToNotify).MemberLeftChat(chatDto.Id, leaverUserId, null); 
     }
     
     public async Task NotifyChatDetailsUpdatedAsync(List<Guid> memberIds, ChatDto updatedChatDto)
@@ -131,7 +135,6 @@ public class SignalRNotifier : IRealTimeNotifier
         if (!usersToNotify.Any()) return;
 
         _logger.LogInformation("SignalR: Notifying users ({UserCount}) about chat {ChatId} details updated.", usersToNotify.Length, updatedChatDto.Id);
-        // Убедитесь, что метод "ChatDetailsUpdated" определен в IChatHubClient.cs
         await _hubContext.Clients.Users(usersToNotify).ChatDetailsUpdated(updatedChatDto);
     }
     
@@ -143,9 +146,12 @@ public class SignalRNotifier : IRealTimeNotifier
         _logger.LogInformation("SignalR: Notifying users ({UserCount}) about member {AddedUserId} added to chat {ChatId} by {AddedByUserId}.",
             usersToNotify.Length, addedUserDto.Id, chatDto.Id, addedByUserId);
         
-        // Предполагаемый метод в IChatHubClient: MemberAddedToChat(ChatDto chatDto, UserSimpleDto addedUserDto, Guid addedByUserId)
-        // await _hubContext.Clients.Users(usersToNotify).MemberAddedToChat(chatDto, addedUserDto, addedByUserId);
-        await Task.CompletedTask; // Заглушка
+        // IChatHubClient.MemberJoinedChat(Guid chatId, UserSimpleDto user, UserSimpleDto? addedBy = null);
+        // `addedByUserId` (Guid) не может быть напрямую преобразован в `UserSimpleDto` здесь без доступа к сервису пользователей.
+        // В идеале, ChatService должен передавать UserSimpleDto для addedByUserId.
+        // Пока передаем null для addedBy.
+        _logger.LogWarning("SignalR: NotifyMemberAddedToChatAsync - addedByUserId {AddedByUserId} cannot be resolved to UserSimpleDto within SignalRNotifier. Passing null for 'addedBy' to client.", addedByUserId);
+        await _hubContext.Clients.Users(usersToNotify).MemberJoinedChat(chatDto.Id, addedUserDto, null);
     }
 
     public async Task NotifyMemberRemovedFromChatAsync(List<Guid> memberIds, ChatDto chatDto, Guid removedUserId, Guid removedByUserId)
@@ -156,9 +162,9 @@ public class SignalRNotifier : IRealTimeNotifier
         _logger.LogInformation("SignalR: Notifying users ({UserCount}) about member {RemovedUserId} removed from chat {ChatId} by {RemovedByUserId}.",
             usersToNotify.Length, removedUserId, chatDto.Id, removedByUserId);
 
-        // Предполагаемый метод в IChatHubClient: MemberRemovedFromChat(ChatDto chatDto, Guid removedUserId, Guid removedByUserId)
-        // await _hubContext.Clients.Users(usersToNotify).MemberRemovedFromChat(chatDto, removedUserId, removedByUserId);
-        await Task.CompletedTask; // Заглушка
+        // IChatHubClient.MemberLeftChat(Guid chatId, Guid userId, Guid? removedByUserId = null);
+        // Этот метод клиента используется и для "покинул" и для "был удален".
+        await _hubContext.Clients.Users(usersToNotify).MemberLeftChat(chatDto.Id, removedUserId, removedByUserId);
     }
 
     public async Task NotifyChatMemberRoleChangedAsync(List<Guid> memberIds, ChatDto chatDto, Guid targetUserId, ChatMemberRole newRole, Guid changedByUserId)
@@ -166,23 +172,27 @@ public class SignalRNotifier : IRealTimeNotifier
         var usersToNotify = ToSignalRUserList(memberIds);
         if (!usersToNotify.Any()) return;
 
-        _logger.LogInformation("SignalR: Notifying users ({UserCount}) about role change for member {TargetUserId} to {NewRole} in chat {ChatId} by {ChangedByUserId}.", usersToNotify.Length, targetUserId, newRole, chatDto.Id, changedByUserId);
+        _logger.LogInformation("SignalR: Notifying users ({UserCount}) about role change for member {TargetUserId} to {NewRole} in chat {ChatId} by {ChangedByUserId}.", 
+            usersToNotify.Length, targetUserId, newRole, chatDto.Id, changedByUserId);
 
-        // Предполагаемый метод в IChatHubClient: ChatMemberRoleChanged(ChatDto chatDto, Guid targetUserId, ChatMemberRole newRole, Guid changedByUserId)
-        // await _hubContext.Clients.Users(usersToNotify).ChatMemberRoleChanged(chatDto, targetUserId, newRole, changedByUserId);
-        await Task.CompletedTask; // Заглушка
+        // IChatHubClient.MemberRoleChanged(Guid chatId, Guid userId, string newRole);
+        // Клиентский метод не принимает changedByUserId.
+        _logger.LogWarning("SignalR: NotifyChatMemberRoleChangedAsync - changedByUserId {ChangedByUserId} is not passed to the client as IChatHubClient.MemberRoleChanged does not support it.", changedByUserId);
+        await _hubContext.Clients.Users(usersToNotify).MemberRoleChanged(chatDto.Id, targetUserId, newRole.ToString());
     }
 
     public async Task NotifyChatDeletedAsync(List<Guid> memberIds, Guid chatId, Guid deletedByUserId)
     {
-        var usersToNotify = ToSignalRUserList(memberIds);
-        if (!usersToNotify.Any()) return;
+        // IChatHubClient.cs не содержит метода для ChatDeleted.
+        // Поэтому мы не можем отправить это уведомление клиентам через SignalR с текущим интерфейсом клиента.
+        _logger.LogWarning("SignalR: NotifyChatDeletedAsync called for chat {ChatId}, but IChatHubClient does not have a corresponding method (e.g., ChatDeleted). Notification will not be sent to clients via SignalR.", chatId);
         
-        _logger.LogInformation("SignalR: Notifying users ({UserCount}) about deletion of chat {ChatId} by {DeletedByUserId}.",
-            usersToNotify.Length, chatId, deletedByUserId);
-
-        // Предполагаемый метод в IChatHubClient: ChatDeleted(Guid chatId, Guid deletedByUserId)
+        // Если бы метод существовал в IChatHubClient, например: Task ChatDeleted(Guid chatId, Guid deletedByUserId);
+        // var usersToNotify = ToSignalRUserList(memberIds);
+        // if (!usersToNotify.Any()) return;
+        // _logger.LogInformation("SignalR: Notifying users ({UserCount}) about deletion of chat {ChatId} by {DeletedByUserId}.",
+        // usersToNotify.Length, chatId, deletedByUserId);
         // await _hubContext.Clients.Users(usersToNotify).ChatDeleted(chatId, deletedByUserId);
-        await Task.CompletedTask; // Заглушка
+        await Task.CompletedTask; // Заглушка остается, так как нет клиентского метода
     }
 }

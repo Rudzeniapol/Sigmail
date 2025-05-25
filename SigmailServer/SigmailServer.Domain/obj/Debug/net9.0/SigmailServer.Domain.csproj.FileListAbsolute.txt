@@ -1,0 +1,13 @@
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\bin\Debug\net9.0\SigmailServer.Domain.deps.json
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\bin\Debug\net9.0\SigmailServer.Domain.dll
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\bin\Debug\net9.0\SigmailServer.Domain.pdb
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.csproj.AssemblyReference.cache
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.AssemblyInfoInputs.cache
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.AssemblyInfo.cs
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.sourcelink.json
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.dll
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\refint\SigmailServer.Domain.dll
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\SigmailServer.Domain.pdb
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Domain\obj\Debug\net9.0\ref\SigmailServer.Domain.dll

@@ -12,4 +12,5 @@ public interface IUserService {
     Task<IEnumerable<UserDto>> SearchUsersAsync(string searchTerm, Guid currentUserId); // Для поиска контактов
     Task UpdateUserProfileAsync(Guid userId, UpdateUserProfileDto dto); // Новый
     // Task UpdateUserAvatarAsync(Guid userId, Stream avatarStream, string contentType); // Новый (работа с файлом)
+    Task UpdateUserAvatarAsync(Guid userId, string avatarFileKey);
 }

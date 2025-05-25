@@ -37,7 +37,7 @@ public class NotificationService : INotificationService
         var notifications = await _notificationRepository.GetForUserAsync(userId, unreadOnly); // TODO: Добавить пагинацию в репозиторий
         
         var pagedNotifications = notifications
-            .OrderByDescending(n => n.CreatedAt) // Сначала новые
+            .OrderByDescending(n => n.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
             

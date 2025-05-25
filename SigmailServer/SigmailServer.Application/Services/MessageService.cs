@@ -80,7 +80,7 @@ public class MessageService : IMessageService
             foreach (var attDto in dto.Attachments)
             {
                 // Предполагается, что FileKey уже существует (файл загружен через AttachmentService, и клиент передал ключ)
-                // Также предполагается, что CreateAttachmentDto содержит все необходимые поля для SigmailClient.Domain.Models.Attachment
+                // Также предполагается, что CreateAttachmentDto содержит все необходимые поля для SigmailServer.Domain.Models.Attachment
                 var attachment = _mapper.Map<SigmailClient.Domain.Models.Attachment>(attDto);
                 message.Attachments.Add(attachment);
             }

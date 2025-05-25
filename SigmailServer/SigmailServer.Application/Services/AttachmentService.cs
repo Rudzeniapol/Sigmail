@@ -61,7 +61,7 @@ public class AttachmentService : IAttachmentService
         string fileUrlOrKey = await _fileStorageRepository.UploadFileAsync(fileStream, uniqueFileKey, contentType); // Репозиторий должен вернуть ключ или URL
 
         // Здесь может быть создание записи об Attachment в БД (если они не вложены в Message)
-        // SigmailClient.Domain.Models.Attachment attachmentEntity = new SigmailClient.Domain.Models.Attachment
+        // SigmailServer.Domain.Models.Attachment attachmentEntity = new SigmailServer.Domain.Models.Attachment
         // {
         //     FileKey = fileUrlOrKey, // или uniqueFileKey, если UploadFileAsync возвращает только его
         //     FileName = fileName,
@@ -150,8 +150,7 @@ public class AttachmentService : IAttachmentService
         // Проверка прав доступа:
         // Связываем fileKey с сообщением, чтобы проверить, имеет ли currentUserId доступ к этому чату/сообщению.
         // Это упрощенная проверка. В реальности может потребоваться более сложная логика.
-        var messageContainingFile = await _unitOfWork.Messages.GetByChatAsync(Guid.Empty, 1, 1) // Это заглушка, нужен метод GetMessageByFileKey
-            .ContinueWith(t => t.Result.FirstOrDefault(m => m.Attachments.Any(a => a.FileKey == fileKey))); // Нужен GetMessageByFileKey
+        var messageContainingFile = await _unitOfWork.Messages.GetByAttachmentKeyAsync(fileKey);
         
         if (messageContainingFile != null)
         {
@@ -165,10 +164,21 @@ public class AttachmentService : IAttachmentService
         else
         {
             // Если файл не привязан к сообщению (например, аватар пользователя), нужна другая логика проверки.
-            // Для аватаров: user.ProfileImageUrl == fileKey && user.Id == currentUserId (или если это общедоступный профиль)
-            // Пока предполагаем, что все файлы привязаны к сообщениям.
-            _logger.LogWarning("Could not determine access rights for file key {FileKey} for user {CurrentUserId}. Denying access.", fileKey, currentUserId);
-            throw new UnauthorizedAccessException("Cannot determine access rights for this file.");
+            // TODO: Реализовать проверку для аватаров, если они хранятся через этот сервис.
+            // Пример:
+            // var user = await _unitOfWork.Users.GetByIdAsync(currentUserId); // Предположим, мы хотим проверить, является ли это аватаром текущего пользователя
+            // if (user == null || user.ProfileImageUrl != fileKey) {
+            //      // Или это может быть аватар другого пользователя, если профили публичны
+            //      var targetUser = await _unitOfWork.Users.FirstOrDefaultAsync(u => u.ProfileImageUrl == fileKey); // нужен метод в репозитории
+            //      if (targetUser == null) { // Файл не является известным аватаром
+            //          _logger.LogWarning("Could not determine access rights for file key {FileKey} for user {CurrentUserId} (not a message attachment or known avatar). Denying access.", fileKey, currentUserId);
+            //          throw new UnauthorizedAccessException("Cannot determine access rights for this file.");
+            //      }
+            //      // Если это аватар другого пользователя, и профили публичны, то доступ можно разрешить.
+            //      // Если нет, то проверяем, currentUserId == targetUser.Id
+            // }
+             _logger.LogWarning("Could not determine access rights for file key {FileKey} for user {CurrentUserId} (file not found in any message or other context). Denying access.", fileKey, currentUserId);
+            throw new UnauthorizedAccessException("Cannot determine access rights for this file or file not found.");
         }
 
         return await _fileStorageRepository.GeneratePresignedUrlAsync(fileKey, TimeSpan.FromHours(1));
@@ -185,18 +195,24 @@ public class AttachmentService : IAttachmentService
         
         // Ищем сообщение, содержащее этот fileKey
         // Нужен метод: Task<Message?> GetMessageByFileKeyAsync(string fileKey, CancellationToken cancellationToken = default);
-        Message? message = null; // = await _unitOfWork.Messages.GetMessageByFileKeyAsync(fileKey); 
+        Message? message = await _unitOfWork.Messages.GetByAttachmentKeyAsync(fileKey); 
 
         if (message == null)
         {
-            // Возможно, это аватар пользователя или другой тип файла, не связанный с сообщением.
-            // Здесь нужна дополнительная логика, если такие случаи есть.
-            // Например, если это аватар:
+            // TODO: Реализовать логику удаления для аватаров или других файлов, не связанных с сообщениями, если это необходимо.
+            // Пример:
             // var user = await _unitOfWork.Users.GetByIdAsync(currentUserId);
-            // if (user?.ProfileImageUrl != fileKey) throw new UnauthorizedAccessException("Cannot delete this file.");
-            
-            _logger.LogWarning("File {FileKey} not found in any message or no permission for user {CurrentUserId} to delete.", fileKey, currentUserId);
-            // Для безопасности, если не можем определить права, запрещаем удаление
+            // if (user != null && user.ProfileImageUrl == fileKey) {
+            //     // Пользователь удаляет свой собственный аватар
+            //     await _fileStorageRepository.DeleteFileAsync(fileKey);
+            //     user.ProfileImageUrl = null; // или на URL по умолчанию
+            //     await _unitOfWork.Users.UpdateAsync(user);
+            //     await _unitOfWork.CommitAsync();
+            //     _logger.LogInformation("User {CurrentUserId} deleted their avatar {FileKey}.", currentUserId, fileKey);
+            //     return;
+            // }
+
+            _logger.LogWarning("File {FileKey} not found in any message or no permission for user {CurrentUserId} to delete (file not a message attachment or other context).", fileKey, currentUserId);
             throw new UnauthorizedAccessException("You do not have permission to delete this file or file not found.");
         }
 
@@ -210,7 +226,8 @@ public class AttachmentService : IAttachmentService
             var chatMember = await _unitOfWork.Chats.GetChatMemberAsync(message.ChatId, currentUserId);
             if (chatMember != null && (chatMember.Role == ChatMemberRole.Admin || chatMember.Role == ChatMemberRole.Owner))
             {
-                canDelete = true; // Админ/владелец чата может удалять
+                // TODO: Добавить более гранулярную проверку прав (может ли админ удалять *любые* файлы в чате, или только файлы из удаляемых им сообщений)
+                canDelete = true; 
             }
         }
 

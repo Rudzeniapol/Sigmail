@@ -2,18 +2,18 @@
   "version": 3,
   "targets": {
     "net9.0": {
-      "AutoMapper/14.0.0": {
+      "AutoMapper/12.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Options": "8.0.0"
+          "Microsoft.CSharp": "4.7.0"
         },
         "compile": {
-          "lib/net8.0/AutoMapper.dll": {
+          "lib/netstandard2.1/AutoMapper.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/AutoMapper.dll": {
+          "lib/netstandard2.1/AutoMapper.dll": {
             "related": ".xml"
           }
         }
@@ -518,7 +518,7 @@
           }
         }
       },
-      "Microsoft.CSharp/4.6.0": {
+      "Microsoft.CSharp/4.7.0": {
         "type": "package",
         "compile": {
           "ref/netcoreapp2.0/_._": {}
@@ -1213,35 +1213,35 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "SigmailClient.Domain/1.0.0": {
+      "SigmailServer.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "MongoDB.Bson": "2.25.0"
         },
         "compile": {
-          "bin/placeholder/SigmailClient.Domain.dll": {}
+          "bin/placeholder/SigmailServer.Domain.dll": {}
         },
         "runtime": {
-          "bin/placeholder/SigmailClient.Domain.dll": {}
+          "bin/placeholder/SigmailServer.Domain.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "AutoMapper/14.0.0": {
-      "sha512": "OC+1neAPM4oCCqQj3g2GJ2shziNNhOkxmNB9cVS8jtx4JbgmRzLcUOxB9Tsz6cVPHugdkHgCaCrTjjSI0Z5sCQ==",
+    "AutoMapper/12.0.1": {
+      "sha512": "hvV62vl6Hp/WfQ24yzo3Co9+OPl8wH8hApwVtgWpiAynVJkUcs7xvehnSftawL8Pe8FrPffBRM3hwzLQqWDNjA==",
       "type": "package",
-      "path": "automapper/14.0.0",
+      "path": "automapper/12.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
-        "automapper.14.0.0.nupkg.sha512",
+        "automapper.12.0.1.nupkg.sha512",
         "automapper.nuspec",
         "icon.png",
-        "lib/net8.0/AutoMapper.dll",
-        "lib/net8.0/AutoMapper.xml"
+        "lib/netstandard2.1/AutoMapper.dll",
+        "lib/netstandard2.1/AutoMapper.xml"
       ]
     },
     "AWSSDK.Core/3.7.302.8": {
@@ -1691,10 +1691,10 @@
         "microsoft.aspnetcore.webutilities.nuspec"
       ]
     },
-    "Microsoft.CSharp/4.6.0": {
-      "sha512": "kxn3M2rnAGy5N5DgcIwcE8QTePWU/XiYcQVzn9HqTls2NKluVzVSmVWRjK7OUPWbljCXuZxHyhEz9kPRIQeXow==",
+    "Microsoft.CSharp/4.7.0": {
+      "sha512": "pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
       "type": "package",
-      "path": "microsoft.csharp/4.6.0",
+      "path": "microsoft.csharp/4.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1717,7 +1717,7 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "microsoft.csharp.4.6.0.nupkg.sha512",
+        "microsoft.csharp.4.7.0.nupkg.sha512",
         "microsoft.csharp.nuspec",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
@@ -2886,16 +2886,16 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "SigmailClient.Domain/1.0.0": {
+    "SigmailServer.Domain/1.0.0": {
       "type": "project",
-      "path": "../SigmailClient.Domain/SigmailClient.Domain.csproj",
-      "msbuildProject": "../SigmailClient.Domain/SigmailClient.Domain.csproj"
+      "path": "../SigmailServer.Domain/SigmailServer.Domain.csproj",
+      "msbuildProject": "../SigmailServer.Domain/SigmailServer.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "AWSSDK.S3 >= 3.7.305.24",
-      "AutoMapper >= 14.0.0",
+      "AutoMapper >= 12.0.1",
       "BCrypt >= 1.0.0",
       "BCrypt.Net >= 0.1.0",
       "FluentValidation >= 11.9.0",
@@ -2906,7 +2906,7 @@
       "Microsoft.Extensions.Configuration >= 9.0.5",
       "Microsoft.Extensions.Http >= 9.0.0-preview.1.24081.5",
       "NEST >= 7.17.5",
-      "SigmailClient.Domain >= 1.0.0",
+      "SigmailServer.Domain >= 1.0.0",
       "StackExchange.Redis >= 2.7.17",
       "System.IdentityModel.Tokens.Jwt >= 8.8.0",
       "prometheus-net >= 8.2.1"
@@ -2944,8 +2944,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailClient.Domain\\SigmailClient.Domain.csproj": {
-              "projectPath": "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailClient.Domain\\SigmailClient.Domain.csproj"
+            "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\SigmailServer.Domain.csproj": {
+              "projectPath": "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\SigmailServer.Domain.csproj"
             }
           }
         }
@@ -2972,7 +2972,7 @@
           },
           "AutoMapper": {
             "target": "Package",
-            "version": "[14.0.0, )"
+            "version": "[12.0.1, )"
           },
           "BCrypt": {
             "target": "Package",
