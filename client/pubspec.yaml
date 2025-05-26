@@ -30,60 +30,82 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  # UI & Theming
+  cupertino_icons: ^1.0.6 # Для iOS-стиля иконок (если нужны)
+  google_fonts: ^6.1.0 # Для кастомных шрифтов из Google Fonts
+  
+  # State Management (выберите один или комбинацию)
+  flutter_bloc: ^8.1.3      # Для BLoC/Cubit
+  provider: ^6.1.1          # Альтернатива или дополнение к BLoC
+  # riverpod: ^2.4.9          # Альтернатива Riverpod (если предпочитаете)
+  # flutter_riverpod: ^2.4.9
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  # Navigation (выберите один)
+  go_router: ^13.0.1        # Мощная декларативная навигация
+  # auto_route: ^7.8.4        # Навигация с генерацией кода
+
+  # Networking & API
+  dio: ^5.4.0               # HTTP клиент
+  web_socket_channel: ^3.0.3 # Обновленная версия для совместимости с signalr_netcore
+  # signalr_core: ^1.1.1      # Клиентская библиотека SignalR Core (может понадобиться также signalr_flutter)
+  signalr_netcore: ^1.4.3   # ЗАМЕНА: Более новый клиент SignalR
+  # signalr_flutter: ^0.2.1-beta.1 # Flutter-специфичная обертка для SignalR, если есть
+  # http: ^1.1.0              # Альтернативный HTTP клиент
+
+  # Data Classes & Serialization
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+  dartz: ^0.10.1
+
+  # Local Storage & Caching
+  shared_preferences: ^2.2.2 # Для простых настроек и флагов
+  # hive: ^2.2.3               # Быстрая NoSQL база данных
+  # hive_flutter: ^1.1.0
+  # sqflite: ^2.3.0            # SQLite, если нужна реляционная БД локально
+  # path_provider: ^2.1.1      # Для получения путей к директориям (нужен для Hive, Sqflite)
+
+  # UI Enhancements & Animations
+  lottie: ^3.0.0              # Для Lottie (JSON) анимаций
+  animations: ^2.0.10         # Готовые анимации переходов от Flutter team
+  flutter_slidable: ^3.0.1    # Действия по свайпу в списках
+  cached_network_image: ^3.3.1 # Кэширование изображений из сети
+  shimmer: ^3.0.0             # Эффект загрузки (скелетоны)
+  flutter_svg: ^2.0.9         # Для SVG изображений
+  # animated_toggle_switch: ^0.8.0 # Для красивых анимированных переключателей
+
+  # Utilities
+  get_it: ^7.6.4              # Service Locator
+  equatable: ^2.0.5           # Для упрощения сравнения объектов (полезно с BLoC)
+  intl: ^0.19.0               # Для форматирования дат, чисел, локализации (i18n/l10n)
+  image_picker: ^1.0.7        # Выбор изображений из галереи/камеры
+  file_picker: ^10.1.9         # Выбор файлов
+  path_provider: ^2.1.1       # Для доступа к путям в файловой системе (часто нужен с file_picker/image_picker)
+  url_launcher: ^6.2.2        # Для открытия URL в браузере/других приложениях
+  # device_info_plus: ^9.1.1    # Для получения информации об устройстве
+  
+  # Иконки (пример)
+  font_awesome_flutter: ^10.6.0
+  mime: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  flutter_lints: ^3.0.1 # Рекомендации по стилю кода от Flutter команды
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  # Code Generation (важно для freezed, json_serializable, auto_route и т.д.)
+  build_runner: ^2.4.7
+  freezed: ^2.4.7
+  json_serializable: ^6.7.1
+  # auto_route_generator: ^7.3.2 # Если используете auto_route
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter packages.
+# Настройки Flutter
 flutter:
+  uses-material-design: true # Включает использование Material Design
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
-  uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  # Чтобы добавить ассеты в ваше приложение, добавьте секцию assets, например:
+  assets:
+    - assets/images/ # Путь к директории с изображениями
+    - assets/lottie/ # Путь к директории с Lottie-анимациями
   #   - images/a_dot_ham.jpeg
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/to/resolution-aware-images
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/to/asset-from-package
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package

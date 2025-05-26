@@ -1,0 +1,318 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'create_attachment_model.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
+
+CreateAttachmentModel _$CreateAttachmentModelFromJson(
+  Map<String, dynamic> json,
+) {
+  return _CreateAttachmentModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CreateAttachmentModel {
+  String get fileKey =>
+      throw _privateConstructorUsedError; // Ключ файла, который вы получили от сервера после загрузки в S3 (или перед прямой загрузкой)
+  String get fileName => throw _privateConstructorUsedError;
+  String get contentType => throw _privateConstructorUsedError;
+  AttachmentType get type =>
+      throw _privateConstructorUsedError; // <<< ИЗМЕНЕН ТИП
+  int get size => throw _privateConstructorUsedError; // Размер файла в байтах
+  String? get thumbnailUrl => throw _privateConstructorUsedError;
+
+  /// Serializes this CreateAttachmentModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CreateAttachmentModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CreateAttachmentModelCopyWith<CreateAttachmentModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CreateAttachmentModelCopyWith<$Res> {
+  factory $CreateAttachmentModelCopyWith(
+    CreateAttachmentModel value,
+    $Res Function(CreateAttachmentModel) then,
+  ) = _$CreateAttachmentModelCopyWithImpl<$Res, CreateAttachmentModel>;
+  @useResult
+  $Res call({
+    String fileKey,
+    String fileName,
+    String contentType,
+    AttachmentType type,
+    int size,
+    String? thumbnailUrl,
+  });
+}
+
+/// @nodoc
+class _$CreateAttachmentModelCopyWithImpl<
+  $Res,
+  $Val extends CreateAttachmentModel
+>
+    implements $CreateAttachmentModelCopyWith<$Res> {
+  _$CreateAttachmentModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CreateAttachmentModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? fileKey = null,
+    Object? fileName = null,
+    Object? contentType = null,
+    Object? type = null,
+    Object? size = null,
+    Object? thumbnailUrl = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            fileKey:
+                null == fileKey
+                    ? _value.fileKey
+                    : fileKey // ignore: cast_nullable_to_non_nullable
+                        as String,
+            fileName:
+                null == fileName
+                    ? _value.fileName
+                    : fileName // ignore: cast_nullable_to_non_nullable
+                        as String,
+            contentType:
+                null == contentType
+                    ? _value.contentType
+                    : contentType // ignore: cast_nullable_to_non_nullable
+                        as String,
+            type:
+                null == type
+                    ? _value.type
+                    : type // ignore: cast_nullable_to_non_nullable
+                        as AttachmentType,
+            size:
+                null == size
+                    ? _value.size
+                    : size // ignore: cast_nullable_to_non_nullable
+                        as int,
+            thumbnailUrl:
+                freezed == thumbnailUrl
+                    ? _value.thumbnailUrl
+                    : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$CreateAttachmentModelImplCopyWith<$Res>
+    implements $CreateAttachmentModelCopyWith<$Res> {
+  factory _$$CreateAttachmentModelImplCopyWith(
+    _$CreateAttachmentModelImpl value,
+    $Res Function(_$CreateAttachmentModelImpl) then,
+  ) = __$$CreateAttachmentModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String fileKey,
+    String fileName,
+    String contentType,
+    AttachmentType type,
+    int size,
+    String? thumbnailUrl,
+  });
+}
+
+/// @nodoc
+class __$$CreateAttachmentModelImplCopyWithImpl<$Res>
+    extends
+        _$CreateAttachmentModelCopyWithImpl<$Res, _$CreateAttachmentModelImpl>
+    implements _$$CreateAttachmentModelImplCopyWith<$Res> {
+  __$$CreateAttachmentModelImplCopyWithImpl(
+    _$CreateAttachmentModelImpl _value,
+    $Res Function(_$CreateAttachmentModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CreateAttachmentModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? fileKey = null,
+    Object? fileName = null,
+    Object? contentType = null,
+    Object? type = null,
+    Object? size = null,
+    Object? thumbnailUrl = freezed,
+  }) {
+    return _then(
+      _$CreateAttachmentModelImpl(
+        fileKey:
+            null == fileKey
+                ? _value.fileKey
+                : fileKey // ignore: cast_nullable_to_non_nullable
+                    as String,
+        fileName:
+            null == fileName
+                ? _value.fileName
+                : fileName // ignore: cast_nullable_to_non_nullable
+                    as String,
+        contentType:
+            null == contentType
+                ? _value.contentType
+                : contentType // ignore: cast_nullable_to_non_nullable
+                    as String,
+        type:
+            null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                    as AttachmentType,
+        size:
+            null == size
+                ? _value.size
+                : size // ignore: cast_nullable_to_non_nullable
+                    as int,
+        thumbnailUrl:
+            freezed == thumbnailUrl
+                ? _value.thumbnailUrl
+                : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(explicitToJson: true)
+class _$CreateAttachmentModelImpl implements _CreateAttachmentModel {
+  const _$CreateAttachmentModelImpl({
+    required this.fileKey,
+    required this.fileName,
+    required this.contentType,
+    required this.type,
+    required this.size,
+    this.thumbnailUrl,
+  });
+
+  factory _$CreateAttachmentModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CreateAttachmentModelImplFromJson(json);
+
+  @override
+  final String fileKey;
+  // Ключ файла, который вы получили от сервера после загрузки в S3 (или перед прямой загрузкой)
+  @override
+  final String fileName;
+  @override
+  final String contentType;
+  @override
+  final AttachmentType type;
+  // <<< ИЗМЕНЕН ТИП
+  @override
+  final int size;
+  // Размер файла в байтах
+  @override
+  final String? thumbnailUrl;
+
+  @override
+  String toString() {
+    return 'CreateAttachmentModel(fileKey: $fileKey, fileName: $fileName, contentType: $contentType, type: $type, size: $size, thumbnailUrl: $thumbnailUrl)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateAttachmentModelImpl &&
+            (identical(other.fileKey, fileKey) || other.fileKey == fileKey) &&
+            (identical(other.fileName, fileName) ||
+                other.fileName == fileName) &&
+            (identical(other.contentType, contentType) ||
+                other.contentType == contentType) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.size, size) || other.size == size) &&
+            (identical(other.thumbnailUrl, thumbnailUrl) ||
+                other.thumbnailUrl == thumbnailUrl));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    fileKey,
+    fileName,
+    contentType,
+    type,
+    size,
+    thumbnailUrl,
+  );
+
+  /// Create a copy of CreateAttachmentModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateAttachmentModelImplCopyWith<_$CreateAttachmentModelImpl>
+  get copyWith =>
+      __$$CreateAttachmentModelImplCopyWithImpl<_$CreateAttachmentModelImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CreateAttachmentModelImplToJson(this);
+  }
+}
+
+abstract class _CreateAttachmentModel implements CreateAttachmentModel {
+  const factory _CreateAttachmentModel({
+    required final String fileKey,
+    required final String fileName,
+    required final String contentType,
+    required final AttachmentType type,
+    required final int size,
+    final String? thumbnailUrl,
+  }) = _$CreateAttachmentModelImpl;
+
+  factory _CreateAttachmentModel.fromJson(Map<String, dynamic> json) =
+      _$CreateAttachmentModelImpl.fromJson;
+
+  @override
+  String get fileKey; // Ключ файла, который вы получили от сервера после загрузки в S3 (или перед прямой загрузкой)
+  @override
+  String get fileName;
+  @override
+  String get contentType;
+  @override
+  AttachmentType get type; // <<< ИЗМЕНЕН ТИП
+  @override
+  int get size; // Размер файла в байтах
+  @override
+  String? get thumbnailUrl;
+
+  /// Create a copy of CreateAttachmentModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CreateAttachmentModelImplCopyWith<_$CreateAttachmentModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
