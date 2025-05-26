@@ -28,4 +28,8 @@ public class S3StorageSettings
     /// например, "http://localhost:9000" или "http://minio:9000".
     /// </summary>
     public string? ServiceURL { get; set; }
+
+    public bool ForcePathStyle { get; set; }
+
+    public string? PublicPresignedUrlHostPort { get; set; }
 }

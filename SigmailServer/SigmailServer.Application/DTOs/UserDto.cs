@@ -7,5 +7,5 @@ public class UserDto { // Полная информация о пользова�
     public string? ProfileImageUrl { get; set; }
     public string? Bio { get; set; }
     public bool IsOnline { get; set; }
-    public DateTime LastSeen { get; set; }
+    public DateTime? LastSeen { get; set; }
 }

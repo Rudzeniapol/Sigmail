@@ -11,6 +11,8 @@ public interface IMessageService {
     Task DeleteMessageAsync(string messageId, Guid deleterUserId); // "Мягкое" удаление
     Task MarkMessageAsReadAsync(string messageId, Guid readerUserId, Guid chatId);
 
+    Task<MessageDto> CreateMessageWithAttachmentAsync(Guid senderId, CreateMessageWithAttachmentDto dto);
+
     // Новые методы
     Task AddReactionToMessageAsync(string messageId, Guid reactorUserId, AddReactionDto reactionDto);
     Task RemoveReactionFromMessageAsync(string messageId, Guid reactorUserId, string emoji);

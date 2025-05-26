@@ -16,3 +16,5 @@ C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject
 C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Persistence\obj\Debug\net9.0\refint\SigmailServer.Persistence.dll
 C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Persistence\obj\Debug\net9.0\SigmailServer.Persistence.pdb
 C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Persistence\obj\Debug\net9.0\ref\SigmailServer.Persistence.dll
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Persistence\bin\Debug\net9.0\SigmailServer.Persistence.runtimeconfig.json
+C:\Users\ffgg9\OneDrive\Desktop\Infinite Learning\Students package\CourseProject4Sem\SigmailServer\SigmailServer.Persistence\obj\Debug\net9.0\SigmailServer.Persistence.genruntimeconfig.cache

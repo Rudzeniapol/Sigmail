@@ -95,32 +95,172 @@ public class MessageService : IMessageService
 
         var messageDto = await MapMessageToDtoAsync(message); // Используем вспомогательный метод
 
-        // Уведомляем всех участников чата
+        // Уведомляем всех участников чата о новом сообщении
         var chatMembers = await _unitOfWork.Chats.GetChatMembersAsync(dto.ChatId);
         var memberIdsToNotify = chatMembers.Select(m => m.Id).ToList();
 
         foreach (var memberId in memberIdsToNotify)
         {
-            // Отправляем real-time уведомление
+            // Отправляем real-time уведомление о новом сообщении
             await _realTimeNotifier.NotifyMessageReceivedAsync(memberId, messageDto);
 
-            // Создаем персистентное уведомление для тех, кто не отправитель (если они не онлайн или для истории)
+            // Создаем персистентное уведомление для тех, кто не отправитель
             if (memberId != senderId)
             {
                 var senderUser = await _unitOfWork.Users.GetByIdAsync(senderId);
                 await _notificationService.CreateAndSendNotificationAsync(
                     memberId,
                     NotificationType.NewMessage,
-                    $"{senderUser?.Username ?? "Someone"}: {messageDto.Text?.Substring(0, Math.Min(messageDto.Text.Length, 50)) ?? "Attachment"}",
-                    $"New message in {chat.Name ?? "chat"}",
-                    message.Id, // RelatedEntityId - ID сообщения
-                    "Message"   // RelatedEntityType
+                    $"{(senderUser?.Username ?? "Someone")}: {messageDto.Text?.Substring(0, Math.Min(messageDto.Text?.Length ?? 0, 50)) ?? "Attachment"}",
+                    $"New message in {(chat?.Name ?? "chat")}", // Используем 'chat' который был загружен ранее
+                    message.Id, 
+                    "Message"
                 );
             }
         }
         
-        // Если клиент прислал свой ID, можно его как-то использовать для подтверждения, но обычно это не требуется, т.к. SignalR подтверждает доставку на хаб.
-        _logger.LogInformation("Message {MessageId} sent by {SenderId} to chat {ChatId}. Notified {MemberCount} members.", message.Id, senderId, dto.ChatId, memberIdsToNotify.Count);
+        // Теперь уведомим об обновлении самого чата (например, для обновления LastMessage в списке чатов)
+        var updatedChatEntity = await _unitOfWork.Chats.GetByIdAsync(dto.ChatId); 
+        if (updatedChatEntity != null)
+        {
+            ChatDto chatDtoForUpdate = _mapper.Map<ChatDto>(updatedChatEntity);
+            
+            // Устанавливаем только что отправленное сообщение как последнее в DTO для SignalR уведомления
+            // так как updatedChatEntity.LastMessageId был только что обновлен этим сообщением.
+            chatDtoForUpdate.LastMessage = messageDto; 
+            // Также убедимся, что основные поля чата, которые могли измениться (как UpdatedAt), присутствуют
+            // AutoMapper должен был перенести updatedChatEntity.UpdatedAt в chatDtoForUpdate.UpdatedAt
+            // Если нет, то chatDtoForUpdate.UpdatedAt = updatedChatEntity.UpdatedAt;
+
+            // Обновляем список участников в DTO, если он маппится и важен для клиента при ChatDetailsUpdated
+            // Это зависит от того, как настроен AutoMapper и что ожидает клиент от ChatDetailsUpdated
+            // var membersForDto = await _unitOfWork.Chats.GetChatMembersAsync(dto.ChatId);
+            // chatDtoForUpdate.Members = _mapper.Map<List<UserSimpleDto>>(membersForDto);
+            // chatDtoForUpdate.MemberCount = membersForDto.Count;
+            // Если _mapper.Map<ChatDto>(updatedChatEntity) уже корректно заполняет members и memberCount, то выше не нужно.
+
+            foreach (var memberId in memberIdsToNotify) // Используем тот же список участников
+            {
+                await _realTimeNotifier.NotifyChatDetailsUpdatedAsync(new List<Guid> { memberId }, chatDtoForUpdate); // Отправляем каждому индивидуально, если метод принимает List
+                                                                                                                  // Или если NotifyChatDetailsUpdatedAsync может принять IEnumerable<Guid> сразу:
+                                                                                                                  // await _realTimeNotifier.NotifyChatDetailsUpdatedAsync(memberIdsToNotify, chatDtoForUpdate);
+                                                                                                                  // Судя по интерфейсу IRealTimeNotifier, он принимает List<Guid> memberIds
+            }
+            // Если NotifyChatDetailsUpdatedAsync принимает IEnumerable или List:
+            await _realTimeNotifier.NotifyChatDetailsUpdatedAsync(memberIdsToNotify, chatDtoForUpdate);
+
+            _logger.LogInformation("Chat {ChatId} details update notification sent to {MemberCount} members.", dto.ChatId, memberIdsToNotify.Count);
+        }
+        else
+        {
+            _logger.LogWarning("Chat {ChatId} not found after update for sending ChatDetailsUpdated notification.", dto.ChatId);
+        }
+
+        _logger.LogInformation("Message {MessageId} sent by {SenderId} to chat {ChatId}. Notified {MemberCount} members for new message.", message.Id, senderId, dto.ChatId, memberIdsToNotify.Count);
+        return messageDto;
+    }
+
+    public async Task<MessageDto> CreateMessageWithAttachmentAsync(Guid senderId, CreateMessageWithAttachmentDto dto)
+    {
+        _logger.LogInformation("User {SenderId} creating message with attachment in chat {ChatId}. FileKey: {FileKey}, FileName: {FileName}",
+            senderId, dto.ChatId, dto.FileKey, dto.FileName);
+
+        var chat = await _unitOfWork.Chats.GetByIdAsync(dto.ChatId);
+        if (chat == null) throw new KeyNotFoundException($"Chat with ID {dto.ChatId} not found.");
+
+        var isMember = await _unitOfWork.Chats.IsUserMemberAsync(dto.ChatId, senderId);
+        if (!isMember) throw new UnauthorizedAccessException($"Sender {senderId} is not a member of chat {dto.ChatId}.");
+
+        if (string.IsNullOrWhiteSpace(dto.FileKey) || string.IsNullOrWhiteSpace(dto.FileName))
+        {
+            throw new ArgumentException("FileKey and FileName are required for messages with attachments.");
+        }
+
+        var attachment = new SigmailClient.Domain.Models.Attachment
+        {
+            FileKey = dto.FileKey,
+            FileName = dto.FileName,
+            ContentType = dto.ContentType,
+            Size = dto.FileSize,
+            Type = dto.AttachmentType,
+            Width = dto.Width,
+            Height = dto.Height,
+            ThumbnailKey = dto.ThumbnailKey
+            // Другие поля Attachment, если они есть и приходят из DTO, можно добавить здесь
+        };
+
+        var message = new Message
+        {
+            ChatId = dto.ChatId,
+            SenderId = senderId,
+            Timestamp = DateTime.UtcNow,
+            Status = MessageStatus.Sent, // Изначально Sent
+            Attachments = new List<SigmailClient.Domain.Models.Attachment> { attachment }
+            // Text может быть null или пустым для сообщений только с вложениями
+        };
+
+        await _messageRepository.AddAsync(message);
+        await _unitOfWork.Chats.UpdateLastMessageAsync(dto.ChatId, message.Id);
+        await _unitOfWork.CommitAsync();
+
+        var messageDto = await MapMessageToDtoAsync(message);
+
+        // Уведомляем всех участников чата о новом сообщении
+        var chatMembers = await _unitOfWork.Chats.GetChatMembersAsync(dto.ChatId);
+        var memberIdsToNotify = chatMembers.Select(m => m.Id).ToList();
+
+        foreach (var memberId in memberIdsToNotify)
+        {
+            await _realTimeNotifier.NotifyMessageReceivedAsync(memberId, messageDto);
+
+            if (memberId != senderId)
+            {
+                 var senderUser = await _unitOfWork.Users.GetByIdAsync(senderId);
+                 var notificationText = $"{(senderUser?.Username ?? "Someone")} sent an attachment: {dto.FileName}";
+                 var notificationTitle = $"New attachment in {(chat?.Name ?? "chat")}";
+                
+                await _notificationService.CreateAndSendNotificationAsync(
+                    memberId,
+                    NotificationType.NewMessage, // Или можно создать NotificationType.NewAttachment
+                    notificationText,
+                    notificationTitle,
+                    message.Id,
+                    "Message" 
+                );
+            }
+        }
+        
+        // Уведомляем об обновлении чата (LastMessage)
+        var updatedChatEntity = await _unitOfWork.Chats.GetByIdAsync(dto.ChatId);
+        if (updatedChatEntity != null)
+        {
+            ChatDto chatDtoForUpdate = _mapper.Map<ChatDto>(updatedChatEntity);
+            chatDtoForUpdate.LastMessage = messageDto;
+
+            // ДОБАВИТЬ ЭТИ ЛОГИ:
+            _logger.LogInformation("PRE-NOTIFICATION LOG for Chat {ChatId}: LastMessage.Id='{LastMessageId}', HasAttachments={HasAttachments}", 
+                chatDtoForUpdate.Id, 
+                chatDtoForUpdate.LastMessage?.Id, 
+                chatDtoForUpdate.LastMessage?.Attachments?.Any());
+            if (chatDtoForUpdate.LastMessage?.Attachments != null)
+            {
+                foreach (var att in chatDtoForUpdate.LastMessage.Attachments)
+                {
+                    _logger.LogInformation("PRE-NOTIFICATION LOG Attachment for Chat {ChatId}: FileKey='{FileKey}', FileName='{FileName}'", 
+                        chatDtoForUpdate.Id, att.FileKey, att.FileName);
+                }
+            }
+            // КОНЕЦ ДОБАВЛЕННЫХ ЛОГОВ
+            
+            // Код для NotifyChatDetailsUpdatedAsync аналогичен тому, что в SendMessageAsync
+            await _realTimeNotifier.NotifyChatDetailsUpdatedAsync(memberIdsToNotify, chatDtoForUpdate);
+             _logger.LogInformation("Chat {ChatId} details update notification sent to {MemberCount} members after attachment message.", dto.ChatId, memberIdsToNotify.Count);
+        }
+
+
+        _logger.LogInformation("Message {MessageId} with attachment {FileKey} created by {SenderId} in chat {ChatId}. Notified {MemberCount} members.", 
+            message.Id, dto.FileKey, senderId, dto.ChatId, memberIdsToNotify.Count);
+            
         return messageDto;
     }
 

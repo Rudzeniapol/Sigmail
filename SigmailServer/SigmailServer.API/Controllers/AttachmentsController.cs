@@ -34,13 +34,14 @@ namespace SigmailServer.API.Controllers
             {
                 return BadRequest(new { message = "FileName and FileSize are required and FileSize must be positive."});
             }
+
             try
             {
                 var uploaderId = GetCurrentUserId();
                 var response = await _attachmentService.GetPresignedUploadUrlAsync(
                     uploaderId, 
                     dto.FileName, 
-                    dto.ContentType ?? "application/octet-stream", // ContentType обязателен или нужен хороший fallback
+                    dto.ContentType ?? "application/octet-stream",
                     dto.FileSize, 
                     dto.AttachmentType
                 );
@@ -61,7 +62,6 @@ namespace SigmailServer.API.Controllers
             }
         }
         
-        // DTO для запроса presigned URL на загрузку
         public class CreatePresignedUrlRequestDto
         {
             public string FileName { get; set; }
@@ -69,7 +69,6 @@ namespace SigmailServer.API.Controllers
             public long FileSize { get; set; }
             public SigmailClient.Domain.Enums.AttachmentType AttachmentType { get; set; }
         }
-
 
         [HttpGet("download-url/{fileKey}")]
         public async Task<IActionResult> GetPresignedDownloadUrl(string fileKey)

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Security.Claims; // Для ClaimTypes
+using System.Text.Json.Serialization; // <--- Добавляем этот using
 
 // Ваши пространства имен
 using SigmailClient.Domain.Interfaces;
@@ -70,11 +71,13 @@ if (s3Settings != null && !string.IsNullOrEmpty(s3Settings.ServiceURL)) // Пр�
 {
     var s3Config = new AmazonS3Config
     {
-        RegionEndpoint = RegionEndpoint.GetBySystemName(s3Settings.Region), // Регион все еще нужен
+        // RegionEndpoint = RegionEndpoint.GetBySystemName(s3Settings.Region), // РЕГИОН ЗАКОММЕНТИРОВАН
         ServiceURL = s3Settings.ServiceURL, // <-- Вот это для MinIO
-        ForcePathStyle = true // <-- И это часто важно для MinIO
+        ForcePathStyle = true, // <-- И это часто важно для MinIO
+        UseHttp = true // <--- ДОБАВЛЕНО: Явно указываем использовать HTTP
     };
-    builder.Services.AddSingleton<IAmazonS3>(new AmazonS3Client(s3Settings.AWSAccessKeyId, s3Settings.AWSSecretAccessKey, s3Config));
+    // Используем конструктор с BasicAWSCredentials и AmazonS3Config
+    builder.Services.AddSingleton<IAmazonS3>(new AmazonS3Client(new BasicAWSCredentials(s3Settings.AWSAccessKeyId, s3Settings.AWSSecretAccessKey), s3Config));
     builder.Services.AddSingleton(s3Settings); 
 }
 else
@@ -136,7 +139,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 // Позволяет SignalR идентифицировать пользователей по ClaimTypes.NameIdentifier (который вы установили как user.Id в JwtTokenGenerator)
 builder.Services.AddSingleton<IUserIdProvider, NameIdentifierUserIdProvider>();
 
@@ -155,7 +162,12 @@ builder.Services.AddCors(options =>
 });
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    }); // <--- Добавляем конфигурацию JSON для enum
+
 builder.Services.AddEndpointsApiExplorer(); // Для Swagger
 
 // Swagger Gen с поддержкой JWT

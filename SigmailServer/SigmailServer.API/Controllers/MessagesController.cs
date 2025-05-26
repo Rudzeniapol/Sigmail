@@ -27,6 +27,38 @@ namespace SigmailServer.API.Controllers
             throw new UnauthorizedAccessException("User identifier not found or invalid.");
         }
 
+        [HttpPost("with-attachment")]
+        public async Task<IActionResult> CreateMessageWithAttachment([FromBody] CreateMessageWithAttachmentDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var senderId = GetCurrentUserId(); 
+                var messageDto = await _messageService.CreateMessageWithAttachmentAsync(senderId, dto);
+                return CreatedAtAction(nameof(GetMessageById), new { messageId = messageDto.Id }, messageDto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (KeyNotFoundException ex) 
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating message with attachment for chat {ChatId} by user {SenderId}", dto.ChatId, GetCurrentUserId());
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] CreateMessageDto dto)
         {

@@ -59,14 +59,24 @@ public class SignalRChatHub : Hub<IChatHubClient>
         _logger.LogInformation("SignalR: Client connected. UserId: {UserId}, ConnectionId: {ConnectionId}. Total connections for user: {Count}",
             userIdString, Context.ConnectionId, connections.Count);
 
-        // Обновляем статус пользователя на "онлайн"
         try
         {
-            await _userService.UpdateOnlineStatusAsync(userId, true, Context.ConnectionId /* Можно передавать ConnectionId как DeviceToken, если нужно */);
+            // Обновляем статус пользователя на "онлайн"
+            await _userService.UpdateOnlineStatusAsync(userId, true, Context.ConnectionId);
+            // Получаем актуальные данные пользователя после обновления статуса
+            UserDto? updatedUser = await _userService.GetByIdAsync(userId);
+
+            if (updatedUser != null)
+            {
+                // Отправляем всем клиентам (или только друзьям/контактам, если есть такая логика)
+                // Используем существующий метод UserStatusChanged из IChatHubClient
+                await Clients.All.UserStatusChanged(updatedUser.Id, updatedUser.IsOnline, updatedUser.LastSeen ?? DateTime.UtcNow); 
+                _logger.LogInformation("SignalR: Sent UserStatusChanged for UserId: {UserId} (Online: true)", userIdString);
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "SignalR: Error updating user {UserId} status to online on connect.", userIdString);
+            _logger.LogError(ex, "SignalR: Error updating user {UserId} status to online and notifying clients.", userIdString);
         }
 
         await base.OnConnectedAsync();
@@ -75,6 +85,7 @@ public class SignalRChatHub : Hub<IChatHubClient>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var userIdString = Context.UserIdentifier;
+        UserDto? userToNotify = null; // Для хранения DTO пользователя, чей статус изменился
 
         if (!string.IsNullOrEmpty(userIdString) && Guid.TryParse(userIdString, out Guid userId))
         {
@@ -96,11 +107,14 @@ public class SignalRChatHub : Hub<IChatHubClient>
                     _logger.LogInformation("SignalR: User {UserId} has no more active connections. Setting status to offline.", userIdString);
                     try
                     {
+                        // Обновляем статус на "офлайн"
                         await _userService.UpdateOnlineStatusAsync(userId, false);
+                        // Получаем актуальные данные пользователя после обновления статуса
+                        userToNotify = await _userService.GetByIdAsync(userId);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "SignalR: Error updating user {UserId} status to offline on disconnect.", userIdString);
+                        _logger.LogError(ex, "SignalR: Error updating user {UserId} status to offline.", userIdString);
                     }
                 }
             }
@@ -114,6 +128,21 @@ public class SignalRChatHub : Hub<IChatHubClient>
         }
 
         await base.OnDisconnectedAsync(exception);
+
+        // Отправляем уведомление после вызова base.OnDisconnectedAsync, если статус пользователя изменился на офлайн
+        if (userToNotify != null)
+        {
+             try
+            {
+                // Используем существующий метод UserStatusChanged из IChatHubClient
+                await Clients.All.UserStatusChanged(userToNotify.Id, userToNotify.IsOnline, userToNotify.LastSeen ?? DateTime.UtcNow); 
+                _logger.LogInformation("SignalR: Sent UserStatusChanged for UserId: {UserId} (Online: false)", userIdString);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SignalR: Error notifying clients about user {UserId} status offline.", userIdString);
+            }
+        }
     }
 
     // --- Методы, вызываемые клиентом на сервере ---

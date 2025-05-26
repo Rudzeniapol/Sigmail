@@ -14,11 +14,13 @@ public class S3FileStorageRepository : IFileStorageRepository
 {
     private readonly IAmazonS3 _s3Client;
     private readonly S3StorageSettings _settings;
+    // private readonly ILogger<S3FileStorageRepository> _logger; // Если нужно логирование ошибок
 
-    public S3FileStorageRepository(IAmazonS3 s3Client, IOptions<S3StorageSettings> settings)
+    public S3FileStorageRepository(IAmazonS3 s3Client, IOptions<S3StorageSettings> settings /*, ILogger<S3FileStorageRepository> logger*/)
     {
         _s3Client = s3Client ?? throw new ArgumentNullException(nameof(s3Client));
         _settings = settings?.Value ?? throw new ArgumentNullException(nameof(settings));
+        // _logger = logger;
     }
 
     public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType, CancellationToken cancellationToken = default)
@@ -59,11 +61,27 @@ public class S3FileStorageRepository : IFileStorageRepository
         {
             BucketName = _settings.BucketName,
             Key = fileKey,
-            Expires = DateTime.UtcNow.Add(duration)
-            // HttpMethod = HttpVerb.GET // По умолчанию GET
+            Expires = DateTime.UtcNow.Add(duration),
+            Verb = HttpVerb.PUT,
         };
-        string url = _s3Client.GetPreSignedURL(request);
-        return Task.FromResult(url);
+
+        // Если PublicPresignedUrlHostPort задан, добавляем его как заголовок Host
+        // Это повлияет на то, как SDK генерирует подпись.
+        if (!string.IsNullOrEmpty(_settings.PublicPresignedUrlHostPort))
+        {
+            request.Headers["Host"] = _settings.PublicPresignedUrlHostPort;
+            Console.WriteLine($"[S3FileStorageRepository] Added 'Host' header for presigning: {_settings.PublicPresignedUrlHostPort}");
+        }
+
+        string generatedUrlBySdk = _s3Client.GetPreSignedURL(request);
+        
+        Console.WriteLine($"[S3FileStorageRepository] SDK Generated Presigned URL (with potential Host header): {generatedUrlBySdk}");
+        Console.WriteLine($"[S3FileStorageRepository] Query parameters of generated URL: {new Uri(generatedUrlBySdk).Query}");
+
+        // Важно: Логику модификации URL здесь оставляем УДАЛЕННОЙ.
+        // Клиент должен будет заменить minio:9000 на 10.0.2.2:9000 в этом URL.
+
+        return Task.FromResult(generatedUrlBySdk);
     }
 
     public async Task<Stream> DownloadFileAsync(string fileKey, CancellationToken cancellationToken = default)

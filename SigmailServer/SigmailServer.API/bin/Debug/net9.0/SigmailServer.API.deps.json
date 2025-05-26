@@ -1350,7 +1350,9 @@
         "dependencies": {
           "AWSSDK.S3": "4.0.0.7",
           "Microsoft.EntityFrameworkCore": "9.0.5",
+          "Microsoft.EntityFrameworkCore.Relational": "9.0.5",
           "MongoDB.Driver": "2.25.0",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
           "SigmailServer.Application": "1.0.0",
           "SigmailServer.Domain": "1.0.0"
         },
