@@ -202,6 +202,46 @@ namespace SigmailServer.Controllers
             }
         }
 
+        [HttpPost("{chatId}/read")]
+        public async Task<IActionResult> MarkAllMessagesAsRead(Guid chatId)
+        {
+            try
+            {
+                var currentUserId = GetCurrentUserId();
+                // Получаем все сообщения в чате
+                var chat = await _chatService.GetChatByIdAsync(chatId, currentUserId);
+                if (chat == null)
+                {
+                    return NotFound(new { message = $"Chat with ID {chatId} not found or access denied." });
+                }
+                // Получаем сервис сообщений через DI (или через UnitOfWork, если нужно)
+                var messageService = (HttpContext.RequestServices.GetService(typeof(SigmailServer.Application.Services.Interfaces.IMessageService)) as SigmailServer.Application.Services.Interfaces.IMessageService);
+                if (messageService == null)
+                {
+                    return StatusCode(500, new { message = "Message service not available." });
+                }
+                // Получаем все сообщения в чате (можно оптимизировать, если сообщений много)
+                var messages = await messageService.GetMessagesAsync(chatId, currentUserId, 1, 1000); // 1000 - лимит на одну страницу
+                foreach (var msg in messages)
+                {
+                    if (!msg.ReadBy.Contains(currentUserId))
+                    {
+                        await messageService.MarkMessageAsReadAsync(msg.Id, currentUserId, chatId);
+                    }
+                }
+                return Ok(new { message = "All messages marked as read." });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error marking messages as read in chat {ChatId} for user {UserId}", chatId, GetCurrentUserId());
+                return StatusCode(500, new { message = "An error occurred while marking messages as read." });
+            }
+        }
+
         // TODO: Добавить эндпоинты для PromoteMemberToAdmin, DemoteAdminToMember, UpdateChatAvatarAsync, DeleteChatAsync
     }
 }
