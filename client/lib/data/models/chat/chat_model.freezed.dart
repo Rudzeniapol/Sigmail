@@ -12,8 +12,7 @@ part of 'chat_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ChatModel _$ChatModelFromJson(Map<String, dynamic> json) {
   return _ChatModel.fromJson(json);
@@ -53,20 +52,19 @@ abstract class $ChatModelCopyWith<$Res> {
   factory $ChatModelCopyWith(ChatModel value, $Res Function(ChatModel) then) =
       _$ChatModelCopyWithImpl<$Res, ChatModel>;
   @useResult
-  $Res call({
-    String id,
-    String? name,
-    ChatTypeModel type,
-    String? description,
-    String? avatarUrl,
-    String creatorId,
-    DateTime createdAt,
-    DateTime? updatedAt,
-    MessageModel? lastMessage,
-    int unreadCount,
-    List<UserSimpleModel>? members,
-    int? memberCount,
-  });
+  $Res call(
+      {String id,
+      String? name,
+      ChatTypeModel type,
+      String? description,
+      String? avatarUrl,
+      String creatorId,
+      DateTime createdAt,
+      DateTime? updatedAt,
+      MessageModel? lastMessage,
+      int unreadCount,
+      List<UserSimpleModel>? members,
+      int? memberCount});
 
   $MessageModelCopyWith<$Res>? get lastMessage;
 }
@@ -99,71 +97,56 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
     Object? members = freezed,
     Object? memberCount = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id:
-                null == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
-                        as String,
-            name:
-                freezed == name
-                    ? _value.name
-                    : name // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ChatTypeModel,
-            description:
-                freezed == description
-                    ? _value.description
-                    : description // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            avatarUrl:
-                freezed == avatarUrl
-                    ? _value.avatarUrl
-                    : avatarUrl // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            creatorId:
-                null == creatorId
-                    ? _value.creatorId
-                    : creatorId // ignore: cast_nullable_to_non_nullable
-                        as String,
-            createdAt:
-                null == createdAt
-                    ? _value.createdAt
-                    : createdAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            updatedAt:
-                freezed == updatedAt
-                    ? _value.updatedAt
-                    : updatedAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime?,
-            lastMessage:
-                freezed == lastMessage
-                    ? _value.lastMessage
-                    : lastMessage // ignore: cast_nullable_to_non_nullable
-                        as MessageModel?,
-            unreadCount:
-                null == unreadCount
-                    ? _value.unreadCount
-                    : unreadCount // ignore: cast_nullable_to_non_nullable
-                        as int,
-            members:
-                freezed == members
-                    ? _value.members
-                    : members // ignore: cast_nullable_to_non_nullable
-                        as List<UserSimpleModel>?,
-            memberCount:
-                freezed == memberCount
-                    ? _value.memberCount
-                    : memberCount // ignore: cast_nullable_to_non_nullable
-                        as int?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ChatTypeModel,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      avatarUrl: freezed == avatarUrl
+          ? _value.avatarUrl
+          : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      creatorId: null == creatorId
+          ? _value.creatorId
+          : creatorId // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastMessage: freezed == lastMessage
+          ? _value.lastMessage
+          : lastMessage // ignore: cast_nullable_to_non_nullable
+              as MessageModel?,
+      unreadCount: null == unreadCount
+          ? _value.unreadCount
+          : unreadCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      members: freezed == members
+          ? _value.members
+          : members // ignore: cast_nullable_to_non_nullable
+              as List<UserSimpleModel>?,
+      memberCount: freezed == memberCount
+          ? _value.memberCount
+          : memberCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
   }
 
   /// Create a copy of ChatModel
@@ -185,25 +168,23 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
 abstract class _$$ChatModelImplCopyWith<$Res>
     implements $ChatModelCopyWith<$Res> {
   factory _$$ChatModelImplCopyWith(
-    _$ChatModelImpl value,
-    $Res Function(_$ChatModelImpl) then,
-  ) = __$$ChatModelImplCopyWithImpl<$Res>;
+          _$ChatModelImpl value, $Res Function(_$ChatModelImpl) then) =
+      __$$ChatModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String? name,
-    ChatTypeModel type,
-    String? description,
-    String? avatarUrl,
-    String creatorId,
-    DateTime createdAt,
-    DateTime? updatedAt,
-    MessageModel? lastMessage,
-    int unreadCount,
-    List<UserSimpleModel>? members,
-    int? memberCount,
-  });
+  $Res call(
+      {String id,
+      String? name,
+      ChatTypeModel type,
+      String? description,
+      String? avatarUrl,
+      String creatorId,
+      DateTime createdAt,
+      DateTime? updatedAt,
+      MessageModel? lastMessage,
+      int unreadCount,
+      List<UserSimpleModel>? members,
+      int? memberCount});
 
   @override
   $MessageModelCopyWith<$Res>? get lastMessage;
@@ -214,9 +195,8 @@ class __$$ChatModelImplCopyWithImpl<$Res>
     extends _$ChatModelCopyWithImpl<$Res, _$ChatModelImpl>
     implements _$$ChatModelImplCopyWith<$Res> {
   __$$ChatModelImplCopyWithImpl(
-    _$ChatModelImpl _value,
-    $Res Function(_$ChatModelImpl) _then,
-  ) : super(_value, _then);
+      _$ChatModelImpl _value, $Res Function(_$ChatModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ChatModel
   /// with the given fields replaced by the non-null parameter values.
@@ -236,90 +216,76 @@ class __$$ChatModelImplCopyWithImpl<$Res>
     Object? members = freezed,
     Object? memberCount = freezed,
   }) {
-    return _then(
-      _$ChatModelImpl(
-        id:
-            null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                    as String,
-        name:
-            freezed == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ChatTypeModel,
-        description:
-            freezed == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        avatarUrl:
-            freezed == avatarUrl
-                ? _value.avatarUrl
-                : avatarUrl // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        creatorId:
-            null == creatorId
-                ? _value.creatorId
-                : creatorId // ignore: cast_nullable_to_non_nullable
-                    as String,
-        createdAt:
-            null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        updatedAt:
-            freezed == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime?,
-        lastMessage:
-            freezed == lastMessage
-                ? _value.lastMessage
-                : lastMessage // ignore: cast_nullable_to_non_nullable
-                    as MessageModel?,
-        unreadCount:
-            null == unreadCount
-                ? _value.unreadCount
-                : unreadCount // ignore: cast_nullable_to_non_nullable
-                    as int,
-        members:
-            freezed == members
-                ? _value._members
-                : members // ignore: cast_nullable_to_non_nullable
-                    as List<UserSimpleModel>?,
-        memberCount:
-            freezed == memberCount
-                ? _value.memberCount
-                : memberCount // ignore: cast_nullable_to_non_nullable
-                    as int?,
-      ),
-    );
+    return _then(_$ChatModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ChatTypeModel,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      avatarUrl: freezed == avatarUrl
+          ? _value.avatarUrl
+          : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      creatorId: null == creatorId
+          ? _value.creatorId
+          : creatorId // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastMessage: freezed == lastMessage
+          ? _value.lastMessage
+          : lastMessage // ignore: cast_nullable_to_non_nullable
+              as MessageModel?,
+      unreadCount: null == unreadCount
+          ? _value.unreadCount
+          : unreadCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      members: freezed == members
+          ? _value._members
+          : members // ignore: cast_nullable_to_non_nullable
+              as List<UserSimpleModel>?,
+      memberCount: freezed == memberCount
+          ? _value.memberCount
+          : memberCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ChatModelImpl implements _ChatModel {
-  const _$ChatModelImpl({
-    required this.id,
-    this.name,
-    required this.type,
-    this.description,
-    this.avatarUrl,
-    required this.creatorId,
-    required this.createdAt,
-    this.updatedAt,
-    this.lastMessage,
-    this.unreadCount = 0,
-    final List<UserSimpleModel>? members,
-    this.memberCount,
-  }) : _members = members;
+  const _$ChatModelImpl(
+      {required this.id,
+      this.name,
+      required this.type,
+      this.description,
+      this.avatarUrl,
+      required this.creatorId,
+      required this.createdAt,
+      this.updatedAt,
+      this.lastMessage,
+      this.unreadCount = 0,
+      final List<UserSimpleModel>? members,
+      this.memberCount})
+      : _members = members;
 
   factory _$ChatModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatModelImplFromJson(json);
@@ -328,7 +294,7 @@ class _$ChatModelImpl implements _ChatModel {
   final String id;
   @override
   final String? name;
-  // Для групповых чатов и каналов
+// Для групповых чатов и каналов
   @override
   final ChatTypeModel type;
   @override
@@ -337,14 +303,14 @@ class _$ChatModelImpl implements _ChatModel {
   final String? avatarUrl;
   @override
   final String creatorId;
-  // Или UserSimpleModel creator, если API возвращает объект
+// Или UserSimpleModel creator, если API возвращает объект
   @override
   final DateTime createdAt;
   @override
   final DateTime? updatedAt;
   @override
   final MessageModel? lastMessage;
-  // Последнее сообщение в чате
+// Последнее сообщение в чате
   @override
   @JsonKey()
   final int unreadCount;
@@ -358,7 +324,7 @@ class _$ChatModelImpl implements _ChatModel {
     return EqualUnmodifiableListView(value);
   }
 
-  // Добавляем список участников
+// Добавляем список участников
   @override
   final int? memberCount;
 
@@ -397,20 +363,19 @@ class _$ChatModelImpl implements _ChatModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    name,
-    type,
-    description,
-    avatarUrl,
-    creatorId,
-    createdAt,
-    updatedAt,
-    lastMessage,
-    unreadCount,
-    const DeepCollectionEquality().hash(_members),
-    memberCount,
-  );
+      runtimeType,
+      id,
+      name,
+      type,
+      description,
+      avatarUrl,
+      creatorId,
+      createdAt,
+      updatedAt,
+      lastMessage,
+      unreadCount,
+      const DeepCollectionEquality().hash(_members),
+      memberCount);
 
   /// Create a copy of ChatModel
   /// with the given fields replaced by the non-null parameter values.
@@ -422,25 +387,26 @@ class _$ChatModelImpl implements _ChatModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatModelImplToJson(this);
+    return _$$ChatModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ChatModel implements ChatModel {
-  const factory _ChatModel({
-    required final String id,
-    final String? name,
-    required final ChatTypeModel type,
-    final String? description,
-    final String? avatarUrl,
-    required final String creatorId,
-    required final DateTime createdAt,
-    final DateTime? updatedAt,
-    final MessageModel? lastMessage,
-    final int unreadCount,
-    final List<UserSimpleModel>? members,
-    final int? memberCount,
-  }) = _$ChatModelImpl;
+  const factory _ChatModel(
+      {required final String id,
+      final String? name,
+      required final ChatTypeModel type,
+      final String? description,
+      final String? avatarUrl,
+      required final String creatorId,
+      required final DateTime createdAt,
+      final DateTime? updatedAt,
+      final MessageModel? lastMessage,
+      final int unreadCount,
+      final List<UserSimpleModel>? members,
+      final int? memberCount}) = _$ChatModelImpl;
 
   factory _ChatModel.fromJson(Map<String, dynamic> json) =
       _$ChatModelImpl.fromJson;
@@ -456,7 +422,8 @@ abstract class _ChatModel implements ChatModel {
   @override
   String? get avatarUrl;
   @override
-  String get creatorId; // Или UserSimpleModel creator, если API возвращает объект
+  String
+      get creatorId; // Или UserSimpleModel creator, если API возвращает объект
   @override
   DateTime get createdAt;
   @override

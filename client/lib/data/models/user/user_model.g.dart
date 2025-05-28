@@ -14,10 +14,9 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
       profileImageUrl: json['profileImageUrl'] as String?,
       bio: json['bio'] as String?,
       isOnline: json['isOnline'] as bool,
-      lastSeen:
-          json['lastSeen'] == null
-              ? null
-              : DateTime.parse(json['lastSeen'] as String),
+      lastSeen: json['lastSeen'] == null
+          ? null
+          : DateTime.parse(json['lastSeen'] as String),
     );
 
 Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>

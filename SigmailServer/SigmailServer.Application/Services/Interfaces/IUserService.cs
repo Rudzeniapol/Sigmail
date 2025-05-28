@@ -1,4 +1,5 @@
 ﻿using SigmailServer.Application.DTOs;
+using SigmailServer.Domain.Models;
 
 namespace SigmailServer.Application.Services.Interfaces;
 
@@ -13,4 +14,9 @@ public interface IUserService {
     Task UpdateUserProfileAsync(Guid userId, UpdateUserProfileDto dto); // Новый
     // Task UpdateUserAvatarAsync(Guid userId, Stream avatarStream, string contentType); // Новый (работа с файлом)
     Task UpdateUserAvatarAsync(Guid userId, string avatarFileKey);
+    Task ChangePasswordAsync(Guid userId, string oldPassword, string newPassword);
+    Task<IEnumerable<UserSimpleDto>> SearchUsersAsync(string searchTerm, int limit = 20); // Новый метод для поиска
+
+    // Метод для маппинга пользователя в UserSimpleDto с генерацией URL аватара
+    Task<UserSimpleDto?> MapUserToSimpleDtoWithAvatarUrlAsync(User user);
 }

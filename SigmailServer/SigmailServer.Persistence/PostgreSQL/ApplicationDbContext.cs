@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SigmailClient.Domain.Models;
-using SigmailClient.Domain.Enums;
+using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Persistence.PostgreSQL;
+namespace SigmailServer.Persistence.PostgreSQL;
 
  // Убедитесь, что этот using есть, если ChatMemberRole и другие enum в этом namespace
 
@@ -23,7 +22,7 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Ignore<Attachment>();
-        modelBuilder.Ignore<MessageReactionEntry>();
+        modelBuilder.Ignore<Reaction>();
         
         // Конфигурация User
         modelBuilder.Entity<User>(entity =>

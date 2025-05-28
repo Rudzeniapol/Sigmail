@@ -43,10 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
-            // Перенаправляем на главный экран или экран чатов
-            // context.go(AppRouter.homeRoute); // Старый вариант
-            // GoRouter.of(context).go(AppRouter.homeRoute); // Тоже неверно, если homeRoute - строка
-            GoRouter.of(context).go(AppRoutes.home);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Вход выполнен успешно!')),
+            );
+            GoRouter.of(context).go(AppRoutes.chats);
           } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Login Failed: ${state.message}')),

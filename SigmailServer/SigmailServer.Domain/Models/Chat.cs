@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SigmailClient.Domain.Enums;
+using SigmailServer.Domain.Enums;
 
-namespace SigmailClient.Domain.Models;
+namespace SigmailServer.Domain.Models;
 
 public class Chat
 {
@@ -21,7 +21,7 @@ public class Chat
 
     [ForeignKey("Creator")]
     public Guid CreatorId { get; set; }
-    public virtual User Creator { get; set; } // Помечено virtual для lazy loading в EF Core
+    public User Creator { get; set; } = null!; // EF Core свяжет это навигационное свойство
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; // Полезно для отслеживания изменений

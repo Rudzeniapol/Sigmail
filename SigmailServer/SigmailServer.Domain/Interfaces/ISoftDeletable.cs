@@ -1,4 +1,4 @@
-﻿namespace SigmailClient.Domain.Interfaces;
+﻿namespace SigmailServer.Domain.Interfaces;
 
 public interface ISoftDeletable {
     bool IsDeleted { get; }

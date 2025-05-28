@@ -12,8 +12,7 @@ part of 'auth_result_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 AuthResultModel _$AuthResultModelFromJson(Map<String, dynamic> json) {
   return _AuthResultModel.fromJson(json);
@@ -39,16 +38,14 @@ mixin _$AuthResultModel {
 /// @nodoc
 abstract class $AuthResultModelCopyWith<$Res> {
   factory $AuthResultModelCopyWith(
-    AuthResultModel value,
-    $Res Function(AuthResultModel) then,
-  ) = _$AuthResultModelCopyWithImpl<$Res, AuthResultModel>;
+          AuthResultModel value, $Res Function(AuthResultModel) then) =
+      _$AuthResultModelCopyWithImpl<$Res, AuthResultModel>;
   @useResult
-  $Res call({
-    UserModel user,
-    String accessToken,
-    DateTime accessTokenExpiration,
-    String refreshToken,
-  });
+  $Res call(
+      {UserModel user,
+      String accessToken,
+      DateTime accessTokenExpiration,
+      String refreshToken});
 
   $UserModelCopyWith<$Res> get user;
 }
@@ -73,31 +70,24 @@ class _$AuthResultModelCopyWithImpl<$Res, $Val extends AuthResultModel>
     Object? accessTokenExpiration = null,
     Object? refreshToken = null,
   }) {
-    return _then(
-      _value.copyWith(
-            user:
-                null == user
-                    ? _value.user
-                    : user // ignore: cast_nullable_to_non_nullable
-                        as UserModel,
-            accessToken:
-                null == accessToken
-                    ? _value.accessToken
-                    : accessToken // ignore: cast_nullable_to_non_nullable
-                        as String,
-            accessTokenExpiration:
-                null == accessTokenExpiration
-                    ? _value.accessTokenExpiration
-                    : accessTokenExpiration // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            refreshToken:
-                null == refreshToken
-                    ? _value.refreshToken
-                    : refreshToken // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel,
+      accessToken: null == accessToken
+          ? _value.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
+              as String,
+      accessTokenExpiration: null == accessTokenExpiration
+          ? _value.accessTokenExpiration
+          : accessTokenExpiration // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      refreshToken: null == refreshToken
+          ? _value.refreshToken
+          : refreshToken // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 
   /// Create a copy of AuthResultModel
@@ -114,18 +104,16 @@ class _$AuthResultModelCopyWithImpl<$Res, $Val extends AuthResultModel>
 /// @nodoc
 abstract class _$$AuthResultModelImplCopyWith<$Res>
     implements $AuthResultModelCopyWith<$Res> {
-  factory _$$AuthResultModelImplCopyWith(
-    _$AuthResultModelImpl value,
-    $Res Function(_$AuthResultModelImpl) then,
-  ) = __$$AuthResultModelImplCopyWithImpl<$Res>;
+  factory _$$AuthResultModelImplCopyWith(_$AuthResultModelImpl value,
+          $Res Function(_$AuthResultModelImpl) then) =
+      __$$AuthResultModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    UserModel user,
-    String accessToken,
-    DateTime accessTokenExpiration,
-    String refreshToken,
-  });
+  $Res call(
+      {UserModel user,
+      String accessToken,
+      DateTime accessTokenExpiration,
+      String refreshToken});
 
   @override
   $UserModelCopyWith<$Res> get user;
@@ -136,9 +124,8 @@ class __$$AuthResultModelImplCopyWithImpl<$Res>
     extends _$AuthResultModelCopyWithImpl<$Res, _$AuthResultModelImpl>
     implements _$$AuthResultModelImplCopyWith<$Res> {
   __$$AuthResultModelImplCopyWithImpl(
-    _$AuthResultModelImpl _value,
-    $Res Function(_$AuthResultModelImpl) _then,
-  ) : super(_value, _then);
+      _$AuthResultModelImpl _value, $Res Function(_$AuthResultModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AuthResultModel
   /// with the given fields replaced by the non-null parameter values.
@@ -150,42 +137,35 @@ class __$$AuthResultModelImplCopyWithImpl<$Res>
     Object? accessTokenExpiration = null,
     Object? refreshToken = null,
   }) {
-    return _then(
-      _$AuthResultModelImpl(
-        user:
-            null == user
-                ? _value.user
-                : user // ignore: cast_nullable_to_non_nullable
-                    as UserModel,
-        accessToken:
-            null == accessToken
-                ? _value.accessToken
-                : accessToken // ignore: cast_nullable_to_non_nullable
-                    as String,
-        accessTokenExpiration:
-            null == accessTokenExpiration
-                ? _value.accessTokenExpiration
-                : accessTokenExpiration // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        refreshToken:
-            null == refreshToken
-                ? _value.refreshToken
-                : refreshToken // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
+    return _then(_$AuthResultModelImpl(
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel,
+      accessToken: null == accessToken
+          ? _value.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
+              as String,
+      accessTokenExpiration: null == accessTokenExpiration
+          ? _value.accessTokenExpiration
+          : accessTokenExpiration // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      refreshToken: null == refreshToken
+          ? _value.refreshToken
+          : refreshToken // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AuthResultModelImpl implements _AuthResultModel {
-  const _$AuthResultModelImpl({
-    required this.user,
-    required this.accessToken,
-    required this.accessTokenExpiration,
-    required this.refreshToken,
-  });
+  const _$AuthResultModelImpl(
+      {required this.user,
+      required this.accessToken,
+      required this.accessTokenExpiration,
+      required this.refreshToken});
 
   factory _$AuthResultModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AuthResultModelImplFromJson(json);
@@ -221,12 +201,7 @@ class _$AuthResultModelImpl implements _AuthResultModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    user,
-    accessToken,
-    accessTokenExpiration,
-    refreshToken,
-  );
+      runtimeType, user, accessToken, accessTokenExpiration, refreshToken);
 
   /// Create a copy of AuthResultModel
   /// with the given fields replaced by the non-null parameter values.
@@ -235,23 +210,22 @@ class _$AuthResultModelImpl implements _AuthResultModel {
   @pragma('vm:prefer-inline')
   _$$AuthResultModelImplCopyWith<_$AuthResultModelImpl> get copyWith =>
       __$$AuthResultModelImplCopyWithImpl<_$AuthResultModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AuthResultModelImplToJson(this);
+    return _$$AuthResultModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _AuthResultModel implements AuthResultModel {
-  const factory _AuthResultModel({
-    required final UserModel user,
-    required final String accessToken,
-    required final DateTime accessTokenExpiration,
-    required final String refreshToken,
-  }) = _$AuthResultModelImpl;
+  const factory _AuthResultModel(
+      {required final UserModel user,
+      required final String accessToken,
+      required final DateTime accessTokenExpiration,
+      required final String refreshToken}) = _$AuthResultModelImpl;
 
   factory _AuthResultModel.fromJson(Map<String, dynamic> json) =
       _$AuthResultModelImpl.fromJson;

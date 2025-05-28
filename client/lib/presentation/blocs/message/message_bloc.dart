@@ -3,9 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sigmail_client/core/use_case.dart';
 import 'package:sigmail_client/data/models/message/create_message_model.dart';
 import 'package:sigmail_client/data/models/message/message_model.dart';
+import 'package:sigmail_client/data/models/reaction/reaction_model.dart';
 import 'package:sigmail_client/domain/use_cases/chat/get_chat_messages_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/observe_messages_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/send_message_use_case.dart';
+import 'package:sigmail_client/domain/use_cases/message/add_reaction_use_case.dart';
+import 'package:sigmail_client/domain/use_cases/message/remove_reaction_use_case.dart';
+import 'package:sigmail_client/domain/use_cases/chat/mark_messages_as_read_use_case.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:mime/mime.dart';
 import 'package:sigmail_client/domain/enums/attachment_type.dart';
@@ -17,6 +21,7 @@ import 'package:sigmail_client/domain/use_cases/attachment/send_message_with_att
 import 'package:sigmail_client/presentation/blocs/message/message_event.dart';
 import 'package:sigmail_client/presentation/blocs/message/message_state.dart';
 import 'package:flutter/foundation.dart'; // Для kDebugMode и print
+import 'package:sigmail_client/domain/repositories/chat_repository.dart';
 
 const int _defaultPageSize = 20; // Количество сообщений на страницу
 
@@ -27,7 +32,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final GetPresignedUploadUrlUseCase _getPresignedUploadUrlUseCase;
   final UploadFileToS3UseCase _uploadFileToS3UseCase;
   final SendMessageWithAttachmentUseCase _sendMessageWithAttachmentUseCase;
+  final AddReactionUseCase _addReactionUseCase;
+  final RemoveReactionUseCase _removeReactionUseCase;
+  final MarkMessagesAsReadUseCase _markMessagesAsReadUseCase;
+  final ChatRepository _chatRepository;
   StreamSubscription? _messageSubscription;
+  StreamSubscription? _reactionUpdateSubscription;
   final String _chatId;
 
   MessageBloc({
@@ -38,6 +48,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     required GetPresignedUploadUrlUseCase getPresignedUploadUrlUseCase,
     required UploadFileToS3UseCase uploadFileToS3UseCase,
     required SendMessageWithAttachmentUseCase sendMessageWithAttachmentUseCase,
+    required AddReactionUseCase addReactionUseCase,
+    required RemoveReactionUseCase removeReactionUseCase,
+    required MarkMessagesAsReadUseCase markMessagesAsReadUseCase,
+    required ChatRepository chatRepository,
   })  : _chatId = chatId,
         _getChatMessagesUseCase = getChatMessagesUseCase,
         _sendMessageUseCase = sendMessageUseCase,
@@ -45,6 +59,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         _getPresignedUploadUrlUseCase = getPresignedUploadUrlUseCase,
         _uploadFileToS3UseCase = uploadFileToS3UseCase,
         _sendMessageWithAttachmentUseCase = sendMessageWithAttachmentUseCase,
+        _addReactionUseCase = addReactionUseCase,
+        _removeReactionUseCase = removeReactionUseCase,
+        _markMessagesAsReadUseCase = markMessagesAsReadUseCase,
+        _chatRepository = chatRepository,
         super(MessageInitial()) {
     if (kDebugMode) {
       print('[MessageBloc] Initializing for chat ID: $_chatId');
@@ -53,9 +71,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<InternalMessageReceived>(_onInternalMessageReceived);
     on<SendNewMessage>(_onSendNewMessage);
     on<SendAttachmentEvent>(_onSendAttachment);
+    on<AddReactionRequested>(_onAddReactionRequested);
+    on<RemoveReactionRequested>(_onRemoveReactionRequested);
+    on<InternalReactionsUpdated>(_onInternalReactionsUpdated);
 
     // Начинаем слушать новые сообщения сразу при создании блока
     _subscribeToMessages();
+    _subscribeToReactionUpdates();
   }
 
   void _subscribeToMessages() {
@@ -75,6 +97,29 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         print('[MessageBloc] Error observing messages: $error');
       }
       // addError(error); // Это может быть полезно для отладки, но не генерирует состояние Error
+    });
+  }
+
+  void _subscribeToReactionUpdates() {
+    if (kDebugMode) {
+      print('[MessageBloc] Subscribing to reaction updates for chat ID: $_chatId');
+    }
+    _reactionUpdateSubscription?.cancel();
+    _reactionUpdateSubscription = _chatRepository
+        .observeMessageReactionsUpdate(_chatId)
+        .listen((reactionUpdateMap) {
+      // reactionUpdateMap это Map<String, List<ReactionModel>>
+      // Ключ - messageId, значение - список реакций
+      reactionUpdateMap.forEach((messageId, reactions) {
+        if (kDebugMode) {
+          print('[MessageBloc] Received reaction update via stream for message $messageId. Reactions count: ${reactions.length}');
+        }
+        add(InternalReactionsUpdated(messageId: messageId, reactions: reactions));
+      });
+    }, onError: (error) {
+      if (kDebugMode) {
+        print('[MessageBloc] Error observing reaction updates: $error');
+      }
     });
   }
 
@@ -107,6 +152,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         },
         (newMessages) {
           if (kDebugMode) print('[MessageBloc] Loaded ${newMessages.length} messages from API.');
+          
+          // Если это первая страница и сообщения загружены, помечаем их как прочитанные
+          if (event.pageNumber == 1 && newMessages.isNotEmpty) {
+            // Вызываем use case, не дожидаясь результата, чтобы не блокировать UI
+            _markMessagesAsReadUseCase.call(MarkMessagesAsReadParams(_chatId)).then((result) {
+              result.fold(
+                (failure) => print('[MessageBloc] Failed to mark messages as read: ${failure.message}'),
+                (_) => print('[MessageBloc] Messages marked as read successfully for chat $_chatId')
+              );
+            });
+          }
+
           if (currentState is MessageLoaded && event.pageNumber > 1) {
             emit(newMessages.isEmpty
                 ? currentState.copyWith(hasReachedMax: true)
@@ -291,12 +348,105 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     }
   }
 
+  Future<void> _onAddReactionRequested(
+      AddReactionRequested event, Emitter<MessageState> emit) async {
+    if (kDebugMode) {
+      print('[MessageBloc] Event: AddReactionRequested for message ${event.messageId}, emoji: ${event.emoji}');
+    }
+    final result = await _addReactionUseCase.call(
+      AddReactionParams(messageId: event.messageId, emoji: event.emoji),
+    );
+
+    result.fold(
+      (failure) {
+        // Можно показать ошибку пользователю через отдельное состояние или snackbar
+        if (kDebugMode) print('[MessageBloc] Failed to add reaction: ${failure.message}');
+        // Не меняем основное состояние сообщений, т.к. операция не удалась
+      },
+      (updatedReactions) {
+        if (kDebugMode) print('[MessageBloc] Reaction added successfully via API. Reactions: $updatedReactions');
+        // Обновляем состояние сообщения локально, чтобы UI сразу отразил изменение.
+        // SignalR также пришлет обновление, но это для немедленной реакции UI.
+        if (state is MessageLoaded) {
+          final currentState = state as MessageLoaded;
+          final messageIndex = currentState.messages.indexWhere((m) => m.id == event.messageId);
+          if (messageIndex != -1) {
+            final updatedMessages = List<MessageModel>.from(currentState.messages);
+            final oldMessage = updatedMessages[messageIndex];
+            updatedMessages[messageIndex] = oldMessage.copyWith(reactions: updatedReactions);
+            emit(MessageLoaded(updatedMessages, hasReachedMax: currentState.hasReachedMax));
+             if (kDebugMode) print('[MessageBloc] State: MessageLoaded (after add reaction), total: ${updatedMessages.length}');
+          }
+        }
+      },
+    );
+  }
+
+  Future<void> _onRemoveReactionRequested(
+      RemoveReactionRequested event, Emitter<MessageState> emit) async {
+    if (kDebugMode) {
+      print('[MessageBloc] Event: RemoveReactionRequested for message ${event.messageId}, emoji: ${event.emoji}');
+    }
+    final result = await _removeReactionUseCase.call(
+      RemoveReactionParams(messageId: event.messageId, emoji: event.emoji),
+    );
+
+    result.fold(
+      (failure) {
+        if (kDebugMode) print('[MessageBloc] Failed to remove reaction: ${failure.message}');
+      },
+      (updatedReactions) {
+        if (kDebugMode) print('[MessageBloc] Reaction removed successfully via API. Reactions: $updatedReactions');
+        if (state is MessageLoaded) {
+          final currentState = state as MessageLoaded;
+          final messageIndex = currentState.messages.indexWhere((m) => m.id == event.messageId);
+          if (messageIndex != -1) {
+            final updatedMessages = List<MessageModel>.from(currentState.messages);
+            final oldMessage = updatedMessages[messageIndex];
+            updatedMessages[messageIndex] = oldMessage.copyWith(reactions: updatedReactions);
+            emit(MessageLoaded(updatedMessages, hasReachedMax: currentState.hasReachedMax));
+            if (kDebugMode) print('[MessageBloc] State: MessageLoaded (after remove reaction), total: ${updatedMessages.length}');
+          }
+        }
+      },
+    );
+  }
+
+  void _onInternalReactionsUpdated(
+    InternalReactionsUpdated event, Emitter<MessageState> emit) {
+    if (kDebugMode) {
+      print('[MessageBloc] Event: InternalReactionsUpdated for message ${event.messageId}, reactions: ${event.reactions.length}');
+    }
+    if (state is MessageLoaded) {
+      final currentState = state as MessageLoaded;
+      final messageIndex = currentState.messages.indexWhere((m) => m.id == event.messageId);
+      if (messageIndex != -1) {
+        final updatedMessages = List<MessageModel>.from(currentState.messages);
+        final oldMessage = updatedMessages[messageIndex];
+        // Применяем реакции, пришедшие от SignalR
+        updatedMessages[messageIndex] = oldMessage.copyWith(reactions: event.reactions);
+        emit(MessageLoaded(updatedMessages, hasReachedMax: currentState.hasReachedMax));
+        if (kDebugMode) print('[MessageBloc] State: MessageLoaded (after internal reactions update), total: ${updatedMessages.length}');
+      } else {
+         if (kDebugMode) print('[MessageBloc] Message ${event.messageId} not found in current state for reaction update.');
+      }
+    }
+  }
+
   @override
   Future<void> close() {
     if (kDebugMode) {
-        print('[MessageBloc] Closing bloc for chat ID: $_chatId');
+      print('[MessageBloc] Closing for chat ID: $_chatId');
     }
     _messageSubscription?.cancel();
+    _reactionUpdateSubscription?.cancel();
+    // Добавляем вызов для закрытия соединения SignalR для этого чата
+    // Важно: это должен быть неблокирующий вызов или обработанный с осторожностью,
+    // чтобы не замедлить процесс закрытия блока.
+    // _chatRepository.disconnectRealtimeForChat(_chatId) возвращает Future,
+    // но здесь мы его не ждем (fire-and-forget), чтобы не блокировать super.close().
+    // Это обычно безопасно для операций по очистке.
+    _chatRepository.disconnectRealtimeForChat(_chatId);
     return super.close();
   }
 } 

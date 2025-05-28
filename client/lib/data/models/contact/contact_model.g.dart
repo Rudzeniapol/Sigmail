@@ -11,14 +11,12 @@ _$ContactModelImpl _$$ContactModelImplFromJson(Map<String, dynamic> json) =>
       contactEntryId: json['contactEntryId'] as String,
       user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
       status: $enumDecode(_$ContactStatusModelEnumMap, json['status']),
-      requestedAt:
-          json['requestedAt'] == null
-              ? null
-              : DateTime.parse(json['requestedAt'] as String),
-      respondedAt:
-          json['respondedAt'] == null
-              ? null
-              : DateTime.parse(json['respondedAt'] as String),
+      requestedAt: json['requestedAt'] == null
+          ? null
+          : DateTime.parse(json['requestedAt'] as String),
+      respondedAt: json['respondedAt'] == null
+          ? null
+          : DateTime.parse(json['respondedAt'] as String),
     );
 
 Map<String, dynamic> _$$ContactModelImplToJson(_$ContactModelImpl instance) =>

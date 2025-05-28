@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SigmailServer.Application.Services.Interfaces;
-using System.Security.Claims;
 
-namespace SigmailServer.API.Controllers
+namespace SigmailServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

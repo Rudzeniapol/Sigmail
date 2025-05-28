@@ -7,9 +7,13 @@ part of 'refresh_token_request_model.dart';
 // **************************************************************************
 
 _$RefreshTokenRequestModelImpl _$$RefreshTokenRequestModelImplFromJson(
-  Map<String, dynamic> json,
-) => _$RefreshTokenRequestModelImpl(refreshToken: json['token'] as String);
+        Map<String, dynamic> json) =>
+    _$RefreshTokenRequestModelImpl(
+      refreshToken: json['token'] as String,
+    );
 
 Map<String, dynamic> _$$RefreshTokenRequestModelImplToJson(
-  _$RefreshTokenRequestModelImpl instance,
-) => <String, dynamic>{'token': instance.refreshToken};
+        _$RefreshTokenRequestModelImpl instance) =>
+    <String, dynamic>{
+      'token': instance.refreshToken,
+    };

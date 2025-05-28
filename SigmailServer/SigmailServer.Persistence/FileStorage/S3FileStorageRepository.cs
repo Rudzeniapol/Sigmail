@@ -2,13 +2,9 @@
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Microsoft.Extensions.Options;
-using SigmailClient.Domain.Interfaces;
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+using SigmailServer.Domain.Interfaces;
 
-namespace SigmailClient.Persistence.FileStorage;
+namespace SigmailServer.Persistence.FileStorage;
 
 public class S3FileStorageRepository : IFileStorageRepository
 {

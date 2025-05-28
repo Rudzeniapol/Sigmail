@@ -12,12 +12,10 @@ part of 'presigned_url_request_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 PresignedUrlRequestModel _$PresignedUrlRequestModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _PresignedUrlRequestModel.fromJson(json);
 }
 
@@ -41,24 +39,20 @@ mixin _$PresignedUrlRequestModel {
 
 /// @nodoc
 abstract class $PresignedUrlRequestModelCopyWith<$Res> {
-  factory $PresignedUrlRequestModelCopyWith(
-    PresignedUrlRequestModel value,
-    $Res Function(PresignedUrlRequestModel) then,
-  ) = _$PresignedUrlRequestModelCopyWithImpl<$Res, PresignedUrlRequestModel>;
+  factory $PresignedUrlRequestModelCopyWith(PresignedUrlRequestModel value,
+          $Res Function(PresignedUrlRequestModel) then) =
+      _$PresignedUrlRequestModelCopyWithImpl<$Res, PresignedUrlRequestModel>;
   @useResult
-  $Res call({
-    String fileName,
-    int fileSize,
-    String? contentType,
-    AttachmentType attachmentType,
-  });
+  $Res call(
+      {String fileName,
+      int fileSize,
+      String? contentType,
+      AttachmentType attachmentType});
 }
 
 /// @nodoc
-class _$PresignedUrlRequestModelCopyWithImpl<
-  $Res,
-  $Val extends PresignedUrlRequestModel
->
+class _$PresignedUrlRequestModelCopyWithImpl<$Res,
+        $Val extends PresignedUrlRequestModel>
     implements $PresignedUrlRequestModelCopyWith<$Res> {
   _$PresignedUrlRequestModelCopyWithImpl(this._value, this._then);
 
@@ -77,31 +71,24 @@ class _$PresignedUrlRequestModelCopyWithImpl<
     Object? contentType = freezed,
     Object? attachmentType = null,
   }) {
-    return _then(
-      _value.copyWith(
-            fileName:
-                null == fileName
-                    ? _value.fileName
-                    : fileName // ignore: cast_nullable_to_non_nullable
-                        as String,
-            fileSize:
-                null == fileSize
-                    ? _value.fileSize
-                    : fileSize // ignore: cast_nullable_to_non_nullable
-                        as int,
-            contentType:
-                freezed == contentType
-                    ? _value.contentType
-                    : contentType // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            attachmentType:
-                null == attachmentType
-                    ? _value.attachmentType
-                    : attachmentType // ignore: cast_nullable_to_non_nullable
-                        as AttachmentType,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileSize: null == fileSize
+          ? _value.fileSize
+          : fileSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      contentType: freezed == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      attachmentType: null == attachmentType
+          ? _value.attachmentType
+          : attachmentType // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+    ) as $Val);
   }
 }
 
@@ -109,31 +96,27 @@ class _$PresignedUrlRequestModelCopyWithImpl<
 abstract class _$$PresignedUrlRequestModelImplCopyWith<$Res>
     implements $PresignedUrlRequestModelCopyWith<$Res> {
   factory _$$PresignedUrlRequestModelImplCopyWith(
-    _$PresignedUrlRequestModelImpl value,
-    $Res Function(_$PresignedUrlRequestModelImpl) then,
-  ) = __$$PresignedUrlRequestModelImplCopyWithImpl<$Res>;
+          _$PresignedUrlRequestModelImpl value,
+          $Res Function(_$PresignedUrlRequestModelImpl) then) =
+      __$$PresignedUrlRequestModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String fileName,
-    int fileSize,
-    String? contentType,
-    AttachmentType attachmentType,
-  });
+  $Res call(
+      {String fileName,
+      int fileSize,
+      String? contentType,
+      AttachmentType attachmentType});
 }
 
 /// @nodoc
 class __$$PresignedUrlRequestModelImplCopyWithImpl<$Res>
-    extends
-        _$PresignedUrlRequestModelCopyWithImpl<
-          $Res,
-          _$PresignedUrlRequestModelImpl
-        >
+    extends _$PresignedUrlRequestModelCopyWithImpl<$Res,
+        _$PresignedUrlRequestModelImpl>
     implements _$$PresignedUrlRequestModelImplCopyWith<$Res> {
   __$$PresignedUrlRequestModelImplCopyWithImpl(
-    _$PresignedUrlRequestModelImpl _value,
-    $Res Function(_$PresignedUrlRequestModelImpl) _then,
-  ) : super(_value, _then);
+      _$PresignedUrlRequestModelImpl _value,
+      $Res Function(_$PresignedUrlRequestModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of PresignedUrlRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -145,30 +128,24 @@ class __$$PresignedUrlRequestModelImplCopyWithImpl<$Res>
     Object? contentType = freezed,
     Object? attachmentType = null,
   }) {
-    return _then(
-      _$PresignedUrlRequestModelImpl(
-        fileName:
-            null == fileName
-                ? _value.fileName
-                : fileName // ignore: cast_nullable_to_non_nullable
-                    as String,
-        fileSize:
-            null == fileSize
-                ? _value.fileSize
-                : fileSize // ignore: cast_nullable_to_non_nullable
-                    as int,
-        contentType:
-            freezed == contentType
-                ? _value.contentType
-                : contentType // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        attachmentType:
-            null == attachmentType
-                ? _value.attachmentType
-                : attachmentType // ignore: cast_nullable_to_non_nullable
-                    as AttachmentType,
-      ),
-    );
+    return _then(_$PresignedUrlRequestModelImpl(
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileSize: null == fileSize
+          ? _value.fileSize
+          : fileSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      contentType: freezed == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      attachmentType: null == attachmentType
+          ? _value.attachmentType
+          : attachmentType // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+    ));
   }
 }
 
@@ -176,12 +153,11 @@ class __$$PresignedUrlRequestModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(explicitToJson: true)
 class _$PresignedUrlRequestModelImpl implements _PresignedUrlRequestModel {
-  const _$PresignedUrlRequestModelImpl({
-    required this.fileName,
-    required this.fileSize,
-    this.contentType,
-    required this.attachmentType,
-  });
+  const _$PresignedUrlRequestModelImpl(
+      {required this.fileName,
+      required this.fileSize,
+      this.contentType,
+      required this.attachmentType});
 
   factory _$PresignedUrlRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$PresignedUrlRequestModelImplFromJson(json);
@@ -190,7 +166,7 @@ class _$PresignedUrlRequestModelImpl implements _PresignedUrlRequestModel {
   final String fileName;
   @override
   final int fileSize;
-  // long на сервере, int в Dart
+// long на сервере, int в Dart
   @override
   final String? contentType;
   @override
@@ -227,23 +203,24 @@ class _$PresignedUrlRequestModelImpl implements _PresignedUrlRequestModel {
   @override
   @pragma('vm:prefer-inline')
   _$$PresignedUrlRequestModelImplCopyWith<_$PresignedUrlRequestModelImpl>
-  get copyWith => __$$PresignedUrlRequestModelImplCopyWithImpl<
-    _$PresignedUrlRequestModelImpl
-  >(this, _$identity);
+      get copyWith => __$$PresignedUrlRequestModelImplCopyWithImpl<
+          _$PresignedUrlRequestModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PresignedUrlRequestModelImplToJson(this);
+    return _$$PresignedUrlRequestModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _PresignedUrlRequestModel implements PresignedUrlRequestModel {
-  const factory _PresignedUrlRequestModel({
-    required final String fileName,
-    required final int fileSize,
-    final String? contentType,
-    required final AttachmentType attachmentType,
-  }) = _$PresignedUrlRequestModelImpl;
+  const factory _PresignedUrlRequestModel(
+          {required final String fileName,
+          required final int fileSize,
+          final String? contentType,
+          required final AttachmentType attachmentType}) =
+      _$PresignedUrlRequestModelImpl;
 
   factory _PresignedUrlRequestModel.fromJson(Map<String, dynamic> json) =
       _$PresignedUrlRequestModelImpl.fromJson;
@@ -262,5 +239,5 @@ abstract class _PresignedUrlRequestModel implements PresignedUrlRequestModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PresignedUrlRequestModelImplCopyWith<_$PresignedUrlRequestModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

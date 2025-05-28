@@ -1,6 +1,7 @@
 ﻿using SigmailServer.Application.DTOs;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace SigmailServer.Application.Services.Interfaces // Или где вы храните интерфейсы
 {
@@ -40,33 +41,14 @@ namespace SigmailServer.Application.Services.Interfaces // Или где вы х
         Task MessageRead(string messageId, Guid readerUserId, Guid chatId);
 
         /// <summary>
-        /// К сообщению была добавлена реакция.
+        /// Реакции на сообщение были обновлены.
         /// </summary>
-        /// <param name="messageId">ID сообщения.</param>
-        /// <param name="reactorUserId">ID пользователя, добавившего реакцию.</param>
-        /// <param name="emoji">Строковое представление emoji.</param>
-        /// <param name="chatId">ID чата, к которому принадлежит сообщение.</param>
-        Task MessageReactionAdded(string messageId, Guid reactorUserId, string emoji, Guid chatId);
-
-        /// <summary>
-        /// Реакция была удалена с сообщения.
-        /// </summary>
-        /// <param name="messageId">ID сообщения.</param>
-        /// <param name="reactorUserId">ID пользователя, чья реакция была удалена.</param>
-        /// <param name="emoji">Строковое представление emoji.</param>
-        /// <param name="chatId">ID чата, к которому принадлежит сообщение.</param>
-        Task MessageReactionRemoved(string messageId, Guid reactorUserId, string emoji, Guid chatId);
-
+        /// <param name="chatId">ID чата.</param>
+        /// <param name="messageId">ID сообщения, чьи реакции обновились.</param>
+        /// <param name="reactions">Полный список обновленных реакций для сообщения.</param>
+        Task ReceiveMessageReactionsUpdate(string chatId, string messageId, IEnumerable<ReactionDto> reactions);
 
         // --- События, связанные с пользователями ---
-
-        /// <summary>
-        /// Статус пользователя изменился (онлайн/оффлайн).
-        /// </summary>
-        /// <param name="userId">ID пользователя, чей статус изменился.</param>
-        /// <param name="isOnline">True, если пользователь теперь онлайн, иначе false.</param>
-        /// <param name="lastSeen">Время последнего онлайна (актуально, если isOnline = false).</param>
-        Task UserStatusChanged(Guid userId, bool isOnline, DateTime lastSeen);
 
         /// <summary>
         /// Пользователь начал печатать в чате.
@@ -98,6 +80,13 @@ namespace SigmailServer.Application.Services.Interfaces // Или где вы х
         /// </summary>
         /// <param name="chat">DTO обновленного чата.</param>
         Task ChatDetailsUpdated(ChatDto chat); // Добавлено для полноты
+
+        /// <summary>
+        /// Чат был удален.
+        /// </summary>
+        /// <param name="chatId">ID удаленного чата.</param>
+        /// <param name="deletedByUserId">ID пользователя, удалившего чат.</param>
+        Task ReceiveChatDeleted(Guid chatId, Guid deletedByUserId);
 
         /// <summary>
         /// Новый участник был добавлен в чат.

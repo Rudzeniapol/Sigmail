@@ -11,31 +11,28 @@ _$MessageModelImpl _$$MessageModelImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       chatId: json['chatId'] as String,
       senderId: json['senderId'] as String,
-      sender:
-          json['sender'] == null
-              ? null
-              : UserSimpleModel.fromJson(
-                json['sender'] as Map<String, dynamic>,
-              ),
+      sender: json['sender'] == null
+          ? null
+          : UserSimpleModel.fromJson(json['sender'] as Map<String, dynamic>),
       text: json['text'] as String?,
-      attachments:
-          (json['attachments'] as List<dynamic>?)
+      attachments: (json['attachments'] as List<dynamic>?)
               ?.map((e) => AttachmentModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       timestamp: DateTime.parse(json['timestamp'] as String),
-      editedAt:
-          json['editedAt'] == null
-              ? null
-              : DateTime.parse(json['editedAt'] as String),
+      editedAt: json['editedAt'] == null
+          ? null
+          : DateTime.parse(json['editedAt'] as String),
       status: $enumDecodeNullable(_$MessageStatusModelEnumMap, json['status']),
       forwardedFromMessageId: json['forwardedFromMessageId'] as String?,
-      forwardedFromUser:
-          json['forwardedFromUser'] == null
-              ? null
-              : UserSimpleModel.fromJson(
-                json['forwardedFromUser'] as Map<String, dynamic>,
-              ),
+      forwardedFromUser: json['forwardedFromUser'] == null
+          ? null
+          : UserSimpleModel.fromJson(
+              json['forwardedFromUser'] as Map<String, dynamic>),
+      reactions: (json['reactions'] as List<dynamic>?)
+              ?.map((e) => ReactionModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) =>
@@ -51,6 +48,7 @@ Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) =>
       'status': _$MessageStatusModelEnumMap[instance.status],
       'forwardedFromMessageId': instance.forwardedFromMessageId,
       'forwardedFromUser': instance.forwardedFromUser,
+      'reactions': instance.reactions,
     };
 
 const _$MessageStatusModelEnumMap = {
@@ -60,4 +58,5 @@ const _$MessageStatusModelEnumMap = {
   MessageStatusModel.read: 'Read',
   MessageStatusModel.edited: 'Edited',
   MessageStatusModel.failed: 'Failed',
+  MessageStatusModel.deleted: 'Deleted',
 };

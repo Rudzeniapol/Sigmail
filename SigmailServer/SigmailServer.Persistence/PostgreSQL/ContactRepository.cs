@@ -1,14 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SigmailClient.Domain.Enums;
-using SigmailClient.Domain.Interfaces;
-using SigmailClient.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using SigmailServer.Domain.Enums;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Persistence.PostgreSQL;
+namespace SigmailServer.Persistence.PostgreSQL;
 
 public class ContactRepository : Repository<Contact>, IContactRepository
 {

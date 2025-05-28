@@ -1,4 +1,4 @@
-﻿using SigmailClient.Domain.Models;
+﻿using SigmailServer.Domain.Models;
 
 namespace SigmailServer.Application.Services.Interfaces;
 

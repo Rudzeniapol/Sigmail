@@ -6,6 +6,7 @@ import 'package:sigmail_client/data/models/chat/chat_model.dart';
 import 'package:sigmail_client/data/models/chat/create_chat_model.dart';
 import 'package:sigmail_client/data/models/message/create_message_model.dart';
 import 'package:sigmail_client/data/models/message/message_model.dart';
+import 'package:sigmail_client/data/models/reaction/reaction_model.dart';
 // Возможно, понадобится Result-тип для обработки ошибок, как в dartz
 // import 'package:dartz/dartz.dart';
 // import 'package:sigmail_client/core/error/failures.dart';
@@ -50,6 +51,19 @@ abstract class ChatRepository {
   Future<Either<Failure, PresignedUrlResponseModel>> getPresignedUploadUrl(PresignedUrlRequestModel request);
   Future<Either<Failure, void>> uploadFileToS3(String presignedUrl, XFile file, String? contentType);
   Future<Either<Failure, MessageModel>> sendMessageWithAttachment(CreateMessageWithAttachmentClientDto dto);
+
+  // Методы для реакций
+  Future<Either<Failure, List<ReactionModel>>> addReaction(String messageId, String emoji);
+  Future<Either<Failure, List<ReactionModel>>> removeReaction(String messageId, String emoji);
+
+  // Наблюдение за обновлением реакций
+  Stream<Map<String, List<ReactionModel>>> observeMessageReactionsUpdate(String chatId);
+
+  // Метод для явного закрытия соединения SignalR для конкретного чата
+  Future<void> disconnectRealtimeForChat(String chatId);
+
+  // Метод для пометки сообщений как прочитанных
+  Future<Either<Failure, void>> markMessagesAsRead(String chatId);
 
   // TODO: Добавить другие методы, если необходимо:
   // - Пометить сообщения как прочитанные

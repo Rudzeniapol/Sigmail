@@ -1,6 +1,6 @@
-﻿using SigmailClient.Domain.Models;
+﻿using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Domain.Interfaces;
+namespace SigmailServer.Domain.Interfaces;
 
 public interface IMessageRepository // Не наследует IRepository<Message> из-за string ID
 {
@@ -12,8 +12,8 @@ public interface IMessageRepository // Не наследует IRepository<Messa
     Task<long> GetCountForChatAsync(Guid chatId, CancellationToken cancellationToken = default);
 
     // Новые методы для статусов и реакций
-    Task AddReactionAsync(string messageId, Guid userId, string emoji, CancellationToken cancellationToken = default);
-    Task RemoveReactionAsync(string messageId, Guid userId, string emoji, CancellationToken cancellationToken = default);
+    // Task AddReactionAsync(string messageId, Guid userId, string emoji, CancellationToken cancellationToken = default); // УДАЛЕНО
+    // Task RemoveReactionAsync(string messageId, Guid userId, string emoji, CancellationToken cancellationToken = default); // УДАЛЕНО
     Task MarkMessageAsReadByAsync(string messageId, Guid userId, CancellationToken cancellationToken = default);
     Task MarkMessagesAsDeliveredToAsync(IEnumerable<string> messageIds, Guid userId, CancellationToken cancellationToken = default);
     Task DeleteMessagesByChatIdAsync(Guid chatId, CancellationToken cancellationToken = default);

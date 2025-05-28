@@ -12,8 +12,7 @@ part of 'create_message_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 CreateMessageModel _$CreateMessageModelFromJson(Map<String, dynamic> json) {
   return _CreateMessageModel.fromJson(json);
@@ -39,15 +38,11 @@ mixin _$CreateMessageModel {
 /// @nodoc
 abstract class $CreateMessageModelCopyWith<$Res> {
   factory $CreateMessageModelCopyWith(
-    CreateMessageModel value,
-    $Res Function(CreateMessageModel) then,
-  ) = _$CreateMessageModelCopyWithImpl<$Res, CreateMessageModel>;
+          CreateMessageModel value, $Res Function(CreateMessageModel) then) =
+      _$CreateMessageModelCopyWithImpl<$Res, CreateMessageModel>;
   @useResult
-  $Res call({
-    String chatId,
-    String? text,
-    List<CreateAttachmentModel> attachments,
-  });
+  $Res call(
+      {String chatId, String? text, List<CreateAttachmentModel> attachments});
 }
 
 /// @nodoc
@@ -69,53 +64,42 @@ class _$CreateMessageModelCopyWithImpl<$Res, $Val extends CreateMessageModel>
     Object? text = freezed,
     Object? attachments = null,
   }) {
-    return _then(
-      _value.copyWith(
-            chatId:
-                null == chatId
-                    ? _value.chatId
-                    : chatId // ignore: cast_nullable_to_non_nullable
-                        as String,
-            text:
-                freezed == text
-                    ? _value.text
-                    : text // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            attachments:
-                null == attachments
-                    ? _value.attachments
-                    : attachments // ignore: cast_nullable_to_non_nullable
-                        as List<CreateAttachmentModel>,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      chatId: null == chatId
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as String,
+      text: freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as String?,
+      attachments: null == attachments
+          ? _value.attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<CreateAttachmentModel>,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$CreateMessageModelImplCopyWith<$Res>
     implements $CreateMessageModelCopyWith<$Res> {
-  factory _$$CreateMessageModelImplCopyWith(
-    _$CreateMessageModelImpl value,
-    $Res Function(_$CreateMessageModelImpl) then,
-  ) = __$$CreateMessageModelImplCopyWithImpl<$Res>;
+  factory _$$CreateMessageModelImplCopyWith(_$CreateMessageModelImpl value,
+          $Res Function(_$CreateMessageModelImpl) then) =
+      __$$CreateMessageModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String chatId,
-    String? text,
-    List<CreateAttachmentModel> attachments,
-  });
+  $Res call(
+      {String chatId, String? text, List<CreateAttachmentModel> attachments});
 }
 
 /// @nodoc
 class __$$CreateMessageModelImplCopyWithImpl<$Res>
     extends _$CreateMessageModelCopyWithImpl<$Res, _$CreateMessageModelImpl>
     implements _$$CreateMessageModelImplCopyWith<$Res> {
-  __$$CreateMessageModelImplCopyWithImpl(
-    _$CreateMessageModelImpl _value,
-    $Res Function(_$CreateMessageModelImpl) _then,
-  ) : super(_value, _then);
+  __$$CreateMessageModelImplCopyWithImpl(_$CreateMessageModelImpl _value,
+      $Res Function(_$CreateMessageModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CreateMessageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -126,36 +110,31 @@ class __$$CreateMessageModelImplCopyWithImpl<$Res>
     Object? text = freezed,
     Object? attachments = null,
   }) {
-    return _then(
-      _$CreateMessageModelImpl(
-        chatId:
-            null == chatId
-                ? _value.chatId
-                : chatId // ignore: cast_nullable_to_non_nullable
-                    as String,
-        text:
-            freezed == text
-                ? _value.text
-                : text // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        attachments:
-            null == attachments
-                ? _value._attachments
-                : attachments // ignore: cast_nullable_to_non_nullable
-                    as List<CreateAttachmentModel>,
-      ),
-    );
+    return _then(_$CreateMessageModelImpl(
+      chatId: null == chatId
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as String,
+      text: freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as String?,
+      attachments: null == attachments
+          ? _value._attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<CreateAttachmentModel>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CreateMessageModelImpl implements _CreateMessageModel {
-  const _$CreateMessageModelImpl({
-    required this.chatId,
-    this.text,
-    final List<CreateAttachmentModel> attachments = const [],
-  }) : _attachments = attachments;
+  const _$CreateMessageModelImpl(
+      {required this.chatId,
+      this.text,
+      final List<CreateAttachmentModel> attachments = const []})
+      : _attachments = attachments;
 
   factory _$CreateMessageModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateMessageModelImplFromJson(json);
@@ -185,20 +164,14 @@ class _$CreateMessageModelImpl implements _CreateMessageModel {
             other is _$CreateMessageModelImpl &&
             (identical(other.chatId, chatId) || other.chatId == chatId) &&
             (identical(other.text, text) || other.text == text) &&
-            const DeepCollectionEquality().equals(
-              other._attachments,
-              _attachments,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._attachments, _attachments));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    chatId,
-    text,
-    const DeepCollectionEquality().hash(_attachments),
-  );
+  int get hashCode => Object.hash(runtimeType, chatId, text,
+      const DeepCollectionEquality().hash(_attachments));
 
   /// Create a copy of CreateMessageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -207,22 +180,22 @@ class _$CreateMessageModelImpl implements _CreateMessageModel {
   @pragma('vm:prefer-inline')
   _$$CreateMessageModelImplCopyWith<_$CreateMessageModelImpl> get copyWith =>
       __$$CreateMessageModelImplCopyWithImpl<_$CreateMessageModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CreateMessageModelImplToJson(this);
+    return _$$CreateMessageModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _CreateMessageModel implements CreateMessageModel {
-  const factory _CreateMessageModel({
-    required final String chatId,
-    final String? text,
-    final List<CreateAttachmentModel> attachments,
-  }) = _$CreateMessageModelImpl;
+  const factory _CreateMessageModel(
+          {required final String chatId,
+          final String? text,
+          final List<CreateAttachmentModel> attachments}) =
+      _$CreateMessageModelImpl;
 
   factory _CreateMessageModel.fromJson(Map<String, dynamic> json) =
       _$CreateMessageModelImpl.fromJson;

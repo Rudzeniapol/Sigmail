@@ -12,12 +12,10 @@ part of 'presigned_url_response_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 PresignedUrlResponseModel _$PresignedUrlResponseModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _PresignedUrlResponseModel.fromJson(json);
 }
 
@@ -44,26 +42,22 @@ mixin _$PresignedUrlResponseModel {
 
 /// @nodoc
 abstract class $PresignedUrlResponseModelCopyWith<$Res> {
-  factory $PresignedUrlResponseModelCopyWith(
-    PresignedUrlResponseModel value,
-    $Res Function(PresignedUrlResponseModel) then,
-  ) = _$PresignedUrlResponseModelCopyWithImpl<$Res, PresignedUrlResponseModel>;
+  factory $PresignedUrlResponseModelCopyWith(PresignedUrlResponseModel value,
+          $Res Function(PresignedUrlResponseModel) then) =
+      _$PresignedUrlResponseModelCopyWithImpl<$Res, PresignedUrlResponseModel>;
   @useResult
-  $Res call({
-    String fileKey,
-    String fileName,
-    String? contentType,
-    int size,
-    @JsonKey(name: 'type') AttachmentType attachmentType,
-    String presignedUploadUrl,
-  });
+  $Res call(
+      {String fileKey,
+      String fileName,
+      String? contentType,
+      int size,
+      @JsonKey(name: 'type') AttachmentType attachmentType,
+      String presignedUploadUrl});
 }
 
 /// @nodoc
-class _$PresignedUrlResponseModelCopyWithImpl<
-  $Res,
-  $Val extends PresignedUrlResponseModel
->
+class _$PresignedUrlResponseModelCopyWithImpl<$Res,
+        $Val extends PresignedUrlResponseModel>
     implements $PresignedUrlResponseModelCopyWith<$Res> {
   _$PresignedUrlResponseModelCopyWithImpl(this._value, this._then);
 
@@ -84,41 +78,32 @@ class _$PresignedUrlResponseModelCopyWithImpl<
     Object? attachmentType = null,
     Object? presignedUploadUrl = null,
   }) {
-    return _then(
-      _value.copyWith(
-            fileKey:
-                null == fileKey
-                    ? _value.fileKey
-                    : fileKey // ignore: cast_nullable_to_non_nullable
-                        as String,
-            fileName:
-                null == fileName
-                    ? _value.fileName
-                    : fileName // ignore: cast_nullable_to_non_nullable
-                        as String,
-            contentType:
-                freezed == contentType
-                    ? _value.contentType
-                    : contentType // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            size:
-                null == size
-                    ? _value.size
-                    : size // ignore: cast_nullable_to_non_nullable
-                        as int,
-            attachmentType:
-                null == attachmentType
-                    ? _value.attachmentType
-                    : attachmentType // ignore: cast_nullable_to_non_nullable
-                        as AttachmentType,
-            presignedUploadUrl:
-                null == presignedUploadUrl
-                    ? _value.presignedUploadUrl
-                    : presignedUploadUrl // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      fileKey: null == fileKey
+          ? _value.fileKey
+          : fileKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      contentType: freezed == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      attachmentType: null == attachmentType
+          ? _value.attachmentType
+          : attachmentType // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+      presignedUploadUrl: null == presignedUploadUrl
+          ? _value.presignedUploadUrl
+          : presignedUploadUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
@@ -126,33 +111,29 @@ class _$PresignedUrlResponseModelCopyWithImpl<
 abstract class _$$PresignedUrlResponseModelImplCopyWith<$Res>
     implements $PresignedUrlResponseModelCopyWith<$Res> {
   factory _$$PresignedUrlResponseModelImplCopyWith(
-    _$PresignedUrlResponseModelImpl value,
-    $Res Function(_$PresignedUrlResponseModelImpl) then,
-  ) = __$$PresignedUrlResponseModelImplCopyWithImpl<$Res>;
+          _$PresignedUrlResponseModelImpl value,
+          $Res Function(_$PresignedUrlResponseModelImpl) then) =
+      __$$PresignedUrlResponseModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String fileKey,
-    String fileName,
-    String? contentType,
-    int size,
-    @JsonKey(name: 'type') AttachmentType attachmentType,
-    String presignedUploadUrl,
-  });
+  $Res call(
+      {String fileKey,
+      String fileName,
+      String? contentType,
+      int size,
+      @JsonKey(name: 'type') AttachmentType attachmentType,
+      String presignedUploadUrl});
 }
 
 /// @nodoc
 class __$$PresignedUrlResponseModelImplCopyWithImpl<$Res>
-    extends
-        _$PresignedUrlResponseModelCopyWithImpl<
-          $Res,
-          _$PresignedUrlResponseModelImpl
-        >
+    extends _$PresignedUrlResponseModelCopyWithImpl<$Res,
+        _$PresignedUrlResponseModelImpl>
     implements _$$PresignedUrlResponseModelImplCopyWith<$Res> {
   __$$PresignedUrlResponseModelImplCopyWithImpl(
-    _$PresignedUrlResponseModelImpl _value,
-    $Res Function(_$PresignedUrlResponseModelImpl) _then,
-  ) : super(_value, _then);
+      _$PresignedUrlResponseModelImpl _value,
+      $Res Function(_$PresignedUrlResponseModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of PresignedUrlResponseModel
   /// with the given fields replaced by the non-null parameter values.
@@ -166,40 +147,32 @@ class __$$PresignedUrlResponseModelImplCopyWithImpl<$Res>
     Object? attachmentType = null,
     Object? presignedUploadUrl = null,
   }) {
-    return _then(
-      _$PresignedUrlResponseModelImpl(
-        fileKey:
-            null == fileKey
-                ? _value.fileKey
-                : fileKey // ignore: cast_nullable_to_non_nullable
-                    as String,
-        fileName:
-            null == fileName
-                ? _value.fileName
-                : fileName // ignore: cast_nullable_to_non_nullable
-                    as String,
-        contentType:
-            freezed == contentType
-                ? _value.contentType
-                : contentType // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        size:
-            null == size
-                ? _value.size
-                : size // ignore: cast_nullable_to_non_nullable
-                    as int,
-        attachmentType:
-            null == attachmentType
-                ? _value.attachmentType
-                : attachmentType // ignore: cast_nullable_to_non_nullable
-                    as AttachmentType,
-        presignedUploadUrl:
-            null == presignedUploadUrl
-                ? _value.presignedUploadUrl
-                : presignedUploadUrl // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
+    return _then(_$PresignedUrlResponseModelImpl(
+      fileKey: null == fileKey
+          ? _value.fileKey
+          : fileKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      contentType: freezed == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      attachmentType: null == attachmentType
+          ? _value.attachmentType
+          : attachmentType // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+      presignedUploadUrl: null == presignedUploadUrl
+          ? _value.presignedUploadUrl
+          : presignedUploadUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -207,14 +180,13 @@ class __$$PresignedUrlResponseModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(explicitToJson: true)
 class _$PresignedUrlResponseModelImpl implements _PresignedUrlResponseModel {
-  const _$PresignedUrlResponseModelImpl({
-    required this.fileKey,
-    required this.fileName,
-    this.contentType,
-    required this.size,
-    @JsonKey(name: 'type') required this.attachmentType,
-    required this.presignedUploadUrl,
-  });
+  const _$PresignedUrlResponseModelImpl(
+      {required this.fileKey,
+      required this.fileName,
+      this.contentType,
+      required this.size,
+      @JsonKey(name: 'type') required this.attachmentType,
+      required this.presignedUploadUrl});
 
   factory _$PresignedUrlResponseModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$PresignedUrlResponseModelImplFromJson(json);
@@ -227,7 +199,7 @@ class _$PresignedUrlResponseModelImpl implements _PresignedUrlResponseModel {
   final String? contentType;
   @override
   final int size;
-  // На сервере это long, в Dart это int
+// На сервере это long, в Dart это int
   @override
   @JsonKey(name: 'type')
   final AttachmentType attachmentType;
@@ -258,15 +230,8 @@ class _$PresignedUrlResponseModelImpl implements _PresignedUrlResponseModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    fileKey,
-    fileName,
-    contentType,
-    size,
-    attachmentType,
-    presignedUploadUrl,
-  );
+  int get hashCode => Object.hash(runtimeType, fileKey, fileName, contentType,
+      size, attachmentType, presignedUploadUrl);
 
   /// Create a copy of PresignedUrlResponseModel
   /// with the given fields replaced by the non-null parameter values.
@@ -274,25 +239,26 @@ class _$PresignedUrlResponseModelImpl implements _PresignedUrlResponseModel {
   @override
   @pragma('vm:prefer-inline')
   _$$PresignedUrlResponseModelImplCopyWith<_$PresignedUrlResponseModelImpl>
-  get copyWith => __$$PresignedUrlResponseModelImplCopyWithImpl<
-    _$PresignedUrlResponseModelImpl
-  >(this, _$identity);
+      get copyWith => __$$PresignedUrlResponseModelImplCopyWithImpl<
+          _$PresignedUrlResponseModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PresignedUrlResponseModelImplToJson(this);
+    return _$$PresignedUrlResponseModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _PresignedUrlResponseModel implements PresignedUrlResponseModel {
-  const factory _PresignedUrlResponseModel({
-    required final String fileKey,
-    required final String fileName,
-    final String? contentType,
-    required final int size,
-    @JsonKey(name: 'type') required final AttachmentType attachmentType,
-    required final String presignedUploadUrl,
-  }) = _$PresignedUrlResponseModelImpl;
+  const factory _PresignedUrlResponseModel(
+          {required final String fileKey,
+          required final String fileName,
+          final String? contentType,
+          required final int size,
+          @JsonKey(name: 'type') required final AttachmentType attachmentType,
+          required final String presignedUploadUrl}) =
+      _$PresignedUrlResponseModelImpl;
 
   factory _PresignedUrlResponseModel.fromJson(Map<String, dynamic> json) =
       _$PresignedUrlResponseModelImpl.fromJson;
@@ -316,5 +282,5 @@ abstract class _PresignedUrlResponseModel implements PresignedUrlResponseModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PresignedUrlResponseModelImplCopyWith<_$PresignedUrlResponseModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

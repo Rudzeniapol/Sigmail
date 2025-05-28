@@ -1,10 +1,9 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Persistence.MongoDB;
-
-using Microsoft.Extensions.Options;
-using MongoDB;
-using SigmailClient.Domain.Models; // Убедитесь, что этот using есть
+namespace SigmailServer.Persistence.MongoDB;
+// Убедитесь, что этот using есть
 
 public class MongoDbContext
 {

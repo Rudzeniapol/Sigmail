@@ -1,13 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SigmailClient.Domain.Interfaces;
-using SigmailClient.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Persistence.PostgreSQL;
+namespace SigmailServer.Persistence.PostgreSQL;
 
 public class UserRepository : Repository<User>, IUserRepository
 {
@@ -58,7 +53,7 @@ public class UserRepository : Repository<User>, IUserRepository
         return await _dbSet.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken && u.RefreshTokenExpiryTime > DateTime.UtcNow, cancellationToken);
     }
 
-    public async Task<IEnumerable<User>> FindUsersAsync(string searchTerm, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<User>> FindUsersAsync(string searchTerm, int limit, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -70,6 +65,7 @@ public class UserRepository : Repository<User>, IUserRepository
             .Where(u => u.Username.ToLower().Contains(lowerSearchTerm) || 
                         u.Email.ToLower().Contains(lowerSearchTerm) ||
                         (u.PhoneNumber != null && u.PhoneNumber.Contains(searchTerm)))
+            .Take(limit)
             .ToListAsync(cancellationToken);
     }
     
@@ -83,5 +79,23 @@ public class UserRepository : Repository<User>, IUserRepository
         // Для простоты и универсальности используем .Where(u => ids.Contains(u.Id))
         // Это может быть не так эффективно для очень больших списков ids на некоторых БД.
         return await _dbSet.Where(u => ids.Contains(u.Id)).ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> IsEmailTakenAsync(string email, Guid? excludeUserId = null, CancellationToken cancellationToken = default)
+    {
+        if (excludeUserId.HasValue)
+        {
+            return await _dbSet.AnyAsync(u => u.Email == email && u.Id != excludeUserId.Value, cancellationToken);
+        }
+        return await _dbSet.AnyAsync(u => u.Email == email, cancellationToken);
+    }
+
+    public async Task<bool> IsUsernameTakenAsync(string username, Guid? excludeUserId = null, CancellationToken cancellationToken = default)
+    {
+        if (excludeUserId.HasValue)
+        {
+            return await _dbSet.AnyAsync(u => u.Username == username && u.Id != excludeUserId.Value, cancellationToken);
+        }
+        return await _dbSet.AnyAsync(u => u.Username == username, cancellationToken);
     }
 }

@@ -1,5 +1,5 @@
-using SigmailClient.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using SigmailServer.Domain.Enums;
 
 namespace SigmailServer.Application.DTOs
 {
@@ -9,13 +9,13 @@ namespace SigmailServer.Application.DTOs
         public Guid ChatId { get; set; }
 
         [Required]
-        public string FileKey { get; set; } // Ключ файла в S3 (получен от GetPresignedUploadUrl)
+        public string FileKey { get; set; } = null!; // Ключ файла в S3 (получен от GetPresignedUploadUrl)
 
         [Required]
-        public string FileName { get; set; } // Оригинальное имя файла
+        public string FileName { get; set; } = null!; // Оригинальное имя файла
 
         [Required]
-        public string ContentType { get; set; }
+        public string ContentType { get; set; } = null!;
 
         [Required]
         public long FileSize { get; set; }

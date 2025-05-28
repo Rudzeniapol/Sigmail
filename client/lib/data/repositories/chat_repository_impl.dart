@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
-import 'package:sigmail_client/core/error/exceptions.dart';
 import 'package:sigmail_client/core/error/failure.dart';
 import 'package:sigmail_client/data/data_sources/remote/chat_remote_data_source.dart';
 import 'package:sigmail_client/data/data_sources/realtime/chat_realtime_data_source.dart';
@@ -9,7 +8,9 @@ import 'package:sigmail_client/data/models/chat/chat_model.dart';
 import 'package:sigmail_client/data/models/chat/create_chat_model.dart';
 import 'package:sigmail_client/data/models/message/create_message_model.dart';
 import 'package:sigmail_client/data/models/message/message_model.dart';
+import 'package:sigmail_client/data/models/reaction/reaction_model.dart';
 import 'package:sigmail_client/domain/repositories/chat_repository.dart';
+import 'package:sigmail_client/core/exceptions.dart';
 // import 'package:dartz/dartz.dart'; // Для обработки ошибок с Either
 // import 'package:sigmail_client/core/error/failures.dart';
 // import 'package:sigmail_client/core/network/network_info.dart'; // Для проверки сети, если нужно
@@ -156,6 +157,52 @@ class ChatRepositoryImpl implements ChatRepository {
       return Left(ServerFailure(e.message ?? 'Ошибка сервера при отправке сообщения с вложением'));
     } catch (e) {
       return Left(UnknownFailure('Неизвестная ошибка при отправке сообщения с вложением: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ReactionModel>>> addReaction(String messageId, String emoji) async {
+    try {
+      final reactions = await _remoteDataSource.addReaction(messageId, emoji);
+      return Right(reactions);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Ошибка сервера при добавлении реакции'));
+    } on NotFoundException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure('Неизвестная ошибка при добавлении реакции: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ReactionModel>>> removeReaction(String messageId, String emoji) async {
+    try {
+      final reactions = await _remoteDataSource.removeReaction(messageId, emoji);
+      return Right(reactions);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Ошибка сервера при удалении реакции'));
+    } on NotFoundException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure('Неизвестная ошибка при удалении реакции: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Stream<Map<String, List<ReactionModel>>> observeMessageReactionsUpdate(String chatId) {
+    _realtimeDataSource.connect(chatId); // Убедимся, что соединение установлено
+    return _realtimeDataSource.observeMessageReactionsUpdate(chatId);
+  }
+
+  @override
+  Future<Either<Failure, void>> markMessagesAsRead(String chatId) async {
+    try {
+      await _remoteDataSource.markMessagesAsRead(chatId);
+      return const Right(null); // Успех, возвращаем void (null в Right)
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Ошибка сервера при пометке сообщений как прочитанных'));
+    } catch (e) {
+      return Left(UnknownFailure('Неизвестная ошибка при пометке сообщений как прочитанных: ${e.toString()}'));
     }
   }
 } 

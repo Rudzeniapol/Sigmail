@@ -12,8 +12,7 @@ part of 'message_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 MessageModel _$MessageModelFromJson(Map<String, dynamic> json) {
   return _MessageModel.fromJson(json);
@@ -34,7 +33,9 @@ mixin _$MessageModel {
   MessageStatusModel? get status =>
       throw _privateConstructorUsedError; // Статус сообщения
   String? get forwardedFromMessageId => throw _privateConstructorUsedError;
-  UserSimpleModel? get forwardedFromUser => throw _privateConstructorUsedError;
+  UserSimpleModel? get forwardedFromUser =>
+      throw _privateConstructorUsedError; // Если API возвращает детали переславшего
+  List<ReactionModel> get reactions => throw _privateConstructorUsedError;
 
   /// Serializes this MessageModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,23 +50,22 @@ mixin _$MessageModel {
 /// @nodoc
 abstract class $MessageModelCopyWith<$Res> {
   factory $MessageModelCopyWith(
-    MessageModel value,
-    $Res Function(MessageModel) then,
-  ) = _$MessageModelCopyWithImpl<$Res, MessageModel>;
+          MessageModel value, $Res Function(MessageModel) then) =
+      _$MessageModelCopyWithImpl<$Res, MessageModel>;
   @useResult
-  $Res call({
-    String id,
-    String chatId,
-    String senderId,
-    UserSimpleModel? sender,
-    String? text,
-    List<AttachmentModel> attachments,
-    DateTime timestamp,
-    DateTime? editedAt,
-    MessageStatusModel? status,
-    String? forwardedFromMessageId,
-    UserSimpleModel? forwardedFromUser,
-  });
+  $Res call(
+      {String id,
+      String chatId,
+      String senderId,
+      UserSimpleModel? sender,
+      String? text,
+      List<AttachmentModel> attachments,
+      DateTime timestamp,
+      DateTime? editedAt,
+      MessageStatusModel? status,
+      String? forwardedFromMessageId,
+      UserSimpleModel? forwardedFromUser,
+      List<ReactionModel> reactions});
 
   $UserSimpleModelCopyWith<$Res>? get sender;
   $UserSimpleModelCopyWith<$Res>? get forwardedFromUser;
@@ -97,67 +97,58 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
     Object? status = freezed,
     Object? forwardedFromMessageId = freezed,
     Object? forwardedFromUser = freezed,
+    Object? reactions = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id:
-                null == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
-                        as String,
-            chatId:
-                null == chatId
-                    ? _value.chatId
-                    : chatId // ignore: cast_nullable_to_non_nullable
-                        as String,
-            senderId:
-                null == senderId
-                    ? _value.senderId
-                    : senderId // ignore: cast_nullable_to_non_nullable
-                        as String,
-            sender:
-                freezed == sender
-                    ? _value.sender
-                    : sender // ignore: cast_nullable_to_non_nullable
-                        as UserSimpleModel?,
-            text:
-                freezed == text
-                    ? _value.text
-                    : text // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            attachments:
-                null == attachments
-                    ? _value.attachments
-                    : attachments // ignore: cast_nullable_to_non_nullable
-                        as List<AttachmentModel>,
-            timestamp:
-                null == timestamp
-                    ? _value.timestamp
-                    : timestamp // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            editedAt:
-                freezed == editedAt
-                    ? _value.editedAt
-                    : editedAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime?,
-            status:
-                freezed == status
-                    ? _value.status
-                    : status // ignore: cast_nullable_to_non_nullable
-                        as MessageStatusModel?,
-            forwardedFromMessageId:
-                freezed == forwardedFromMessageId
-                    ? _value.forwardedFromMessageId
-                    : forwardedFromMessageId // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            forwardedFromUser:
-                freezed == forwardedFromUser
-                    ? _value.forwardedFromUser
-                    : forwardedFromUser // ignore: cast_nullable_to_non_nullable
-                        as UserSimpleModel?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      chatId: null == chatId
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as String,
+      senderId: null == senderId
+          ? _value.senderId
+          : senderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      sender: freezed == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as UserSimpleModel?,
+      text: freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as String?,
+      attachments: null == attachments
+          ? _value.attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<AttachmentModel>,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      editedAt: freezed == editedAt
+          ? _value.editedAt
+          : editedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as MessageStatusModel?,
+      forwardedFromMessageId: freezed == forwardedFromMessageId
+          ? _value.forwardedFromMessageId
+          : forwardedFromMessageId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      forwardedFromUser: freezed == forwardedFromUser
+          ? _value.forwardedFromUser
+          : forwardedFromUser // ignore: cast_nullable_to_non_nullable
+              as UserSimpleModel?,
+      reactions: null == reactions
+          ? _value.reactions
+          : reactions // ignore: cast_nullable_to_non_nullable
+              as List<ReactionModel>,
+    ) as $Val);
   }
 
   /// Create a copy of MessageModel
@@ -193,24 +184,23 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
 abstract class _$$MessageModelImplCopyWith<$Res>
     implements $MessageModelCopyWith<$Res> {
   factory _$$MessageModelImplCopyWith(
-    _$MessageModelImpl value,
-    $Res Function(_$MessageModelImpl) then,
-  ) = __$$MessageModelImplCopyWithImpl<$Res>;
+          _$MessageModelImpl value, $Res Function(_$MessageModelImpl) then) =
+      __$$MessageModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String chatId,
-    String senderId,
-    UserSimpleModel? sender,
-    String? text,
-    List<AttachmentModel> attachments,
-    DateTime timestamp,
-    DateTime? editedAt,
-    MessageStatusModel? status,
-    String? forwardedFromMessageId,
-    UserSimpleModel? forwardedFromUser,
-  });
+  $Res call(
+      {String id,
+      String chatId,
+      String senderId,
+      UserSimpleModel? sender,
+      String? text,
+      List<AttachmentModel> attachments,
+      DateTime timestamp,
+      DateTime? editedAt,
+      MessageStatusModel? status,
+      String? forwardedFromMessageId,
+      UserSimpleModel? forwardedFromUser,
+      List<ReactionModel> reactions});
 
   @override
   $UserSimpleModelCopyWith<$Res>? get sender;
@@ -223,9 +213,8 @@ class __$$MessageModelImplCopyWithImpl<$Res>
     extends _$MessageModelCopyWithImpl<$Res, _$MessageModelImpl>
     implements _$$MessageModelImplCopyWith<$Res> {
   __$$MessageModelImplCopyWithImpl(
-    _$MessageModelImpl _value,
-    $Res Function(_$MessageModelImpl) _then,
-  ) : super(_value, _then);
+      _$MessageModelImpl _value, $Res Function(_$MessageModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of MessageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -243,99 +232,93 @@ class __$$MessageModelImplCopyWithImpl<$Res>
     Object? status = freezed,
     Object? forwardedFromMessageId = freezed,
     Object? forwardedFromUser = freezed,
+    Object? reactions = null,
   }) {
-    return _then(
-      _$MessageModelImpl(
-        id:
-            null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                    as String,
-        chatId:
-            null == chatId
-                ? _value.chatId
-                : chatId // ignore: cast_nullable_to_non_nullable
-                    as String,
-        senderId:
-            null == senderId
-                ? _value.senderId
-                : senderId // ignore: cast_nullable_to_non_nullable
-                    as String,
-        sender:
-            freezed == sender
-                ? _value.sender
-                : sender // ignore: cast_nullable_to_non_nullable
-                    as UserSimpleModel?,
-        text:
-            freezed == text
-                ? _value.text
-                : text // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        attachments:
-            null == attachments
-                ? _value._attachments
-                : attachments // ignore: cast_nullable_to_non_nullable
-                    as List<AttachmentModel>,
-        timestamp:
-            null == timestamp
-                ? _value.timestamp
-                : timestamp // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        editedAt:
-            freezed == editedAt
-                ? _value.editedAt
-                : editedAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime?,
-        status:
-            freezed == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                    as MessageStatusModel?,
-        forwardedFromMessageId:
-            freezed == forwardedFromMessageId
-                ? _value.forwardedFromMessageId
-                : forwardedFromMessageId // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        forwardedFromUser:
-            freezed == forwardedFromUser
-                ? _value.forwardedFromUser
-                : forwardedFromUser // ignore: cast_nullable_to_non_nullable
-                    as UserSimpleModel?,
-      ),
-    );
+    return _then(_$MessageModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      chatId: null == chatId
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as String,
+      senderId: null == senderId
+          ? _value.senderId
+          : senderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      sender: freezed == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as UserSimpleModel?,
+      text: freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as String?,
+      attachments: null == attachments
+          ? _value._attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<AttachmentModel>,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      editedAt: freezed == editedAt
+          ? _value.editedAt
+          : editedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as MessageStatusModel?,
+      forwardedFromMessageId: freezed == forwardedFromMessageId
+          ? _value.forwardedFromMessageId
+          : forwardedFromMessageId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      forwardedFromUser: freezed == forwardedFromUser
+          ? _value.forwardedFromUser
+          : forwardedFromUser // ignore: cast_nullable_to_non_nullable
+              as UserSimpleModel?,
+      reactions: null == reactions
+          ? _value._reactions
+          : reactions // ignore: cast_nullable_to_non_nullable
+              as List<ReactionModel>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MessageModelImpl implements _MessageModel {
-  const _$MessageModelImpl({
-    required this.id,
-    required this.chatId,
-    required this.senderId,
-    this.sender,
-    this.text,
-    final List<AttachmentModel> attachments = const [],
-    required this.timestamp,
-    this.editedAt,
-    this.status,
-    this.forwardedFromMessageId,
-    this.forwardedFromUser,
-  }) : _attachments = attachments;
+  const _$MessageModelImpl(
+      {required this.id,
+      required this.chatId,
+      required this.senderId,
+      this.sender,
+      this.text,
+      final List<AttachmentModel> attachments = const [],
+      required this.timestamp,
+      this.editedAt,
+      this.status,
+      this.forwardedFromMessageId,
+      this.forwardedFromUser,
+      final List<ReactionModel> reactions = const []})
+      : _attachments = attachments,
+        _reactions = reactions;
 
   factory _$MessageModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MessageModelImplFromJson(json);
 
   @override
   final String id;
-  // MongoDB ObjectId как строка
+// MongoDB ObjectId как строка
   @override
   final String chatId;
   @override
   final String senderId;
   @override
   final UserSimpleModel? sender;
-  // Детали отправителя, если API их возвращает
+// Детали отправителя, если API их возвращает
   @override
   final String? text;
   final List<AttachmentModel> _attachments;
@@ -353,15 +336,25 @@ class _$MessageModelImpl implements _MessageModel {
   final DateTime? editedAt;
   @override
   final MessageStatusModel? status;
-  // Статус сообщения
+// Статус сообщения
   @override
   final String? forwardedFromMessageId;
   @override
   final UserSimpleModel? forwardedFromUser;
+// Если API возвращает детали переславшего
+  final List<ReactionModel> _reactions;
+// Если API возвращает детали переславшего
+  @override
+  @JsonKey()
+  List<ReactionModel> get reactions {
+    if (_reactions is EqualUnmodifiableListView) return _reactions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_reactions);
+  }
 
   @override
   String toString() {
-    return 'MessageModel(id: $id, chatId: $chatId, senderId: $senderId, sender: $sender, text: $text, attachments: $attachments, timestamp: $timestamp, editedAt: $editedAt, status: $status, forwardedFromMessageId: $forwardedFromMessageId, forwardedFromUser: $forwardedFromUser)';
+    return 'MessageModel(id: $id, chatId: $chatId, senderId: $senderId, sender: $sender, text: $text, attachments: $attachments, timestamp: $timestamp, editedAt: $editedAt, status: $status, forwardedFromMessageId: $forwardedFromMessageId, forwardedFromUser: $forwardedFromUser, reactions: $reactions)';
   }
 
   @override
@@ -375,10 +368,8 @@ class _$MessageModelImpl implements _MessageModel {
                 other.senderId == senderId) &&
             (identical(other.sender, sender) || other.sender == sender) &&
             (identical(other.text, text) || other.text == text) &&
-            const DeepCollectionEquality().equals(
-              other._attachments,
-              _attachments,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._attachments, _attachments) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
             (identical(other.editedAt, editedAt) ||
@@ -387,25 +378,27 @@ class _$MessageModelImpl implements _MessageModel {
             (identical(other.forwardedFromMessageId, forwardedFromMessageId) ||
                 other.forwardedFromMessageId == forwardedFromMessageId) &&
             (identical(other.forwardedFromUser, forwardedFromUser) ||
-                other.forwardedFromUser == forwardedFromUser));
+                other.forwardedFromUser == forwardedFromUser) &&
+            const DeepCollectionEquality()
+                .equals(other._reactions, _reactions));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    chatId,
-    senderId,
-    sender,
-    text,
-    const DeepCollectionEquality().hash(_attachments),
-    timestamp,
-    editedAt,
-    status,
-    forwardedFromMessageId,
-    forwardedFromUser,
-  );
+      runtimeType,
+      id,
+      chatId,
+      senderId,
+      sender,
+      text,
+      const DeepCollectionEquality().hash(_attachments),
+      timestamp,
+      editedAt,
+      status,
+      forwardedFromMessageId,
+      forwardedFromUser,
+      const DeepCollectionEquality().hash(_reactions));
 
   /// Create a copy of MessageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -417,24 +410,26 @@ class _$MessageModelImpl implements _MessageModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MessageModelImplToJson(this);
+    return _$$MessageModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _MessageModel implements MessageModel {
-  const factory _MessageModel({
-    required final String id,
-    required final String chatId,
-    required final String senderId,
-    final UserSimpleModel? sender,
-    final String? text,
-    final List<AttachmentModel> attachments,
-    required final DateTime timestamp,
-    final DateTime? editedAt,
-    final MessageStatusModel? status,
-    final String? forwardedFromMessageId,
-    final UserSimpleModel? forwardedFromUser,
-  }) = _$MessageModelImpl;
+  const factory _MessageModel(
+      {required final String id,
+      required final String chatId,
+      required final String senderId,
+      final UserSimpleModel? sender,
+      final String? text,
+      final List<AttachmentModel> attachments,
+      required final DateTime timestamp,
+      final DateTime? editedAt,
+      final MessageStatusModel? status,
+      final String? forwardedFromMessageId,
+      final UserSimpleModel? forwardedFromUser,
+      final List<ReactionModel> reactions}) = _$MessageModelImpl;
 
   factory _MessageModel.fromJson(Map<String, dynamic> json) =
       _$MessageModelImpl.fromJson;
@@ -460,7 +455,10 @@ abstract class _MessageModel implements MessageModel {
   @override
   String? get forwardedFromMessageId;
   @override
-  UserSimpleModel? get forwardedFromUser;
+  UserSimpleModel?
+      get forwardedFromUser; // Если API возвращает детали переславшего
+  @override
+  List<ReactionModel> get reactions;
 
   /// Create a copy of MessageModel
   /// with the given fields replaced by the non-null parameter values.

@@ -22,10 +22,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetCurrentUserUseCase _getCurrentUser;
   final ObserveAuthChangesUseCase _observeAuthChanges;
   StreamSubscription<UserModel?>? _authChangesSubscription;
+  StreamSubscription<UserAvatarUpdate>? _userAvatarUpdateSubscription;
 
   // Зависимости для управления статусами пользователя
   final UserRealtimeDataSource _userRealtimeDataSource;
-  final UserStatusBloc _userStatusBloc; 
+  final UserStatusBloc _userStatusBloc;
 
   AuthBloc({
     required LoginUserUseCase loginUser,
@@ -49,10 +50,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequested>(_onLoginRequested);
     on<RegisterRequested>(_onRegisterRequested);
     on<LogoutRequested>(_onLogoutRequested);
+    on<UserUpdated>(_onUserUpdated);
+    on<RealtimeAvatarUpdateReceived>(_onRealtimeAvatarUpdateReceived);
 
     // Подписываемся на изменения состояния аутентификации
     _authChangesSubscription = _observeAuthChanges.call().listen((user) {
       add(AuthStateChanged(user));
+    });
+
+    // Подписываемся на обновления аватара из UserRealtimeDataSource
+    _userAvatarUpdateSubscription = _userRealtimeDataSource.userAvatarUpdateStream.listen((avatarUpdate) {
+      add(RealtimeAvatarUpdateReceived(userId: avatarUpdate.userId, newAvatarUrl: avatarUpdate.newAvatarUrl));
     });
   }
 
@@ -76,19 +84,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
   
-  void _onAuthStateChanged(AuthStateChanged event, Emitter<AuthState> emit) {
+  void _onAuthStateChanged(AuthStateChanged event, Emitter<AuthState> emit) async {
     if (event.user != null) {
       // Пользователь аутентифицирован
       // Проверяем, нужно ли подключаться (если это не было сделано в _onAuthCheckRequested)
-      if (!_userRealtimeDataSource.isConnected) { // Добавим isConnected в UserRealtimeDataSource
-         _userRealtimeDataSource.connect().then((_) {
-            _userStatusBloc.add(ObserveUserStatusesStarted());
-         });
+      if (!_userRealtimeDataSource.isConnected) { 
+         // Используем await для гарантированного завершения подключения перед следующими шагами
+         await _userRealtimeDataSource.connect(); 
+         _userStatusBloc.add(ObserveUserStatusesStarted());
       }
       emit(Authenticated(event.user!));
     } else {
-      // Пользователь не аутентифицирован, отключаемся
-      _userRealtimeDataSource.disconnect();
+      // Пользователь не аутентифицирован, отключаемся, только если было активное соединение
+      if (_userRealtimeDataSource.isConnected) { // <--- Добавим проверку isConnected перед disconnect
+        await _userRealtimeDataSource.disconnect(); // <--- Добавим await
+      }
       // Здесь можно также остановить наблюдение в UserStatusBloc, если это необходимо
       // _userStatusBloc.add(ObserveUserStatusesStopped()); 
       emit(Unauthenticated());
@@ -151,9 +161,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  // Обработчик для события UserUpdated
+  void _onUserUpdated(UserUpdated event, Emitter<AuthState> emit) {
+    final currentState = state;
+    if (currentState is Authenticated) {
+      // Обновляем пользователя в текущем Authenticated состоянии
+      emit(Authenticated(event.updatedUser));
+    } 
+    // Если состояние не Authenticated, то ничего не делаем, 
+    // так как обновлять нечего или пользователь не вошел в систему.
+  }
+
+  // Новый обработчик для события обновления аватара из SignalR
+  void _onRealtimeAvatarUpdateReceived(RealtimeAvatarUpdateReceived event, Emitter<AuthState> emit) {
+    final currentState = state;
+    if (currentState is Authenticated) {
+      // Обновляем только если ID пользователя совпадает с текущим аутентифицированным пользователем
+      // ИЛИ если мы хотим обновлять аватары других пользователей, видимых в UI (например, в списке чатов)
+      // Сейчас предполагаем, что это событие только для ТЕКУЩЕГО пользователя.
+      // Если это для любого пользователя, то нужно будет найти и обновить его в каком-то общем списке пользователей.
+      if (currentState.user.id == event.userId) {
+        final updatedUser = currentState.user.copyWith(profileImageUrl: event.newAvatarUrl);
+        emit(Authenticated(updatedUser));
+      }
+    }
+  }
+
   @override
   Future<void> close() {
     _authChangesSubscription?.cancel();
+    _userAvatarUpdateSubscription?.cancel();
     // Отключаемся при закрытии AuthBloc
     _userRealtimeDataSource.disconnect(); 
     return super.close();

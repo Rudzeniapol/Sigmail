@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
-using System.Security.Claims;
+using SigmailServer.Domain.Enums;
 
-namespace SigmailServer.API.Controllers
+namespace SigmailServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -67,7 +67,7 @@ namespace SigmailServer.API.Controllers
             public string FileName { get; set; }
             public string? ContentType { get; set; }
             public long FileSize { get; set; }
-            public SigmailClient.Domain.Enums.AttachmentType AttachmentType { get; set; }
+            public AttachmentType AttachmentType { get; set; }
         }
 
         [HttpGet("download-url/{fileKey}")]

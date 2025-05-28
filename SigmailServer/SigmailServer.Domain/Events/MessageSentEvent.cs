@@ -1,6 +1,6 @@
-﻿using SigmailClient.Domain.Events.Interfaces;
+﻿using SigmailServer.Domain.Events.Interfaces;
 
-namespace SigmailClient.Domain.Events;
+namespace SigmailServer.Domain.Events;
 
 public class MessageSentEvent : IDomainEvent {
     public Guid MessageId { get; }

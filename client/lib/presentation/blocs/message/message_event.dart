@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:sigmail_client/data/models/message/create_message_model.dart';
 import 'package:sigmail_client/data/models/message/message_model.dart';
+import 'package:sigmail_client/data/models/reaction/reaction_model.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:sigmail_client/domain/enums/attachment_type.dart';
 
@@ -58,4 +59,37 @@ class SendAttachmentEvent extends MessageEvent {
 
   @override
   List<Object?> get props => [file, chatId, attachmentType, messageText];
+}
+
+// Событие для запроса на добавление реакции
+class AddReactionRequested extends MessageEvent {
+  final String messageId;
+  final String emoji;
+
+  const AddReactionRequested({required this.messageId, required this.emoji});
+
+  @override
+  List<Object> get props => [messageId, emoji];
+}
+
+// Событие для запроса на удаление реакции
+class RemoveReactionRequested extends MessageEvent {
+  final String messageId;
+  final String emoji;
+
+  const RemoveReactionRequested({required this.messageId, required this.emoji});
+
+  @override
+  List<Object> get props => [messageId, emoji];
+}
+
+// Событие для внутреннего обновления реакций (например, от SignalR)
+class InternalReactionsUpdated extends MessageEvent {
+  final String messageId;
+  final List<ReactionModel> reactions;
+
+  const InternalReactionsUpdated({required this.messageId, required this.reactions});
+
+  @override
+  List<Object> get props => [messageId, reactions];
 } 

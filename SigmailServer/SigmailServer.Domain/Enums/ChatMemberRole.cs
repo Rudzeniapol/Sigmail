@@ -1,4 +1,4 @@
-﻿namespace SigmailClient.Domain.Enums;
+﻿namespace SigmailServer.Domain.Enums;
 
 public enum ChatMemberRole
 {

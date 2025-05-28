@@ -12,8 +12,7 @@ part of 'attachment_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 AttachmentModel _$AttachmentModelFromJson(Map<String, dynamic> json) {
   return _AttachmentModel.fromJson(json);
@@ -45,22 +44,20 @@ mixin _$AttachmentModel {
 /// @nodoc
 abstract class $AttachmentModelCopyWith<$Res> {
   factory $AttachmentModelCopyWith(
-    AttachmentModel value,
-    $Res Function(AttachmentModel) then,
-  ) = _$AttachmentModelCopyWithImpl<$Res, AttachmentModel>;
+          AttachmentModel value, $Res Function(AttachmentModel) then) =
+      _$AttachmentModelCopyWithImpl<$Res, AttachmentModel>;
   @useResult
-  $Res call({
-    String fileKey,
-    String fileName,
-    String contentType,
-    AttachmentType type,
-    int size,
-    String? presignedUrl,
-    String? thumbnailKey,
-    String? thumbnailPresignedUrl,
-    int? width,
-    int? height,
-  });
+  $Res call(
+      {String fileKey,
+      String fileName,
+      String contentType,
+      AttachmentType type,
+      int size,
+      String? presignedUrl,
+      String? thumbnailKey,
+      String? thumbnailPresignedUrl,
+      int? width,
+      int? height});
 }
 
 /// @nodoc
@@ -89,85 +86,70 @@ class _$AttachmentModelCopyWithImpl<$Res, $Val extends AttachmentModel>
     Object? width = freezed,
     Object? height = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            fileKey:
-                null == fileKey
-                    ? _value.fileKey
-                    : fileKey // ignore: cast_nullable_to_non_nullable
-                        as String,
-            fileName:
-                null == fileName
-                    ? _value.fileName
-                    : fileName // ignore: cast_nullable_to_non_nullable
-                        as String,
-            contentType:
-                null == contentType
-                    ? _value.contentType
-                    : contentType // ignore: cast_nullable_to_non_nullable
-                        as String,
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as AttachmentType,
-            size:
-                null == size
-                    ? _value.size
-                    : size // ignore: cast_nullable_to_non_nullable
-                        as int,
-            presignedUrl:
-                freezed == presignedUrl
-                    ? _value.presignedUrl
-                    : presignedUrl // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            thumbnailKey:
-                freezed == thumbnailKey
-                    ? _value.thumbnailKey
-                    : thumbnailKey // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            thumbnailPresignedUrl:
-                freezed == thumbnailPresignedUrl
-                    ? _value.thumbnailPresignedUrl
-                    : thumbnailPresignedUrl // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            width:
-                freezed == width
-                    ? _value.width
-                    : width // ignore: cast_nullable_to_non_nullable
-                        as int?,
-            height:
-                freezed == height
-                    ? _value.height
-                    : height // ignore: cast_nullable_to_non_nullable
-                        as int?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      fileKey: null == fileKey
+          ? _value.fileKey
+          : fileKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      contentType: null == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      presignedUrl: freezed == presignedUrl
+          ? _value.presignedUrl
+          : presignedUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      thumbnailKey: freezed == thumbnailKey
+          ? _value.thumbnailKey
+          : thumbnailKey // ignore: cast_nullable_to_non_nullable
+              as String?,
+      thumbnailPresignedUrl: freezed == thumbnailPresignedUrl
+          ? _value.thumbnailPresignedUrl
+          : thumbnailPresignedUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      width: freezed == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$AttachmentModelImplCopyWith<$Res>
     implements $AttachmentModelCopyWith<$Res> {
-  factory _$$AttachmentModelImplCopyWith(
-    _$AttachmentModelImpl value,
-    $Res Function(_$AttachmentModelImpl) then,
-  ) = __$$AttachmentModelImplCopyWithImpl<$Res>;
+  factory _$$AttachmentModelImplCopyWith(_$AttachmentModelImpl value,
+          $Res Function(_$AttachmentModelImpl) then) =
+      __$$AttachmentModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String fileKey,
-    String fileName,
-    String contentType,
-    AttachmentType type,
-    int size,
-    String? presignedUrl,
-    String? thumbnailKey,
-    String? thumbnailPresignedUrl,
-    int? width,
-    int? height,
-  });
+  $Res call(
+      {String fileKey,
+      String fileName,
+      String contentType,
+      AttachmentType type,
+      int size,
+      String? presignedUrl,
+      String? thumbnailKey,
+      String? thumbnailPresignedUrl,
+      int? width,
+      int? height});
 }
 
 /// @nodoc
@@ -175,9 +157,8 @@ class __$$AttachmentModelImplCopyWithImpl<$Res>
     extends _$AttachmentModelCopyWithImpl<$Res, _$AttachmentModelImpl>
     implements _$$AttachmentModelImplCopyWith<$Res> {
   __$$AttachmentModelImplCopyWithImpl(
-    _$AttachmentModelImpl _value,
-    $Res Function(_$AttachmentModelImpl) _then,
-  ) : super(_value, _then);
+      _$AttachmentModelImpl _value, $Res Function(_$AttachmentModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AttachmentModel
   /// with the given fields replaced by the non-null parameter values.
@@ -195,60 +176,48 @@ class __$$AttachmentModelImplCopyWithImpl<$Res>
     Object? width = freezed,
     Object? height = freezed,
   }) {
-    return _then(
-      _$AttachmentModelImpl(
-        fileKey:
-            null == fileKey
-                ? _value.fileKey
-                : fileKey // ignore: cast_nullable_to_non_nullable
-                    as String,
-        fileName:
-            null == fileName
-                ? _value.fileName
-                : fileName // ignore: cast_nullable_to_non_nullable
-                    as String,
-        contentType:
-            null == contentType
-                ? _value.contentType
-                : contentType // ignore: cast_nullable_to_non_nullable
-                    as String,
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as AttachmentType,
-        size:
-            null == size
-                ? _value.size
-                : size // ignore: cast_nullable_to_non_nullable
-                    as int,
-        presignedUrl:
-            freezed == presignedUrl
-                ? _value.presignedUrl
-                : presignedUrl // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        thumbnailKey:
-            freezed == thumbnailKey
-                ? _value.thumbnailKey
-                : thumbnailKey // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        thumbnailPresignedUrl:
-            freezed == thumbnailPresignedUrl
-                ? _value.thumbnailPresignedUrl
-                : thumbnailPresignedUrl // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        width:
-            freezed == width
-                ? _value.width
-                : width // ignore: cast_nullable_to_non_nullable
-                    as int?,
-        height:
-            freezed == height
-                ? _value.height
-                : height // ignore: cast_nullable_to_non_nullable
-                    as int?,
-      ),
-    );
+    return _then(_$AttachmentModelImpl(
+      fileKey: null == fileKey
+          ? _value.fileKey
+          : fileKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      contentType: null == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      presignedUrl: freezed == presignedUrl
+          ? _value.presignedUrl
+          : presignedUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      thumbnailKey: freezed == thumbnailKey
+          ? _value.thumbnailKey
+          : thumbnailKey // ignore: cast_nullable_to_non_nullable
+              as String?,
+      thumbnailPresignedUrl: freezed == thumbnailPresignedUrl
+          ? _value.thumbnailPresignedUrl
+          : thumbnailPresignedUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      width: freezed == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
@@ -256,18 +225,17 @@ class __$$AttachmentModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(explicitToJson: true)
 class _$AttachmentModelImpl implements _AttachmentModel {
-  const _$AttachmentModelImpl({
-    required this.fileKey,
-    required this.fileName,
-    required this.contentType,
-    required this.type,
-    required this.size,
-    this.presignedUrl,
-    this.thumbnailKey,
-    this.thumbnailPresignedUrl,
-    this.width,
-    this.height,
-  });
+  const _$AttachmentModelImpl(
+      {required this.fileKey,
+      required this.fileName,
+      required this.contentType,
+      required this.type,
+      required this.size,
+      this.presignedUrl,
+      this.thumbnailKey,
+      this.thumbnailPresignedUrl,
+      this.width,
+      this.height});
 
   factory _$AttachmentModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AttachmentModelImplFromJson(json);
@@ -323,18 +291,17 @@ class _$AttachmentModelImpl implements _AttachmentModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    fileKey,
-    fileName,
-    contentType,
-    type,
-    size,
-    presignedUrl,
-    thumbnailKey,
-    thumbnailPresignedUrl,
-    width,
-    height,
-  );
+      runtimeType,
+      fileKey,
+      fileName,
+      contentType,
+      type,
+      size,
+      presignedUrl,
+      thumbnailKey,
+      thumbnailPresignedUrl,
+      width,
+      height);
 
   /// Create a copy of AttachmentModel
   /// with the given fields replaced by the non-null parameter values.
@@ -343,29 +310,28 @@ class _$AttachmentModelImpl implements _AttachmentModel {
   @pragma('vm:prefer-inline')
   _$$AttachmentModelImplCopyWith<_$AttachmentModelImpl> get copyWith =>
       __$$AttachmentModelImplCopyWithImpl<_$AttachmentModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AttachmentModelImplToJson(this);
+    return _$$AttachmentModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _AttachmentModel implements AttachmentModel {
-  const factory _AttachmentModel({
-    required final String fileKey,
-    required final String fileName,
-    required final String contentType,
-    required final AttachmentType type,
-    required final int size,
-    final String? presignedUrl,
-    final String? thumbnailKey,
-    final String? thumbnailPresignedUrl,
-    final int? width,
-    final int? height,
-  }) = _$AttachmentModelImpl;
+  const factory _AttachmentModel(
+      {required final String fileKey,
+      required final String fileName,
+      required final String contentType,
+      required final AttachmentType type,
+      required final int size,
+      final String? presignedUrl,
+      final String? thumbnailKey,
+      final String? thumbnailPresignedUrl,
+      final int? width,
+      final int? height}) = _$AttachmentModelImpl;
 
   factory _AttachmentModel.fromJson(Map<String, dynamic> json) =
       _$AttachmentModelImpl.fromJson;

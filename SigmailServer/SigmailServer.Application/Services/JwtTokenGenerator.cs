@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SigmailClient.Domain.Models;
 using SigmailServer.Application.Services.Interfaces;
+using SigmailServer.Domain.Models;
 
 namespace SigmailServer.Application.Services;
 

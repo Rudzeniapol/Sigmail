@@ -1,6 +1,7 @@
-﻿namespace SigmailServer.Application.DTOs;
+﻿using SigmailServer.Domain.Enums;
 
-using SigmailClient.Domain.Enums; // Для ChatType
+namespace SigmailServer.Application.DTOs;
+// Для ChatType
 
 public class CreateChatDto {
     public string? Name { get; set; } // Для групп/каналов

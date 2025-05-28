@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using SigmailClient.Domain.Enums;
-using SigmailClient.Domain.Interfaces;
 using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
-using SigmailClient.Domain.Models;
+using SigmailServer.Domain.Enums;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Domain.Models;
 
 namespace SigmailServer.Application.Services;
 

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using SigmailClient.Domain.Models;
 using SigmailServer.Application.DTOs;
+using SigmailServer.Domain.Models;
 
 namespace SigmailServer.Application.DTOs.MappingProfiles
 {
@@ -10,7 +10,8 @@ namespace SigmailServer.Application.DTOs.MappingProfiles
         {
             // Из Message (домен) в MessageDto (DTO для отображения)
             CreateMap<Message, MessageDto>()
-                .ForMember(dest => dest.Sender, opt => opt.Ignore()); // Sender (UserSimpleDto) будет заполняться в сервисе
+                .ForMember(dest => dest.Sender, opt => opt.Ignore()) // Sender (UserSimpleDto) будет заполняться в сервисе
+                .ForMember(dest => dest.IsRead, opt => opt.Ignore()); // IsRead будет устанавливаться вручную в MessageService
 
             // Из CreateMessageDto (DTO для создания) в Message (домен)
             CreateMap<CreateMessageDto, Message>()
@@ -27,8 +28,8 @@ namespace SigmailServer.Application.DTOs.MappingProfiles
                 .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.Attachments, opt => opt.MapFrom(src => src.Attachments)); // Маппим вложения
 
-            // Из MessageReactionEntry (домен) в MessageReactionDto (DTO)
-            CreateMap<MessageReactionEntry, MessageReactionDto>();
+            // Из Domain.Models.Reaction в Application.DTOs.ReactionDto
+            CreateMap<Reaction, ReactionDto>();
         }
     }
 }

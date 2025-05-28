@@ -18,7 +18,7 @@
           }
         }
       },
-      "AWSSDK.Core/3.7.302.8": {
+      "AWSSDK.Core/4.0.0.6": {
         "type": "package",
         "compile": {
           "lib/net8.0/AWSSDK.Core.dll": {
@@ -31,10 +31,10 @@
           }
         }
       },
-      "AWSSDK.S3/3.7.305.24": {
+      "AWSSDK.S3/4.0.0.7": {
         "type": "package",
         "dependencies": {
-          "AWSSDK.Core": "[3.7.302.8, 4.0.0)"
+          "AWSSDK.Core": "[4.0.0.5, 5.0.0)"
         },
         "compile": {
           "lib/net8.0/AWSSDK.S3.dll": {
@@ -47,25 +47,16 @@
           }
         }
       },
-      "BCrypt/1.0.0": {
+      "BCrypt.Net-Next/4.0.3": {
         "type": "package",
         "compile": {
-          "lib/DevOne.Security.Cryptography.BCrypt.dll": {}
-        },
-        "runtime": {
-          "lib/DevOne.Security.Cryptography.BCrypt.dll": {}
-        }
-      },
-      "BCrypt.Net/0.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/net35/BCrypt.Net.dll": {
-            "related": ".XML"
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net35/BCrypt.Net.dll": {
-            "related": ".XML"
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
           }
         }
       },
@@ -1244,23 +1235,20 @@
         "lib/netstandard2.1/AutoMapper.xml"
       ]
     },
-    "AWSSDK.Core/3.7.302.8": {
-      "sha512": "6qKoc8+plcVdGV/pJDJ2T5pXTu+oMKVTCSisg3zB4mbSwsa14YC58QxZF4Ga2fFcpJbi+ChRdOBkpTF4oyTDzA==",
+    "AWSSDK.Core/4.0.0.6": {
+      "sha512": "qPg9l63BTLXARC8j8fjjTrHa5pNDBq1g+XDzu6Oi1zl1d+RKbjLrCXZYFBQN+O6ZJGeHRBNLD0fFcPEK4rEk5Q==",
       "type": "package",
-      "path": "awssdk.core/3.7.302.8",
+      "path": "awssdk.core/4.0.0.6",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "awssdk.core.3.7.302.8.nupkg.sha512",
+        "awssdk.core.4.0.0.6.nupkg.sha512",
         "awssdk.core.nuspec",
         "images/AWSLogo.png",
-        "lib/net35/AWSSDK.Core.dll",
-        "lib/net35/AWSSDK.Core.pdb",
-        "lib/net35/AWSSDK.Core.xml",
-        "lib/net45/AWSSDK.Core.dll",
-        "lib/net45/AWSSDK.Core.pdb",
-        "lib/net45/AWSSDK.Core.xml",
+        "lib/net472/AWSSDK.Core.dll",
+        "lib/net472/AWSSDK.Core.pdb",
+        "lib/net472/AWSSDK.Core.xml",
         "lib/net8.0/AWSSDK.Core.dll",
         "lib/net8.0/AWSSDK.Core.pdb",
         "lib/net8.0/AWSSDK.Core.xml",
@@ -1273,25 +1261,22 @@
         "tools/account-management.ps1"
       ]
     },
-    "AWSSDK.S3/3.7.305.24": {
-      "sha512": "nOOpRSE+FPzCDpIFHo2S3nDckPBfny/4oxmGir50xrd7ADe0ivKFE2SdCexkRiVeyyaMNvZu6A/JXmc8ynMtyw==",
+    "AWSSDK.S3/4.0.0.7": {
+      "sha512": "dFELsA+Y7aXmvCTL83+oIWmr+0s/GpkqCKZK1ac7HPdYQFv+QHEAhrXdCJknsCKqK+v0yefkLzuKuSSP6k4tmA==",
       "type": "package",
-      "path": "awssdk.s3/3.7.305.24",
+      "path": "awssdk.s3/4.0.0.7",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "analyzers/dotnet/cs/AWSSDK.S3.CodeAnalysis.dll",
         "analyzers/dotnet/cs/SharedAnalysisCode.dll",
-        "awssdk.s3.3.7.305.24.nupkg.sha512",
+        "awssdk.s3.4.0.0.7.nupkg.sha512",
         "awssdk.s3.nuspec",
         "images/AWSLogo.png",
-        "lib/net35/AWSSDK.S3.dll",
-        "lib/net35/AWSSDK.S3.pdb",
-        "lib/net35/AWSSDK.S3.xml",
-        "lib/net45/AWSSDK.S3.dll",
-        "lib/net45/AWSSDK.S3.pdb",
-        "lib/net45/AWSSDK.S3.xml",
+        "lib/net472/AWSSDK.S3.dll",
+        "lib/net472/AWSSDK.S3.pdb",
+        "lib/net472/AWSSDK.S3.xml",
         "lib/net8.0/AWSSDK.S3.dll",
         "lib/net8.0/AWSSDK.S3.pdb",
         "lib/net8.0/AWSSDK.S3.xml",
@@ -1305,29 +1290,35 @@
         "tools/uninstall.ps1"
       ]
     },
-    "BCrypt/1.0.0": {
-      "sha512": "/ibwe2Sg7MJR26IrEzW2Rde9/+A+AYXB5Kf9w/8BVLDdzSfUe4W2M7i2efy1Wa9wHh1k0y81Q6h9Ty8C6IrUGA==",
+    "BCrypt.Net-Next/4.0.3": {
+      "sha512": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
       "type": "package",
-      "path": "bcrypt/1.0.0",
+      "path": "bcrypt.net-next/4.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "bcrypt.1.0.0.nupkg.sha512",
-        "bcrypt.nuspec",
-        "lib/DevOne.Security.Cryptography.BCrypt.dll"
-      ]
-    },
-    "BCrypt.Net/0.1.0": {
-      "sha512": "sST2w361Dxt9GGMfpOTiK50wXGV64Ybb1hiX3xjEWnhVYZNF43NuySGwADJa7X1R+bA53NsFR+tuDxcYiJeIOA==",
-      "type": "package",
-      "path": "bcrypt.net/0.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "bcrypt.net.0.1.0.nupkg.sha512",
-        "bcrypt.net.nuspec",
-        "lib/net35/BCrypt.Net.XML",
-        "lib/net35/BCrypt.Net.dll"
+        "bcrypt.net-next.4.0.3.nupkg.sha512",
+        "bcrypt.net-next.nuspec",
+        "ico.png",
+        "lib/net20/BCrypt.Net-Next.dll",
+        "lib/net20/BCrypt.Net-Next.xml",
+        "lib/net35/BCrypt.Net-Next.dll",
+        "lib/net35/BCrypt.Net-Next.xml",
+        "lib/net462/BCrypt.Net-Next.dll",
+        "lib/net462/BCrypt.Net-Next.xml",
+        "lib/net472/BCrypt.Net-Next.dll",
+        "lib/net472/BCrypt.Net-Next.xml",
+        "lib/net48/BCrypt.Net-Next.dll",
+        "lib/net48/BCrypt.Net-Next.xml",
+        "lib/net5.0/BCrypt.Net-Next.dll",
+        "lib/net5.0/BCrypt.Net-Next.xml",
+        "lib/net6.0/BCrypt.Net-Next.dll",
+        "lib/net6.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.0/BCrypt.Net-Next.dll",
+        "lib/netstandard2.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.1/BCrypt.Net-Next.dll",
+        "lib/netstandard2.1/BCrypt.Net-Next.xml",
+        "readme.md"
       ]
     },
     "Elasticsearch.Net/7.17.5": {
@@ -2894,17 +2885,17 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "AWSSDK.S3 >= 3.7.305.24",
+      "AWSSDK.Core >= 4.0.0.6",
+      "AWSSDK.S3 >= 4.0.0.7",
       "AutoMapper >= 12.0.1",
-      "BCrypt >= 1.0.0",
-      "BCrypt.Net >= 0.1.0",
+      "BCrypt.Net-Next >= 4.0.3",
       "FluentValidation >= 11.9.0",
       "MaxMind.GeoIP2 >= 5.1.0",
       "Microsoft.AspNetCore.SignalR >= 1.2.0",
       "Microsoft.AspNetCore.StaticFiles >= 2.3.0",
       "Microsoft.Extensions.Caching.StackExchangeRedis >= 9.0.0-preview.1.24081.5",
       "Microsoft.Extensions.Configuration >= 9.0.5",
-      "Microsoft.Extensions.Http >= 9.0.0-preview.1.24081.5",
+      "Microsoft.Extensions.Http >= 9.0.0-preview.2.24128.5",
       "NEST >= 7.17.5",
       "SigmailServer.Domain >= 1.0.0",
       "StackExchange.Redis >= 2.7.17",
@@ -2966,21 +2957,21 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "AWSSDK.Core": {
+            "target": "Package",
+            "version": "[4.0.0.6, )"
+          },
           "AWSSDK.S3": {
             "target": "Package",
-            "version": "[3.7.305.24, )"
+            "version": "[4.0.0.7, )"
           },
           "AutoMapper": {
             "target": "Package",
             "version": "[12.0.1, )"
           },
-          "BCrypt": {
+          "BCrypt.Net-Next": {
             "target": "Package",
-            "version": "[1.0.0, )"
-          },
-          "BCrypt.Net": {
-            "target": "Package",
-            "version": "[0.1.0, )"
+            "version": "[4.0.3, )"
           },
           "FluentValidation": {
             "target": "Package",
@@ -3008,7 +2999,7 @@
           },
           "Microsoft.Extensions.Http": {
             "target": "Package",
-            "version": "[9.0.0-preview.1.24081.5, )"
+            "version": "[9.0.0-preview.2.24128.5, )"
           },
           "NEST": {
             "target": "Package",
@@ -3046,37 +3037,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "SigmailServer.Application depends on Microsoft.Extensions.Http (>= 9.0.0-preview.1.24081.5) but Microsoft.Extensions.Http 9.0.0-preview.1.24081.5 was not found. Microsoft.Extensions.Http 9.0.0-preview.2.24128.5 was resolved instead.",
-      "libraryId": "Microsoft.Extensions.Http",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'BCrypt 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
-      "libraryId": "BCrypt",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'BCrypt.Net 0.1.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
-      "libraryId": "BCrypt.Net",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    }
-  ]
+  }
 }

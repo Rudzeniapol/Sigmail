@@ -1,15 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Persistence.MongoDB;
-
-using MongoDB;
-using SigmailClient.Domain.Interfaces;
-using SigmailClient.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+namespace SigmailServer.Persistence.MongoDB;
 
 public class NotificationRepository : INotificationRepository
 {

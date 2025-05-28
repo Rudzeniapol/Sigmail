@@ -1,11 +1,12 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using SigmailClient.Domain.Interfaces;
-using SigmailClient.Domain.Models;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Domain.Models;
+
 // Добавлено для полноты, хотя для CountDocumentsAsync с лямбдой обычно достаточно MongoDB.Driver
 // Стандартный LINQ
 
-namespace SigmailClient.Persistence.MongoDB;
+namespace SigmailServer.Persistence.MongoDB;
 
 public class MessageRepository : IMessageRepository
 {
@@ -77,48 +78,6 @@ public class MessageRepository : IMessageRepository
         );
         return await _messagesCollection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
         // Предыдущий вариант: return await _messagesCollection.CountDocumentsAsync(m => m.ChatId == chatId && !m.IsDeleted, cancellationToken);
-    }
-
-    public async Task AddReactionAsync(string messageId, Guid userId, string emoji, CancellationToken cancellationToken = default)
-    {
-        if (!ObjectId.TryParse(messageId, out _)) throw new ArgumentException("Invalid message ID format.", nameof(messageId));
-
-        var filter = Builders<Message>.Filter.Eq(m => m.Id, messageId);
-    
-        // Создаем объект реакции. ReactedAt будет установлен автоматически моделью.
-        var newReaction = new MessageReactionEntry { UserId = userId, Emoji = emoji }; 
-
-        // Логика для предотвращения дублирования реакции от одного и того же пользователя с тем же emoji.
-        // 1. Сначала удаляем любую существующую реакцию этого пользователя с этим emoji.
-        var pullUpdate = Builders<Message>.Update.PullFilter(m => m.Reactions, 
-            r => r.UserId == userId && r.Emoji == emoji);
-        await _messagesCollection.UpdateOneAsync(filter, pullUpdate, cancellationToken: cancellationToken);
-
-        // 2. Затем добавляем новую реакцию.
-        // Это гарантирует, что если пользователь меняет реакцию (хотя здесь он просто добавляет ту же), 
-        // или если мы хотим "обновить" ReactedAt, старая запись удаляется и добавляется новая.
-        // Если же нужно просто "не добавлять, если уже есть", то эта двухэтапная операция - избыточна,
-        // и можно было бы использовать $addToSet, но $addToSet сравнивает весь объект.
-        // Так как ReactedAt всегда новый при создании объекта newReaction (если бы мы его тут задавали),
-        // $addToSet добавил бы дубликат.
-        // С учетом того, что ReactedAt устанавливается в модели, и мы хотим, чтобы была только одна реакция UserId+Emoji,
-        // подход "удалить старую + добавить новую" является более надежным для обеспечения уникальности.
-
-        var pushUpdate = Builders<Message>.Update.AddToSet(m => m.Reactions, newReaction); // Используем newReaction
-    
-        await _messagesCollection.UpdateOneAsync(filter, pushUpdate, cancellationToken: cancellationToken);
-    }
-
-    public async Task RemoveReactionAsync(string messageId, Guid userId, string emoji, CancellationToken cancellationToken = default)
-    {
-        if (!ObjectId.TryParse(messageId, out _)) throw new ArgumentException("Invalid message ID format.", nameof(messageId));
-
-        var filter = Builders<Message>.Filter.Eq(m => m.Id, messageId);
-        var reactionToRemove = new MessageReactionEntry { UserId = userId, Emoji = emoji }; // Точное совпадение может не сработать из-за Timestamp
-        // Удаляем по UserId и Emoji
-        var update = Builders<Message>.Update.PullFilter(m => m.Reactions, r => r.UserId == userId && r.Emoji == emoji);
-        
-        await _messagesCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
     }
 
     public async Task MarkMessageAsReadByAsync(string messageId, Guid userId, CancellationToken cancellationToken = default)

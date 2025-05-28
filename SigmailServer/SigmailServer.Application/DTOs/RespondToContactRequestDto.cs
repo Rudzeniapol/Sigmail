@@ -1,4 +1,4 @@
-﻿using SigmailClient.Domain.Enums;
+﻿using SigmailServer.Domain.Enums;
 
 namespace SigmailServer.Application.DTOs;
 

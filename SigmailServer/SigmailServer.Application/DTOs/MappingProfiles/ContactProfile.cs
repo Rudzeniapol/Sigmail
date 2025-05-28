@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using SigmailClient.Domain.Models;
 using SigmailServer.Application.DTOs;
+using SigmailServer.Domain.Models;
 
 namespace SigmailServer.Application.DTOs.MappingProfiles
 {

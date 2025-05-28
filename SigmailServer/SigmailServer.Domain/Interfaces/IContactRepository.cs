@@ -1,7 +1,7 @@
-﻿using SigmailClient.Domain.Models;
-using SigmailClient.Domain.Enums;
+﻿using SigmailServer.Domain.Enums;
+using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Domain.Interfaces;
+namespace SigmailServer.Domain.Interfaces;
 
 public interface IContactRepository : IRepository<Contact>
 {

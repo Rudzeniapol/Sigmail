@@ -4,7 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>SigmailClient.Domain</RootNamespace>
+        <RootNamespace>SigmailServer.Domain</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

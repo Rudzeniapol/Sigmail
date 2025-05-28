@@ -12,8 +12,7 @@ part of 'user_simple_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 UserSimpleModel _$UserSimpleModelFromJson(Map<String, dynamic> json) {
   return _UserSimpleModel.fromJson(json);
@@ -38,9 +37,8 @@ mixin _$UserSimpleModel {
 /// @nodoc
 abstract class $UserSimpleModelCopyWith<$Res> {
   factory $UserSimpleModelCopyWith(
-    UserSimpleModel value,
-    $Res Function(UserSimpleModel) then,
-  ) = _$UserSimpleModelCopyWithImpl<$Res, UserSimpleModel>;
+          UserSimpleModel value, $Res Function(UserSimpleModel) then) =
+      _$UserSimpleModelCopyWithImpl<$Res, UserSimpleModel>;
   @useResult
   $Res call({String id, String username, String? profileImageUrl});
 }
@@ -64,36 +62,29 @@ class _$UserSimpleModelCopyWithImpl<$Res, $Val extends UserSimpleModel>
     Object? username = null,
     Object? profileImageUrl = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id:
-                null == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
-                        as String,
-            username:
-                null == username
-                    ? _value.username
-                    : username // ignore: cast_nullable_to_non_nullable
-                        as String,
-            profileImageUrl:
-                freezed == profileImageUrl
-                    ? _value.profileImageUrl
-                    : profileImageUrl // ignore: cast_nullable_to_non_nullable
-                        as String?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      profileImageUrl: freezed == profileImageUrl
+          ? _value.profileImageUrl
+          : profileImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$UserSimpleModelImplCopyWith<$Res>
     implements $UserSimpleModelCopyWith<$Res> {
-  factory _$$UserSimpleModelImplCopyWith(
-    _$UserSimpleModelImpl value,
-    $Res Function(_$UserSimpleModelImpl) then,
-  ) = __$$UserSimpleModelImplCopyWithImpl<$Res>;
+  factory _$$UserSimpleModelImplCopyWith(_$UserSimpleModelImpl value,
+          $Res Function(_$UserSimpleModelImpl) then) =
+      __$$UserSimpleModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String id, String username, String? profileImageUrl});
@@ -104,9 +95,8 @@ class __$$UserSimpleModelImplCopyWithImpl<$Res>
     extends _$UserSimpleModelCopyWithImpl<$Res, _$UserSimpleModelImpl>
     implements _$$UserSimpleModelImplCopyWith<$Res> {
   __$$UserSimpleModelImplCopyWithImpl(
-    _$UserSimpleModelImpl _value,
-    $Res Function(_$UserSimpleModelImpl) _then,
-  ) : super(_value, _then);
+      _$UserSimpleModelImpl _value, $Res Function(_$UserSimpleModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of UserSimpleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -117,36 +107,28 @@ class __$$UserSimpleModelImplCopyWithImpl<$Res>
     Object? username = null,
     Object? profileImageUrl = freezed,
   }) {
-    return _then(
-      _$UserSimpleModelImpl(
-        id:
-            null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                    as String,
-        username:
-            null == username
-                ? _value.username
-                : username // ignore: cast_nullable_to_non_nullable
-                    as String,
-        profileImageUrl:
-            freezed == profileImageUrl
-                ? _value.profileImageUrl
-                : profileImageUrl // ignore: cast_nullable_to_non_nullable
-                    as String?,
-      ),
-    );
+    return _then(_$UserSimpleModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      profileImageUrl: freezed == profileImageUrl
+          ? _value.profileImageUrl
+          : profileImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserSimpleModelImpl implements _UserSimpleModel {
-  const _$UserSimpleModelImpl({
-    required this.id,
-    required this.username,
-    this.profileImageUrl,
-  });
+  const _$UserSimpleModelImpl(
+      {required this.id, required this.username, this.profileImageUrl});
 
   factory _$UserSimpleModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserSimpleModelImplFromJson(json);
@@ -186,22 +168,21 @@ class _$UserSimpleModelImpl implements _UserSimpleModel {
   @pragma('vm:prefer-inline')
   _$$UserSimpleModelImplCopyWith<_$UserSimpleModelImpl> get copyWith =>
       __$$UserSimpleModelImplCopyWithImpl<_$UserSimpleModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserSimpleModelImplToJson(this);
+    return _$$UserSimpleModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _UserSimpleModel implements UserSimpleModel {
-  const factory _UserSimpleModel({
-    required final String id,
-    required final String username,
-    final String? profileImageUrl,
-  }) = _$UserSimpleModelImpl;
+  const factory _UserSimpleModel(
+      {required final String id,
+      required final String username,
+      final String? profileImageUrl}) = _$UserSimpleModelImpl;
 
   factory _UserSimpleModel.fromJson(Map<String, dynamic> json) =
       _$UserSimpleModelImpl.fromJson;

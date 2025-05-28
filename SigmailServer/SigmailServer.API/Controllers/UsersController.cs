@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
-using System.Security.Claims;
+using SigmailServer.Domain.Enums;
 
-namespace SigmailServer.API.Controllers
+namespace SigmailServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -84,7 +85,15 @@ namespace SigmailServer.API.Controllers
             {
                 var userId = GetCurrentUserId();
                 await _userService.UpdateUserProfileAsync(userId, dto);
-                return Ok(new { message = "Profile updated successfully." });
+                // Возвращаем обновленного пользователя после обновления профиля
+                var updatedUser = await _userService.GetByIdAsync(userId);
+                if (updatedUser == null) 
+                {
+                    // Этого не должно произойти, если UpdateUserProfileAsync не выбросил исключение
+                    _logger.LogError("User {UserId} not found after profile update.", userId);
+                    return NotFound(new { message = "User not found after update." });
+                }
+                return Ok(updatedUser);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -107,7 +116,7 @@ namespace SigmailServer.API.Controllers
 
         [HttpPost("me/avatar")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadAvatar(IFormFile file)
+        public async Task<ActionResult<UserDto>> UploadAvatar(IFormFile file)
         {
             if (file == null || file.Length == 0)
             {
@@ -123,29 +132,29 @@ namespace SigmailServer.API.Controllers
                     file.OpenReadStream(),
                     file.FileName,
                     file.ContentType,
-                    SigmailClient.Domain.Enums.AttachmentType.Image 
+                    AttachmentType.Image 
                 );
 
-                // <<< ВЫЗОВ НОВОГО МЕТОДА СЕРВИСА >>>
                 await _userService.UpdateUserAvatarAsync(userId, attachmentDto.FileKey);
                 
                 _logger.LogInformation("User {UserId} uploaded and linked new avatar. FileKey: {FileKey}", userId, attachmentDto.FileKey);
                 
-                // Получаем обновленный URL (если UploadAttachmentAsync его не возвращает в актуальном виде для аватара)
-                // или просто подтверждаем успех. PresignedUrl из attachmentDto может быть не тем, что хранится как ProfileImageUrl.
-                // ProfileImageUrl - это обычно сам fileKey или постоянный CDN URL, а не временный presigned.
-                return Ok(new { 
-                    message = "Avatar uploaded and updated successfully.", 
-                    fileKey = attachmentDto.FileKey,
-                    // Если ProfileImageUrl должен быть доступен через presigned URL, его нужно генерировать отдельно:
-                    // profileImageUrl = await _attachmentService.GetPresignedDownloadUrlAsync(attachmentDto.FileKey, userId) 
-                });
+                // Получаем и возвращаем обновленный UserDto
+                var updatedUserDto = await _userService.GetByIdAsync(userId);
+                if (updatedUserDto == null)
+                {
+                    // Этого не должно произойти, если UpdateUserAvatarAsync не выбросил исключение и пользователь существует
+                    _logger.LogError("User {UserId} not found after avatar update.", userId);
+                    return NotFound(new { message = "User not found after avatar update." }); 
+                }
+                
+                return Ok(updatedUserDto); // Возвращаем полный UserDto
             }
             catch (UnauthorizedAccessException ex)
             {
                 return Unauthorized(new { message = ex.Message });
             }
-            catch (KeyNotFoundException ex) // Если user не найден в UpdateUserAvatarAsync
+            catch (KeyNotFoundException ex) 
             {
                  return NotFound(new { message = ex.Message });
             }
@@ -160,29 +169,17 @@ namespace SigmailServer.API.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet("search")]
-        public async Task<IActionResult> SearchUsers([FromQuery] string searchTerm)
+        public async Task<ActionResult<IEnumerable<UserSimpleDto>>> SearchUsers([FromQuery] string query)
         {
-            if (string.IsNullOrWhiteSpace(searchTerm))
+            if (string.IsNullOrWhiteSpace(query))
             {
-                return BadRequest(new { message = "Search term cannot be empty." });
+                return Ok(Enumerable.Empty<UserSimpleDto>()); // Возвращаем пустой список, если запрос пуст
             }
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                var users = await _userService.SearchUsersAsync(searchTerm, currentUserId);
-                return Ok(users);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error searching users with term '{SearchTerm}'.", searchTerm);
-                return StatusCode(500, new { message = "An unexpected error occurred." });
-            }
+
+            var users = await _userService.SearchUsersAsync(query);
+            return Ok(users);
         }
     }
 }

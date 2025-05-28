@@ -60,6 +60,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "AWSSDK.Core": {
+              "target": "Package",
+              "version": "[4.0.0.6, )"
+            },
             "AWSSDK.S3": {
               "target": "Package",
               "version": "[4.0.0.7, )"
@@ -97,6 +101,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[8.1.2, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[9.0.5, )"
             }
           },
           "imports": [
@@ -172,21 +180,21 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "AWSSDK.Core": {
+              "target": "Package",
+              "version": "[4.0.0.6, )"
+            },
             "AWSSDK.S3": {
               "target": "Package",
-              "version": "[3.7.305.24, )"
+              "version": "[4.0.0.7, )"
             },
             "AutoMapper": {
               "target": "Package",
               "version": "[12.0.1, )"
             },
-            "BCrypt": {
+            "BCrypt.Net-Next": {
               "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "BCrypt.Net": {
-              "target": "Package",
-              "version": "[0.1.0, )"
+              "version": "[4.0.3, )"
             },
             "FluentValidation": {
               "target": "Package",
@@ -214,7 +222,7 @@
             },
             "Microsoft.Extensions.Http": {
               "target": "Package",
-              "version": "[9.0.0-preview.1.24081.5, )"
+              "version": "[9.0.0-preview.2.24128.5, )"
             },
             "NEST": {
               "target": "Package",
@@ -377,6 +385,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "AWSSDK.Core": {
+              "target": "Package",
+              "version": "[4.0.0.6, )"
+            },
             "AWSSDK.S3": {
               "target": "Package",
               "version": "[4.0.0.7, )"

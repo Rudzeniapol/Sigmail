@@ -1,4 +1,4 @@
-﻿namespace SigmailClient.Persistence.FileStorage;
+﻿namespace SigmailServer.Persistence.FileStorage;
 
 
 public class S3StorageSettings

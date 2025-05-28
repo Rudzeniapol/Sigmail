@@ -2,5 +2,5 @@
 
 public class AddMembersDto
 {
-    public List<Guid> UserIds { get; set; }
+    public List<Guid> UserIds { get; set; } = null!;
 }

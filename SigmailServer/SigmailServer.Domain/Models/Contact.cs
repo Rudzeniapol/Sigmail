@@ -1,21 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SigmailClient.Domain.Enums;
+using SigmailServer.Domain.Enums;
 
-namespace SigmailClient.Domain.Models;
+namespace SigmailServer.Domain.Models;
 
 public class Contact
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid UserId { get; set; } // Тот, кто добавил/запросил
+    public Guid UserId { get; set; } // ID пользователя, который инициировал или к которому относится контакт
     [ForeignKey("UserId")]
-    public virtual User User { get; set; }
+    public virtual User User { get; set; } = null!;
 
-    public Guid ContactUserId { get; set; } // Тот, кого добавили/кому запрос
+    public Guid ContactUserId { get; set; } // ID пользователя, который является контактом
     [ForeignKey("ContactUserId")]
-    public virtual User ContactUser { get; set; }
+    public virtual User ContactUser { get; set; } = null!;
 
     [Required]
     [Column(TypeName = "varchar(20)")]

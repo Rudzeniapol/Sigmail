@@ -12,8 +12,7 @@ part of 'notification_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 NotificationModel _$NotificationModelFromJson(Map<String, dynamic> json) {
   return _NotificationModel.fromJson(json);
@@ -48,21 +47,19 @@ mixin _$NotificationModel {
 /// @nodoc
 abstract class $NotificationModelCopyWith<$Res> {
   factory $NotificationModelCopyWith(
-    NotificationModel value,
-    $Res Function(NotificationModel) then,
-  ) = _$NotificationModelCopyWithImpl<$Res, NotificationModel>;
+          NotificationModel value, $Res Function(NotificationModel) then) =
+      _$NotificationModelCopyWithImpl<$Res, NotificationModel>;
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    NotificationTypeModel type,
-    String? title,
-    String message,
-    String? relatedEntityId,
-    String? relatedEntityType,
-    bool isRead,
-    DateTime createdAt,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      NotificationTypeModel type,
+      String? title,
+      String message,
+      String? relatedEntityId,
+      String? relatedEntityType,
+      bool isRead,
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -90,89 +87,74 @@ class _$NotificationModelCopyWithImpl<$Res, $Val extends NotificationModel>
     Object? isRead = null,
     Object? createdAt = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id:
-                null == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
-                        as String,
-            userId:
-                null == userId
-                    ? _value.userId
-                    : userId // ignore: cast_nullable_to_non_nullable
-                        as String,
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as NotificationTypeModel,
-            title:
-                freezed == title
-                    ? _value.title
-                    : title // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            message:
-                null == message
-                    ? _value.message
-                    : message // ignore: cast_nullable_to_non_nullable
-                        as String,
-            relatedEntityId:
-                freezed == relatedEntityId
-                    ? _value.relatedEntityId
-                    : relatedEntityId // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            relatedEntityType:
-                freezed == relatedEntityType
-                    ? _value.relatedEntityType
-                    : relatedEntityType // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            isRead:
-                null == isRead
-                    ? _value.isRead
-                    : isRead // ignore: cast_nullable_to_non_nullable
-                        as bool,
-            createdAt:
-                null == createdAt
-                    ? _value.createdAt
-                    : createdAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as NotificationTypeModel,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      relatedEntityId: freezed == relatedEntityId
+          ? _value.relatedEntityId
+          : relatedEntityId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      relatedEntityType: freezed == relatedEntityType
+          ? _value.relatedEntityType
+          : relatedEntityType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isRead: null == isRead
+          ? _value.isRead
+          : isRead // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$NotificationModelImplCopyWith<$Res>
     implements $NotificationModelCopyWith<$Res> {
-  factory _$$NotificationModelImplCopyWith(
-    _$NotificationModelImpl value,
-    $Res Function(_$NotificationModelImpl) then,
-  ) = __$$NotificationModelImplCopyWithImpl<$Res>;
+  factory _$$NotificationModelImplCopyWith(_$NotificationModelImpl value,
+          $Res Function(_$NotificationModelImpl) then) =
+      __$$NotificationModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    NotificationTypeModel type,
-    String? title,
-    String message,
-    String? relatedEntityId,
-    String? relatedEntityType,
-    bool isRead,
-    DateTime createdAt,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      NotificationTypeModel type,
+      String? title,
+      String message,
+      String? relatedEntityId,
+      String? relatedEntityType,
+      bool isRead,
+      DateTime createdAt});
 }
 
 /// @nodoc
 class __$$NotificationModelImplCopyWithImpl<$Res>
     extends _$NotificationModelCopyWithImpl<$Res, _$NotificationModelImpl>
     implements _$$NotificationModelImplCopyWith<$Res> {
-  __$$NotificationModelImplCopyWithImpl(
-    _$NotificationModelImpl _value,
-    $Res Function(_$NotificationModelImpl) _then,
-  ) : super(_value, _then);
+  __$$NotificationModelImplCopyWithImpl(_$NotificationModelImpl _value,
+      $Res Function(_$NotificationModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of NotificationModel
   /// with the given fields replaced by the non-null parameter values.
@@ -189,96 +171,84 @@ class __$$NotificationModelImplCopyWithImpl<$Res>
     Object? isRead = null,
     Object? createdAt = null,
   }) {
-    return _then(
-      _$NotificationModelImpl(
-        id:
-            null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                    as String,
-        userId:
-            null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                    as String,
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as NotificationTypeModel,
-        title:
-            freezed == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        message:
-            null == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                    as String,
-        relatedEntityId:
-            freezed == relatedEntityId
-                ? _value.relatedEntityId
-                : relatedEntityId // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        relatedEntityType:
-            freezed == relatedEntityType
-                ? _value.relatedEntityType
-                : relatedEntityType // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        isRead:
-            null == isRead
-                ? _value.isRead
-                : isRead // ignore: cast_nullable_to_non_nullable
-                    as bool,
-        createdAt:
-            null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-      ),
-    );
+    return _then(_$NotificationModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as NotificationTypeModel,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      relatedEntityId: freezed == relatedEntityId
+          ? _value.relatedEntityId
+          : relatedEntityId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      relatedEntityType: freezed == relatedEntityType
+          ? _value.relatedEntityType
+          : relatedEntityType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isRead: null == isRead
+          ? _value.isRead
+          : isRead // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$NotificationModelImpl implements _NotificationModel {
-  const _$NotificationModelImpl({
-    required this.id,
-    required this.userId,
-    required this.type,
-    this.title,
-    required this.message,
-    this.relatedEntityId,
-    this.relatedEntityType,
-    required this.isRead,
-    required this.createdAt,
-  });
+  const _$NotificationModelImpl(
+      {required this.id,
+      required this.userId,
+      required this.type,
+      this.title,
+      required this.message,
+      this.relatedEntityId,
+      this.relatedEntityType,
+      required this.isRead,
+      required this.createdAt});
 
   factory _$NotificationModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$NotificationModelImplFromJson(json);
 
   @override
   final String id;
-  // MongoDB ObjectId как строка
+// MongoDB ObjectId как строка
   @override
   final String userId;
-  // Кому уведомление
+// Кому уведомление
   @override
   final NotificationTypeModel type;
   @override
   final String? title;
-  // Необязательный, если тип сам по себе информативен
+// Необязательный, если тип сам по себе информативен
   @override
   final String message;
-  // Текст уведомления
+// Текст уведомления
   @override
   final String? relatedEntityId;
-  // ID связанной сущности (например, chatId, userId)
+// ID связанной сущности (например, chatId, userId)
   @override
   final String? relatedEntityType;
-  // Тип связанной сущности ("Chat", "User")
+// Тип связанной сущности ("Chat", "User")
   @override
   final bool isRead;
   @override
@@ -310,18 +280,8 @@ class _$NotificationModelImpl implements _NotificationModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    userId,
-    type,
-    title,
-    message,
-    relatedEntityId,
-    relatedEntityType,
-    isRead,
-    createdAt,
-  );
+  int get hashCode => Object.hash(runtimeType, id, userId, type, title, message,
+      relatedEntityId, relatedEntityType, isRead, createdAt);
 
   /// Create a copy of NotificationModel
   /// with the given fields replaced by the non-null parameter values.
@@ -330,28 +290,27 @@ class _$NotificationModelImpl implements _NotificationModel {
   @pragma('vm:prefer-inline')
   _$$NotificationModelImplCopyWith<_$NotificationModelImpl> get copyWith =>
       __$$NotificationModelImplCopyWithImpl<_$NotificationModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationModelImplToJson(this);
+    return _$$NotificationModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _NotificationModel implements NotificationModel {
-  const factory _NotificationModel({
-    required final String id,
-    required final String userId,
-    required final NotificationTypeModel type,
-    final String? title,
-    required final String message,
-    final String? relatedEntityId,
-    final String? relatedEntityType,
-    required final bool isRead,
-    required final DateTime createdAt,
-  }) = _$NotificationModelImpl;
+  const factory _NotificationModel(
+      {required final String id,
+      required final String userId,
+      required final NotificationTypeModel type,
+      final String? title,
+      required final String message,
+      final String? relatedEntityId,
+      final String? relatedEntityType,
+      required final bool isRead,
+      required final DateTime createdAt}) = _$NotificationModelImpl;
 
   factory _NotificationModel.fromJson(Map<String, dynamic> json) =
       _$NotificationModelImpl.fromJson;
@@ -367,7 +326,8 @@ abstract class _NotificationModel implements NotificationModel {
   @override
   String get message; // Текст уведомления
   @override
-  String? get relatedEntityId; // ID связанной сущности (например, chatId, userId)
+  String?
+      get relatedEntityId; // ID связанной сущности (например, chatId, userId)
   @override
   String? get relatedEntityType; // Тип связанной сущности ("Chat", "User")
   @override

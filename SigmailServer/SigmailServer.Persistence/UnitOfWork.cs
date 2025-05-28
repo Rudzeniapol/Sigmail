@@ -1,10 +1,7 @@
-﻿using SigmailClient.Persistence.PostgreSQL;
-using SigmailClient.Domain.Interfaces;
-using System.Threading.Tasks;
-using System;
-using System.Threading;
+﻿using SigmailServer.Domain.Interfaces;
+using SigmailServer.Persistence.PostgreSQL;
 
-namespace SigmailClient.Persistence;
+namespace SigmailServer.Persistence;
 
 public class UnitOfWork : IUnitOfWork
 {

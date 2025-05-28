@@ -15,21 +15,16 @@ _$ChatModelImpl _$$ChatModelImplFromJson(Map<String, dynamic> json) =>
       avatarUrl: json['avatarUrl'] as String?,
       creatorId: json['creatorId'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt:
-          json['updatedAt'] == null
-              ? null
-              : DateTime.parse(json['updatedAt'] as String),
-      lastMessage:
-          json['lastMessage'] == null
-              ? null
-              : MessageModel.fromJson(
-                json['lastMessage'] as Map<String, dynamic>,
-              ),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      lastMessage: json['lastMessage'] == null
+          ? null
+          : MessageModel.fromJson(json['lastMessage'] as Map<String, dynamic>),
       unreadCount: (json['unreadCount'] as num?)?.toInt() ?? 0,
-      members:
-          (json['members'] as List<dynamic>?)
-              ?.map((e) => UserSimpleModel.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      members: (json['members'] as List<dynamic>?)
+          ?.map((e) => UserSimpleModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       memberCount: (json['memberCount'] as num?)?.toInt(),
     );
 

@@ -12,8 +12,7 @@ part of 'contact_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ContactModel _$ContactModelFromJson(Map<String, dynamic> json) {
   return _ContactModel.fromJson(json);
@@ -42,17 +41,15 @@ mixin _$ContactModel {
 /// @nodoc
 abstract class $ContactModelCopyWith<$Res> {
   factory $ContactModelCopyWith(
-    ContactModel value,
-    $Res Function(ContactModel) then,
-  ) = _$ContactModelCopyWithImpl<$Res, ContactModel>;
+          ContactModel value, $Res Function(ContactModel) then) =
+      _$ContactModelCopyWithImpl<$Res, ContactModel>;
   @useResult
-  $Res call({
-    String contactEntryId,
-    UserModel user,
-    ContactStatusModel status,
-    DateTime? requestedAt,
-    DateTime? respondedAt,
-  });
+  $Res call(
+      {String contactEntryId,
+      UserModel user,
+      ContactStatusModel status,
+      DateTime? requestedAt,
+      DateTime? respondedAt});
 
   $UserModelCopyWith<$Res> get user;
 }
@@ -78,36 +75,28 @@ class _$ContactModelCopyWithImpl<$Res, $Val extends ContactModel>
     Object? requestedAt = freezed,
     Object? respondedAt = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            contactEntryId:
-                null == contactEntryId
-                    ? _value.contactEntryId
-                    : contactEntryId // ignore: cast_nullable_to_non_nullable
-                        as String,
-            user:
-                null == user
-                    ? _value.user
-                    : user // ignore: cast_nullable_to_non_nullable
-                        as UserModel,
-            status:
-                null == status
-                    ? _value.status
-                    : status // ignore: cast_nullable_to_non_nullable
-                        as ContactStatusModel,
-            requestedAt:
-                freezed == requestedAt
-                    ? _value.requestedAt
-                    : requestedAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime?,
-            respondedAt:
-                freezed == respondedAt
-                    ? _value.respondedAt
-                    : respondedAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      contactEntryId: null == contactEntryId
+          ? _value.contactEntryId
+          : contactEntryId // ignore: cast_nullable_to_non_nullable
+              as String,
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ContactStatusModel,
+      requestedAt: freezed == requestedAt
+          ? _value.requestedAt
+          : requestedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      respondedAt: freezed == respondedAt
+          ? _value.respondedAt
+          : respondedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 
   /// Create a copy of ContactModel
@@ -125,18 +114,16 @@ class _$ContactModelCopyWithImpl<$Res, $Val extends ContactModel>
 abstract class _$$ContactModelImplCopyWith<$Res>
     implements $ContactModelCopyWith<$Res> {
   factory _$$ContactModelImplCopyWith(
-    _$ContactModelImpl value,
-    $Res Function(_$ContactModelImpl) then,
-  ) = __$$ContactModelImplCopyWithImpl<$Res>;
+          _$ContactModelImpl value, $Res Function(_$ContactModelImpl) then) =
+      __$$ContactModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String contactEntryId,
-    UserModel user,
-    ContactStatusModel status,
-    DateTime? requestedAt,
-    DateTime? respondedAt,
-  });
+  $Res call(
+      {String contactEntryId,
+      UserModel user,
+      ContactStatusModel status,
+      DateTime? requestedAt,
+      DateTime? respondedAt});
 
   @override
   $UserModelCopyWith<$Res> get user;
@@ -147,9 +134,8 @@ class __$$ContactModelImplCopyWithImpl<$Res>
     extends _$ContactModelCopyWithImpl<$Res, _$ContactModelImpl>
     implements _$$ContactModelImplCopyWith<$Res> {
   __$$ContactModelImplCopyWithImpl(
-    _$ContactModelImpl _value,
-    $Res Function(_$ContactModelImpl) _then,
-  ) : super(_value, _then);
+      _$ContactModelImpl _value, $Res Function(_$ContactModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ContactModel
   /// with the given fields replaced by the non-null parameter values.
@@ -162,58 +148,50 @@ class __$$ContactModelImplCopyWithImpl<$Res>
     Object? requestedAt = freezed,
     Object? respondedAt = freezed,
   }) {
-    return _then(
-      _$ContactModelImpl(
-        contactEntryId:
-            null == contactEntryId
-                ? _value.contactEntryId
-                : contactEntryId // ignore: cast_nullable_to_non_nullable
-                    as String,
-        user:
-            null == user
-                ? _value.user
-                : user // ignore: cast_nullable_to_non_nullable
-                    as UserModel,
-        status:
-            null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                    as ContactStatusModel,
-        requestedAt:
-            freezed == requestedAt
-                ? _value.requestedAt
-                : requestedAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime?,
-        respondedAt:
-            freezed == respondedAt
-                ? _value.respondedAt
-                : respondedAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime?,
-      ),
-    );
+    return _then(_$ContactModelImpl(
+      contactEntryId: null == contactEntryId
+          ? _value.contactEntryId
+          : contactEntryId // ignore: cast_nullable_to_non_nullable
+              as String,
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ContactStatusModel,
+      requestedAt: freezed == requestedAt
+          ? _value.requestedAt
+          : requestedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      respondedAt: freezed == respondedAt
+          ? _value.respondedAt
+          : respondedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ContactModelImpl implements _ContactModel {
-  const _$ContactModelImpl({
-    required this.contactEntryId,
-    required this.user,
-    required this.status,
-    this.requestedAt,
-    this.respondedAt,
-  });
+  const _$ContactModelImpl(
+      {required this.contactEntryId,
+      required this.user,
+      required this.status,
+      this.requestedAt,
+      this.respondedAt});
 
   factory _$ContactModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ContactModelImplFromJson(json);
 
   @override
   final String contactEntryId;
-  // ID записи Contact
+// ID записи Contact
   @override
   final UserModel user;
-  // Информация о пользователе-контакте
+// Информация о пользователе-контакте
   @override
   final ContactStatusModel status;
   @override
@@ -244,13 +222,7 @@ class _$ContactModelImpl implements _ContactModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    contactEntryId,
-    user,
-    status,
-    requestedAt,
-    respondedAt,
-  );
+      runtimeType, contactEntryId, user, status, requestedAt, respondedAt);
 
   /// Create a copy of ContactModel
   /// with the given fields replaced by the non-null parameter values.
@@ -262,18 +234,19 @@ class _$ContactModelImpl implements _ContactModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ContactModelImplToJson(this);
+    return _$$ContactModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ContactModel implements ContactModel {
-  const factory _ContactModel({
-    required final String contactEntryId,
-    required final UserModel user,
-    required final ContactStatusModel status,
-    final DateTime? requestedAt,
-    final DateTime? respondedAt,
-  }) = _$ContactModelImpl;
+  const factory _ContactModel(
+      {required final String contactEntryId,
+      required final UserModel user,
+      required final ContactStatusModel status,
+      final DateTime? requestedAt,
+      final DateTime? respondedAt}) = _$ContactModelImpl;
 
   factory _ContactModel.fromJson(Map<String, dynamic> json) =
       _$ContactModelImpl.fromJson;

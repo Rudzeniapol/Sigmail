@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
-using System.Security.Claims;
+using SigmailServer.Domain.Exceptions; // Для NotFoundException
 
-namespace SigmailServer.API.Controllers
+namespace SigmailServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -12,11 +13,16 @@ namespace SigmailServer.API.Controllers
     public class MessagesController : ControllerBase
     {
         private readonly IMessageService _messageService;
+        private readonly IMessageReactionService _messageReactionService;
         private readonly ILogger<MessagesController> _logger;
 
-        public MessagesController(IMessageService messageService, ILogger<MessagesController> logger)
+        public MessagesController(
+            IMessageService messageService, 
+            IMessageReactionService messageReactionService,
+            ILogger<MessagesController> logger)
         {
             _messageService = messageService;
+            _messageReactionService = messageReactionService;
             _logger = logger;
         }
         
@@ -197,17 +203,27 @@ namespace SigmailServer.API.Controllers
         [HttpPost("{messageId}/reactions")]
         public async Task<IActionResult> AddReaction(string messageId, [FromBody] AddReactionDto dto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
                 var reactorUserId = GetCurrentUserId();
-                await _messageService.AddReactionToMessageAsync(messageId, reactorUserId, dto);
-                return Ok(new { message = "Reaction added." });
+                var reactions = await _messageReactionService.AddReactionAsync(messageId, reactorUserId, dto.Emoji);
+                return Ok(reactions);
             }
-            // ... обработка исключений ...
+            catch (NotFoundException ex)
+            {
+                _logger.LogWarning(ex, "AddReaction: Resource not found for message {MessageId}", messageId);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                 _logger.LogWarning(ex, "AddReaction: Unauthorized access by user {UserId} to message {MessageId}", GetCurrentUserId(), messageId);
+                return Forbid(ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding reaction to message {MessageId} by user {UserId}", messageId, GetCurrentUserId());
-                return StatusCode(500, new { message = "An error occurred." });
+                return StatusCode(500, new { message = "An error occurred while adding reaction." });
             }
         }
 
@@ -217,16 +233,24 @@ namespace SigmailServer.API.Controllers
             try
             {
                 var reactorUserId = GetCurrentUserId();
-                // emoji нужно будет URL-декодировать, если он содержит спецсимволы и был закодирован клиентом
                 var decodedEmoji = System.Net.WebUtility.UrlDecode(emoji);
-                await _messageService.RemoveReactionFromMessageAsync(messageId, reactorUserId, decodedEmoji);
-                return Ok(new { message = "Reaction removed." });
+                var reactions = await _messageReactionService.RemoveReactionAsync(messageId, reactorUserId, decodedEmoji);
+                return Ok(reactions);
             }
-            // ... обработка исключений ...
+            catch (NotFoundException ex)
+            {
+                _logger.LogWarning(ex, "RemoveReaction: Resource not found for message {MessageId} or reaction {Emoji}", messageId, emoji);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogWarning(ex, "RemoveReaction: Unauthorized access by user {UserId} to message {MessageId}", GetCurrentUserId(), messageId);
+                return Forbid(ex.Message);
+            }
             catch (Exception ex)
             {
                  _logger.LogError(ex, "Error removing reaction {Emoji} from message {MessageId} by user {UserId}", emoji, messageId, GetCurrentUserId());
-                return StatusCode(500, new { message = "An error occurred." });
+                return StatusCode(500, new { message = "An error occurred while removing reaction." });
             }
         }
         

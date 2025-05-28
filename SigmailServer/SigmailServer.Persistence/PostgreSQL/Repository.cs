@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SigmailClient.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using SigmailServer.Domain.Interfaces;
 
-namespace SigmailClient.Persistence.PostgreSQL;
+namespace SigmailServer.Persistence.PostgreSQL;
 
 public class Repository<T> : IRepository<T> where T : class
 {

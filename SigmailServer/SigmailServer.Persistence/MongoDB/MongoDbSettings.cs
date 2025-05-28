@@ -1,4 +1,4 @@
-﻿namespace SigmailClient.Persistence.MongoDB;
+﻿namespace SigmailServer.Persistence.MongoDB;
 
 public class MongoDbSettings
 {

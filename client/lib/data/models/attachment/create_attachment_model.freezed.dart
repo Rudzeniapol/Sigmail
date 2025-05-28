@@ -12,12 +12,10 @@ part of 'create_attachment_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 CreateAttachmentModel _$CreateAttachmentModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _CreateAttachmentModel.fromJson(json);
 }
 
@@ -44,26 +42,22 @@ mixin _$CreateAttachmentModel {
 
 /// @nodoc
 abstract class $CreateAttachmentModelCopyWith<$Res> {
-  factory $CreateAttachmentModelCopyWith(
-    CreateAttachmentModel value,
-    $Res Function(CreateAttachmentModel) then,
-  ) = _$CreateAttachmentModelCopyWithImpl<$Res, CreateAttachmentModel>;
+  factory $CreateAttachmentModelCopyWith(CreateAttachmentModel value,
+          $Res Function(CreateAttachmentModel) then) =
+      _$CreateAttachmentModelCopyWithImpl<$Res, CreateAttachmentModel>;
   @useResult
-  $Res call({
-    String fileKey,
-    String fileName,
-    String contentType,
-    AttachmentType type,
-    int size,
-    String? thumbnailUrl,
-  });
+  $Res call(
+      {String fileKey,
+      String fileName,
+      String contentType,
+      AttachmentType type,
+      int size,
+      String? thumbnailUrl});
 }
 
 /// @nodoc
-class _$CreateAttachmentModelCopyWithImpl<
-  $Res,
-  $Val extends CreateAttachmentModel
->
+class _$CreateAttachmentModelCopyWithImpl<$Res,
+        $Val extends CreateAttachmentModel>
     implements $CreateAttachmentModelCopyWith<$Res> {
   _$CreateAttachmentModelCopyWithImpl(this._value, this._then);
 
@@ -84,41 +78,32 @@ class _$CreateAttachmentModelCopyWithImpl<
     Object? size = null,
     Object? thumbnailUrl = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            fileKey:
-                null == fileKey
-                    ? _value.fileKey
-                    : fileKey // ignore: cast_nullable_to_non_nullable
-                        as String,
-            fileName:
-                null == fileName
-                    ? _value.fileName
-                    : fileName // ignore: cast_nullable_to_non_nullable
-                        as String,
-            contentType:
-                null == contentType
-                    ? _value.contentType
-                    : contentType // ignore: cast_nullable_to_non_nullable
-                        as String,
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as AttachmentType,
-            size:
-                null == size
-                    ? _value.size
-                    : size // ignore: cast_nullable_to_non_nullable
-                        as int,
-            thumbnailUrl:
-                freezed == thumbnailUrl
-                    ? _value.thumbnailUrl
-                    : thumbnailUrl // ignore: cast_nullable_to_non_nullable
-                        as String?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      fileKey: null == fileKey
+          ? _value.fileKey
+          : fileKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      contentType: null == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      thumbnailUrl: freezed == thumbnailUrl
+          ? _value.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
   }
 }
 
@@ -126,30 +111,28 @@ class _$CreateAttachmentModelCopyWithImpl<
 abstract class _$$CreateAttachmentModelImplCopyWith<$Res>
     implements $CreateAttachmentModelCopyWith<$Res> {
   factory _$$CreateAttachmentModelImplCopyWith(
-    _$CreateAttachmentModelImpl value,
-    $Res Function(_$CreateAttachmentModelImpl) then,
-  ) = __$$CreateAttachmentModelImplCopyWithImpl<$Res>;
+          _$CreateAttachmentModelImpl value,
+          $Res Function(_$CreateAttachmentModelImpl) then) =
+      __$$CreateAttachmentModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String fileKey,
-    String fileName,
-    String contentType,
-    AttachmentType type,
-    int size,
-    String? thumbnailUrl,
-  });
+  $Res call(
+      {String fileKey,
+      String fileName,
+      String contentType,
+      AttachmentType type,
+      int size,
+      String? thumbnailUrl});
 }
 
 /// @nodoc
 class __$$CreateAttachmentModelImplCopyWithImpl<$Res>
-    extends
-        _$CreateAttachmentModelCopyWithImpl<$Res, _$CreateAttachmentModelImpl>
+    extends _$CreateAttachmentModelCopyWithImpl<$Res,
+        _$CreateAttachmentModelImpl>
     implements _$$CreateAttachmentModelImplCopyWith<$Res> {
-  __$$CreateAttachmentModelImplCopyWithImpl(
-    _$CreateAttachmentModelImpl _value,
-    $Res Function(_$CreateAttachmentModelImpl) _then,
-  ) : super(_value, _then);
+  __$$CreateAttachmentModelImplCopyWithImpl(_$CreateAttachmentModelImpl _value,
+      $Res Function(_$CreateAttachmentModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CreateAttachmentModel
   /// with the given fields replaced by the non-null parameter values.
@@ -163,40 +146,32 @@ class __$$CreateAttachmentModelImplCopyWithImpl<$Res>
     Object? size = null,
     Object? thumbnailUrl = freezed,
   }) {
-    return _then(
-      _$CreateAttachmentModelImpl(
-        fileKey:
-            null == fileKey
-                ? _value.fileKey
-                : fileKey // ignore: cast_nullable_to_non_nullable
-                    as String,
-        fileName:
-            null == fileName
-                ? _value.fileName
-                : fileName // ignore: cast_nullable_to_non_nullable
-                    as String,
-        contentType:
-            null == contentType
-                ? _value.contentType
-                : contentType // ignore: cast_nullable_to_non_nullable
-                    as String,
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as AttachmentType,
-        size:
-            null == size
-                ? _value.size
-                : size // ignore: cast_nullable_to_non_nullable
-                    as int,
-        thumbnailUrl:
-            freezed == thumbnailUrl
-                ? _value.thumbnailUrl
-                : thumbnailUrl // ignore: cast_nullable_to_non_nullable
-                    as String?,
-      ),
-    );
+    return _then(_$CreateAttachmentModelImpl(
+      fileKey: null == fileKey
+          ? _value.fileKey
+          : fileKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileName: null == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      contentType: null == contentType
+          ? _value.contentType
+          : contentType // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as AttachmentType,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      thumbnailUrl: freezed == thumbnailUrl
+          ? _value.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
@@ -204,31 +179,30 @@ class __$$CreateAttachmentModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(explicitToJson: true)
 class _$CreateAttachmentModelImpl implements _CreateAttachmentModel {
-  const _$CreateAttachmentModelImpl({
-    required this.fileKey,
-    required this.fileName,
-    required this.contentType,
-    required this.type,
-    required this.size,
-    this.thumbnailUrl,
-  });
+  const _$CreateAttachmentModelImpl(
+      {required this.fileKey,
+      required this.fileName,
+      required this.contentType,
+      required this.type,
+      required this.size,
+      this.thumbnailUrl});
 
   factory _$CreateAttachmentModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateAttachmentModelImplFromJson(json);
 
   @override
   final String fileKey;
-  // Ключ файла, который вы получили от сервера после загрузки в S3 (или перед прямой загрузкой)
+// Ключ файла, который вы получили от сервера после загрузки в S3 (или перед прямой загрузкой)
   @override
   final String fileName;
   @override
   final String contentType;
   @override
   final AttachmentType type;
-  // <<< ИЗМЕНЕН ТИП
+// <<< ИЗМЕНЕН ТИП
   @override
   final int size;
-  // Размер файла в байтах
+// Размер файла в байтах
   @override
   final String? thumbnailUrl;
 
@@ -256,14 +230,7 @@ class _$CreateAttachmentModelImpl implements _CreateAttachmentModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    fileKey,
-    fileName,
-    contentType,
-    type,
-    size,
-    thumbnailUrl,
-  );
+      runtimeType, fileKey, fileName, contentType, type, size, thumbnailUrl);
 
   /// Create a copy of CreateAttachmentModel
   /// with the given fields replaced by the non-null parameter values.
@@ -271,33 +238,32 @@ class _$CreateAttachmentModelImpl implements _CreateAttachmentModel {
   @override
   @pragma('vm:prefer-inline')
   _$$CreateAttachmentModelImplCopyWith<_$CreateAttachmentModelImpl>
-  get copyWith =>
-      __$$CreateAttachmentModelImplCopyWithImpl<_$CreateAttachmentModelImpl>(
-        this,
-        _$identity,
-      );
+      get copyWith => __$$CreateAttachmentModelImplCopyWithImpl<
+          _$CreateAttachmentModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CreateAttachmentModelImplToJson(this);
+    return _$$CreateAttachmentModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _CreateAttachmentModel implements CreateAttachmentModel {
-  const factory _CreateAttachmentModel({
-    required final String fileKey,
-    required final String fileName,
-    required final String contentType,
-    required final AttachmentType type,
-    required final int size,
-    final String? thumbnailUrl,
-  }) = _$CreateAttachmentModelImpl;
+  const factory _CreateAttachmentModel(
+      {required final String fileKey,
+      required final String fileName,
+      required final String contentType,
+      required final AttachmentType type,
+      required final int size,
+      final String? thumbnailUrl}) = _$CreateAttachmentModelImpl;
 
   factory _CreateAttachmentModel.fromJson(Map<String, dynamic> json) =
       _$CreateAttachmentModelImpl.fromJson;
 
   @override
-  String get fileKey; // Ключ файла, который вы получили от сервера после загрузки в S3 (или перед прямой загрузкой)
+  String
+      get fileKey; // Ключ файла, который вы получили от сервера после загрузки в S3 (или перед прямой загрузкой)
   @override
   String get fileName;
   @override
@@ -314,5 +280,5 @@ abstract class _CreateAttachmentModel implements CreateAttachmentModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CreateAttachmentModelImplCopyWith<_$CreateAttachmentModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

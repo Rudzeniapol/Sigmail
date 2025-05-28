@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
-using System.Security.Authentication; // Для InvalidCredentialException
-using System.Security.Claims; // Для ClaimTypes
+// Для InvalidCredentialException
 
-namespace SigmailServer.API.Controllers
+// Для ClaimTypes
+
+namespace SigmailServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

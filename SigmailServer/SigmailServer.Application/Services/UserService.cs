@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using SigmailClient.Domain.Enums;
-using SigmailClient.Domain.Interfaces;
+using SigmailServer.Domain.Interfaces;
 using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
+using SigmailServer.Domain.Models;
+using BCrypt.Net;
+using SigmailServer.Domain.Enums;
+using System.Threading;
 
 namespace SigmailServer.Application.Services;
 
@@ -32,6 +35,72 @@ public class UserService : IUserService
         _fileStorageRepository = fileStorageRepository;
     }
 
+    private async Task<UserDto> MapUserToDtoWithAvatarUrlAsync(User user)
+    {
+        var userDto = _mapper.Map<UserDto>(user);
+        if (!string.IsNullOrWhiteSpace(userDto.ProfileImageUrl))
+        {
+            try
+            {
+                // ProfileImageUrl хранит ключ файла.
+                // Генерируем presigned URL для доступа к файлу.
+                // TimeSpan можно вынести в конфигурацию, если нужно.
+                var presignedUrl = await _fileStorageRepository.GeneratePresignedUrlAsync(userDto.ProfileImageUrl, TimeSpan.FromHours(1)); 
+                userDto.ProfileImageUrl = presignedUrl;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get presigned URL for avatar {AvatarKey} for user {UserId}. Returning key itself.", userDto.ProfileImageUrl, user.Id);
+                // Оставляем ключ как fallback. Клиент не сможет загрузить, но и не должен упасть.
+            }
+        }
+        return userDto;
+    }
+    
+    public async Task<UserSimpleDto?> MapUserToSimpleDtoWithAvatarUrlAsync(User user)
+    {
+        if (user == null) 
+        {
+            _logger.LogWarning("MapUserToSimpleDtoWithAvatarUrlAsync called with null user.");
+            return null; // Возвращаем null, если пользователь null
+        }
+
+        var userSimpleDto = _mapper.Map<UserSimpleDto>(user);
+        if (!string.IsNullOrWhiteSpace(userSimpleDto.ProfileImageUrl))
+        {
+            try
+            {
+                var presignedUrl = await _fileStorageRepository.GeneratePresignedUrlAsync(userSimpleDto.ProfileImageUrl, TimeSpan.FromHours(1));
+                userSimpleDto.ProfileImageUrl = presignedUrl;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get presigned URL for avatar {AvatarKey} for user {UserId} (SimpleDto). Returning key itself.", userSimpleDto.ProfileImageUrl, user.Id);
+            }
+        }
+        return userSimpleDto;
+    }
+
+    private async Task<IEnumerable<UserDto>> MapUsersToDtoWithAvatarUrlAsync(IEnumerable<User> users)
+    {
+        var userDtos = new List<UserDto>();
+        foreach (var user in users)
+        {
+            userDtos.Add(await MapUserToDtoWithAvatarUrlAsync(user));
+        }
+        return userDtos;
+    }
+    
+    private async Task<IEnumerable<UserSimpleDto>> MapUsersToSimpleDtoWithAvatarUrlAsync(IEnumerable<User> users)
+    {
+        var userSimpleDtos = new List<UserSimpleDto>();
+        foreach (var user in users)
+        {
+            userSimpleDtos.Add(await MapUserToSimpleDtoWithAvatarUrlAsync(user));
+        }
+        return userSimpleDtos;
+    }
+
     public async Task<UserDto?> GetByIdAsync(Guid id)
     {
         _logger.LogInformation("Requesting user by ID {UserId}", id);
@@ -41,7 +110,8 @@ public class UserService : IUserService
             _logger.LogWarning("User with ID {UserId} not found.", id);
             return null;
         }
-        return _mapper.Map<UserDto>(user);
+        // return _mapper.Map<UserDto>(user);
+        return await MapUserToDtoWithAvatarUrlAsync(user);
     }
 
     public async Task UpdateOnlineStatusAsync(Guid id, bool isOnline, string? deviceToken = null)
@@ -85,7 +155,8 @@ public class UserService : IUserService
         // Рассмотрите альтернативы, если это не для админ-панели.
         var users = await _unitOfWork.Users.GetAllAsync(); // Предполагается, что GetAllAsync существует
         var onlineUsers = users.Where(u => u.IsOnline);
-        return _mapper.Map<IEnumerable<UserDto>>(onlineUsers);
+        // return _mapper.Map<IEnumerable<UserDto>>(onlineUsers);
+        return await MapUsersToDtoWithAvatarUrlAsync(onlineUsers);
     }
 
     public async Task<UserDto?> GetByUsernameAsync(string username)
@@ -93,7 +164,9 @@ public class UserService : IUserService
         _logger.LogInformation("Requesting user by username {Username}", username);
         if (string.IsNullOrWhiteSpace(username))
         {
-            throw new ArgumentException("Username cannot be empty.", nameof(username));
+            // Consider throwing ArgumentException if username cannot be empty
+            _logger.LogWarning("Requested username was null or whitespace.");
+            return null; 
         }
         var user = await _unitOfWork.Users.GetByUsernameAsync(username);
         if (user == null)
@@ -101,7 +174,8 @@ public class UserService : IUserService
             _logger.LogWarning("User with username {Username} not found.", username);
             return null;
         }
-        return _mapper.Map<UserDto>(user);
+        // return _mapper.Map<UserDto>(user);
+        return await MapUserToDtoWithAvatarUrlAsync(user);
     }
 
     public async Task<IEnumerable<UserDto>> SearchUsersAsync(string searchTerm, Guid currentUserId)
@@ -113,12 +187,13 @@ public class UserService : IUserService
         }
         // IUserRepository.FindUsersAsync должен быть реализован для поиска по username, email и т.д.
         // и не должен возвращать текущего пользователя.
-        var users = await _unitOfWork.Users.FindUsersAsync(searchTerm); 
+        var users = await _unitOfWork.Users.FindUsersAsync(searchTerm, 20, CancellationToken.None); 
         
         // Исключаем текущего пользователя из результатов поиска
         var foundUsers = users.Where(u => u.Id != currentUserId);
         
-        return _mapper.Map<IEnumerable<UserDto>>(foundUsers);
+        // return _mapper.Map<IEnumerable<UserDto>>(foundUsers);
+        return await MapUsersToDtoWithAvatarUrlAsync(foundUsers);
     }
 
     public async Task UpdateUserProfileAsync(Guid userId, UpdateUserProfileDto dto)
@@ -241,24 +316,86 @@ public class UserService : IUserService
             }
             catch (Exception ex)
             {
-                // Логируем ошибку, но не прерываем основной процесс, так как новый аватар уже установлен
                 _logger.LogError(ex, "Failed to delete old avatar {OldAvatarKey} for user {UserId} from S3. This needs to be handled manually or by a cleanup job.", oldAvatarKey, userId);
             }
         }
-        
-        // Уведомляем контакты об изменении аватара (если это необходимо)
-        var contacts = await _unitOfWork.Contacts.GetUserContactsAsync(userId, ContactRequestStatus.Accepted);
-        var contactUserIdsToNotify = contacts
-            .Select(c => c.UserId == userId ? c.ContactUserId : c.UserId)
-            .Distinct()
-            .ToList();
-        
-        if (contactUserIdsToNotify.Any())
+    
+        // Уведомляем контакты/других пользователей об обновлении аватара через SignalR
+        try
         {
-             // Вам понадобится новый метод в IRealTimeNotifier и IChatHubClient, например:
-             // NotifyUserAvatarChangedAsync(IEnumerable<Guid> observerUserIds, Guid userId, string newAvatarUrl)
-             // await _realTimeNotifier.NotifyUserAvatarChangedAsync(contactUserIdsToNotify, userId, user.ProfileImageUrl);
-            _logger.LogInformation("Avatar changed for user {UserId}. Consider notifying {Count} contacts via real-time update if feature is implemented.", userId, contactUserIdsToNotify.Count);
+            var contacts = await _unitOfWork.Contacts.GetUserContactsAsync(userId, ContactRequestStatus.Accepted);
+            var contactUserIdsToNotify = contacts
+                .Select(c => c.UserId == userId ? c.ContactUserId : c.UserId)
+                .Distinct()
+                .ToList(); // ToList() чтобы избежать многократного выполнения запроса
+
+            if (contactUserIdsToNotify.Any())
+            {
+                string? newAvatarFullUrl = null;
+                if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl)) // user.ProfileImageUrl это ключ
+                {
+                    try
+                    {
+                        newAvatarFullUrl = await _fileStorageRepository.GeneratePresignedUrlAsync(user.ProfileImageUrl, TimeSpan.FromHours(1));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to generate presigned URL for new avatar {AvatarKey} for user {UserId} during notification. Avatar URL will be sent as key.", user.ProfileImageUrl, userId);
+                        newAvatarFullUrl = user.ProfileImageUrl; // Отправляем ключ как fallback, если генерация URL не удалась
+                    }
+                }
+                else
+                {
+                    newAvatarFullUrl = string.Empty; // Если ключа нет, отправляем пустую строку
+                }
+                
+                // Убедитесь, что NotifyUserAvatarUpdatedAsync существует в IRealTimeNotifier и SignalRNotifier
+                await _realTimeNotifier.NotifyUserAvatarUpdatedAsync(contactUserIdsToNotify, userId, newAvatarFullUrl);
+                _logger.LogInformation("Notified {Count} contacts about avatar update for user {UserId}", contactUserIdsToNotify.Count, userId);
+            }
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to notify contacts about avatar update for user {UserId}.", userId);
+            // Не прерываем выполнение, так как основная операция (обновление аватара) уже завершена.
+        }
+    }
+
+    public async Task<IEnumerable<UserSimpleDto>> SearchUsersAsync(string searchTerm, int limit = 20)
+    {
+        _logger.LogInformation("Searching for users (simple DTO) with term '{SearchTerm}' and limit {Limit}", searchTerm, limit);
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return Enumerable.Empty<UserSimpleDto>();
+        }
+        // Пока для простоты оставим без этого
+
+        var users = await _unitOfWork.Users.FindUsersAsync(searchTerm.ToLower(), limit, CancellationToken.None); // Заменено SearchUsersByUsernameAsync на FindUsersAsync и добавлен CancellationToken.None
+        // return _mapper.Map<IEnumerable<UserSimpleDto>>(users);
+        return await MapUsersToSimpleDtoWithAvatarUrlAsync(users);
+    }
+
+    public async Task ChangePasswordAsync(Guid userId, string oldPassword, string newPassword)
+    {
+        _logger.LogInformation("User {UserId} attempting to change password.", userId);
+        var user = await _unitOfWork.Users.GetByIdAsync(userId);
+        if (user == null)
+        {
+            _logger.LogWarning("User {UserId} not found for password change.", userId);
+            throw new KeyNotFoundException("User not found.");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash))
+        {
+            _logger.LogWarning("Invalid old password for user {UserId}.", userId);
+            throw new ArgumentException("Invalid old password.");
+        }
+
+        var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        user.UpdatePassword(newPasswordHash); // Предполагается, что в User.cs есть метод UpdatePassword
+
+        await _unitOfWork.Users.UpdateAsync(user);
+        await _unitOfWork.CommitAsync();
+        _logger.LogInformation("Password changed successfully for user {UserId}.", userId);
     }
 }

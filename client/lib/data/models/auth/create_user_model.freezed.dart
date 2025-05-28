@@ -12,8 +12,7 @@ part of 'create_user_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 CreateUserModel _$CreateUserModelFromJson(Map<String, dynamic> json) {
   return _CreateUserModel.fromJson(json);
@@ -38,9 +37,8 @@ mixin _$CreateUserModel {
 /// @nodoc
 abstract class $CreateUserModelCopyWith<$Res> {
   factory $CreateUserModelCopyWith(
-    CreateUserModel value,
-    $Res Function(CreateUserModel) then,
-  ) = _$CreateUserModelCopyWithImpl<$Res, CreateUserModel>;
+          CreateUserModel value, $Res Function(CreateUserModel) then) =
+      _$CreateUserModelCopyWithImpl<$Res, CreateUserModel>;
   @useResult
   $Res call({String username, String email, String password});
 }
@@ -64,36 +62,29 @@ class _$CreateUserModelCopyWithImpl<$Res, $Val extends CreateUserModel>
     Object? email = null,
     Object? password = null,
   }) {
-    return _then(
-      _value.copyWith(
-            username:
-                null == username
-                    ? _value.username
-                    : username // ignore: cast_nullable_to_non_nullable
-                        as String,
-            email:
-                null == email
-                    ? _value.email
-                    : email // ignore: cast_nullable_to_non_nullable
-                        as String,
-            password:
-                null == password
-                    ? _value.password
-                    : password // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$CreateUserModelImplCopyWith<$Res>
     implements $CreateUserModelCopyWith<$Res> {
-  factory _$$CreateUserModelImplCopyWith(
-    _$CreateUserModelImpl value,
-    $Res Function(_$CreateUserModelImpl) then,
-  ) = __$$CreateUserModelImplCopyWithImpl<$Res>;
+  factory _$$CreateUserModelImplCopyWith(_$CreateUserModelImpl value,
+          $Res Function(_$CreateUserModelImpl) then) =
+      __$$CreateUserModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String username, String email, String password});
@@ -104,9 +95,8 @@ class __$$CreateUserModelImplCopyWithImpl<$Res>
     extends _$CreateUserModelCopyWithImpl<$Res, _$CreateUserModelImpl>
     implements _$$CreateUserModelImplCopyWith<$Res> {
   __$$CreateUserModelImplCopyWithImpl(
-    _$CreateUserModelImpl _value,
-    $Res Function(_$CreateUserModelImpl) _then,
-  ) : super(_value, _then);
+      _$CreateUserModelImpl _value, $Res Function(_$CreateUserModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CreateUserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -117,36 +107,28 @@ class __$$CreateUserModelImplCopyWithImpl<$Res>
     Object? email = null,
     Object? password = null,
   }) {
-    return _then(
-      _$CreateUserModelImpl(
-        username:
-            null == username
-                ? _value.username
-                : username // ignore: cast_nullable_to_non_nullable
-                    as String,
-        email:
-            null == email
-                ? _value.email
-                : email // ignore: cast_nullable_to_non_nullable
-                    as String,
-        password:
-            null == password
-                ? _value.password
-                : password // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
+    return _then(_$CreateUserModelImpl(
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CreateUserModelImpl implements _CreateUserModel {
-  const _$CreateUserModelImpl({
-    required this.username,
-    required this.email,
-    required this.password,
-  });
+  const _$CreateUserModelImpl(
+      {required this.username, required this.email, required this.password});
 
   factory _$CreateUserModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateUserModelImplFromJson(json);
@@ -186,22 +168,21 @@ class _$CreateUserModelImpl implements _CreateUserModel {
   @pragma('vm:prefer-inline')
   _$$CreateUserModelImplCopyWith<_$CreateUserModelImpl> get copyWith =>
       __$$CreateUserModelImplCopyWithImpl<_$CreateUserModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CreateUserModelImplToJson(this);
+    return _$$CreateUserModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _CreateUserModel implements CreateUserModel {
-  const factory _CreateUserModel({
-    required final String username,
-    required final String email,
-    required final String password,
-  }) = _$CreateUserModelImpl;
+  const factory _CreateUserModel(
+      {required final String username,
+      required final String email,
+      required final String password}) = _$CreateUserModelImpl;
 
   factory _CreateUserModel.fromJson(Map<String, dynamic> json) =
       _$CreateUserModelImpl.fromJson;

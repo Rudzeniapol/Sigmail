@@ -8,12 +8,14 @@ import 'package:http_parser/http_parser.dart';
 import 'package:cross_file/cross_file.dart';
 
 import 'package:sigmail_client/core/constants.dart';
-import 'package:sigmail_client/core/error/exceptions.dart';
+// import 'package:sigmail_client/core/error/exceptions.dart'; // УДАЛЯЕМ ЭТОТ ИМПОРТ
+import 'package:sigmail_client/core/exceptions.dart';
 // import 'package:sigmail_client/data/data_sources/remote/auth_remote_data_source.dart'; // Старый импорт ServerException - УДАЛЯЕМ или комментируем
 import 'package:sigmail_client/data/models/chat/chat_model.dart';
 import 'package:sigmail_client/data/models/chat/create_chat_model.dart';
 import 'package:sigmail_client/data/models/message/create_message_model.dart';
 import 'package:sigmail_client/data/models/message/message_model.dart';
+import 'package:sigmail_client/data/models/reaction/reaction_model.dart';
 
 // Импорты для вложений
 import 'package:sigmail_client/data/models/attachment/presigned_url_request_model.dart';
@@ -38,6 +40,13 @@ abstract class ChatRemoteDataSource {
   Future<PresignedUrlResponseModel> getPresignedUploadUrl(PresignedUrlRequestModel request);
   Future<void> uploadFileToS3(String presignedUrl, XFile file, String? contentType);
   Future<MessageModel> sendMessageWithAttachment(CreateMessageWithAttachmentClientDto dto);
+
+  // Методы для реакций
+  Future<List<ReactionModel>> addReaction(String messageId, String emoji);
+  Future<List<ReactionModel>> removeReaction(String messageId, String emoji);
+
+  // Метод для пометки сообщений как прочитанных
+  Future<void> markMessagesAsRead(String chatId);
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -60,12 +69,12 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         final List<dynamic> chatListJson = response.data as List<dynamic>;
         return chatListJson.map((json) => ChatModel.fromJson(json as Map<String, dynamic>)).toList();
       } else {
-        throw ServerException(message: 'Failed to get chats: ${response.statusCode}', statusCode: response.statusCode);
+        throw ServerException('Failed to get chats: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      throw ServerException(message: e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during getChats', statusCode: e.response?.statusCode);
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during getChats');
     } catch (e) {
-      throw ServerException(message: 'Unknown error during getChats: ${e.toString()}');
+      throw ServerException('Unknown error during getChats: ${e.toString()}');
     }
   }
 
@@ -76,12 +85,12 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       if (response.statusCode == 200 && response.data != null) {
         return ChatModel.fromJson(response.data as Map<String, dynamic>);
       } else {
-        throw ServerException(message: 'Failed to get chat by ID: ${response.statusCode}', statusCode: response.statusCode);
+        throw ServerException('Failed to get chat by ID: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      throw ServerException(message: e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during getChatById', statusCode: e.response?.statusCode);
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during getChatById');
     } catch (e) {
-      throw ServerException(message: 'Unknown error during getChatById: ${e.toString()}');
+      throw ServerException('Unknown error during getChatById: ${e.toString()}');
     }
   }
 
@@ -95,12 +104,12 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       if (response.statusCode == 201 && response.data != null) { 
         return ChatModel.fromJson(response.data as Map<String, dynamic>);
       } else {
-        throw ServerException(message: 'Failed to create chat: ${response.statusCode}', statusCode: response.statusCode);
+        throw ServerException('Failed to create chat: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      throw ServerException(message: e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during createChat', statusCode: e.response?.statusCode);
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during createChat');
     } catch (e) {
-      throw ServerException(message: 'Unknown error during createChat: ${e.toString()}');
+      throw ServerException('Unknown error during createChat: ${e.toString()}');
     }
   }
 
@@ -118,15 +127,14 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         final List<dynamic> data = response.data as List<dynamic>;
         return data.map((item) => MessageModel.fromJson(item as Map<String, dynamic>)).toList();
       } else {
-        throw ServerException(message: 'Failed to load messages', statusCode: response.statusCode);
+        throw ServerException('Failed to load messages: ${response.statusCode}');
       }
     } on DioException catch (e) {
       throw ServerException(
-        message: e.response?.data?['message'] as String? ?? e.message ?? 'Network error',
-        statusCode: e.response?.statusCode,
+        e.response?.data?['message'] as String? ?? e.message ?? 'Network error. Status: ${e.response?.statusCode}',
       );
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException('Unknown error while loading messages: ${e.toString()}');
     }
   }
 
@@ -140,12 +148,12 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       if (response.statusCode == 201 && response.data != null) { 
         return MessageModel.fromJson(response.data as Map<String, dynamic>);
       } else {
-        throw ServerException(message: 'Failed to send message: ${response.statusCode}', statusCode: response.statusCode);
+        throw ServerException('Failed to send message: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      throw ServerException(message: e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during sendMessage', statusCode: e.response?.statusCode);
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during sendMessage. Status: ${e.response?.statusCode}');
     } catch (e) {
-      throw ServerException(message: 'Unknown error during sendMessage: ${e.toString()}');
+      throw ServerException('Unknown error during sendMessage: ${e.toString()}');
     }
   }
 
@@ -160,15 +168,14 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       if (response.statusCode == 200 && response.data != null) {
         return PresignedUrlResponseModel.fromJson(response.data as Map<String, dynamic>);
       } else {
-        throw ServerException(message: 'Failed to get presigned URL: ${response.statusCode}', statusCode: response.statusCode);
+        throw ServerException('Failed to get presigned URL: ${response.statusCode}');
       }
     } on DioException catch (e) {
       throw ServerException(
-        message: e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during getPresignedUploadUrl',
-        statusCode: e.response?.statusCode,
+        e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during getPresignedUploadUrl. Status: ${e.response?.statusCode}',
       );
     } catch (e) {
-      throw ServerException(message: 'Unknown error during getPresignedUploadUrl: ${e.toString()}');
+      throw ServerException('Unknown error during getPresignedUploadUrl: ${e.toString()}');
     }
   }
 
@@ -223,6 +230,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
             errorMessage += ' - ${jsonEncode(response.data)}';
           } else {
             try {
+              // Попытка декодирования, если это байты (например, XML ошибка от S3)
               final responseBody = utf8.decode(response.data as List<int>, allowMalformed: true);
               errorMessage += ' - $responseBody';
             } catch (_) {
@@ -230,18 +238,17 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
             }
           }
         }
-        throw ServerException(message: errorMessage, statusCode: response.statusCode);
+        throw ServerException(errorMessage);
       }
        if (kDebugMode) {
         print('[ChatRemoteDataSource] File uploaded successfully to S3. Status: ${response.statusCode}');
       }
     } on DioException catch (e) {
        throw ServerException(
-        message: e.response?.data?.toString() ?? e.message ?? 'Dio error during S3 upload',
-        statusCode: e.response?.statusCode,
+        e.response?.data?.toString() ?? e.message ?? 'Dio error during S3 upload. Status: ${e.response?.statusCode}',
       );
     } catch (e) {
-      throw ServerException(message: 'Unexpected error during S3 upload: ${e.toString()}');
+      throw ServerException('Unexpected error during S3 upload: ${e.toString()}');
     }
   }
 
@@ -252,18 +259,90 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         '$serverBaseUrl$_messagesPath/with-attachment',
         data: dto.toJson(),
       );
-      if (response.statusCode == 201 && response.data != null) { 
+      if (response.statusCode == 201 && response.data != null) {
         return MessageModel.fromJson(response.data as Map<String, dynamic>);
       } else {
-        throw ServerException(message: 'Failed to send message with attachment: ${response.statusCode}', statusCode: response.statusCode);
+        throw ServerException('Failed to send message with attachment: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      throw ServerException(
-        message: e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during sendMessageWithAttachment',
-        statusCode: e.response?.statusCode,
-      );
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error: sendMessageWithAttachment. Status: ${e.response?.statusCode}');
     } catch (e) {
-      throw ServerException(message: 'Unknown error during sendMessageWithAttachment: ${e.toString()}');
+      throw ServerException('Unknown error during sendMessageWithAttachment: ${e.toString()}');
+    }
+  }
+
+  // Методы для реакций
+  @override
+  Future<List<ReactionModel>> addReaction(String messageId, String emoji) async {
+    try {
+      final response = await _dio.post(
+        '$serverBaseUrl$_messagesPath/$messageId/reactions',
+        data: {'emoji': emoji},
+      );
+      if (response.statusCode == 200 && response.data != null) {
+        final List<dynamic> data = response.data as List<dynamic>;
+        return data.map((item) => ReactionModel.fromJson(item as Map<String, dynamic>)).toList();
+      } else if (response.statusCode == 404) {
+        throw NotFoundException('Message not found when adding reaction. Status: ${response.statusCode}');
+      } 
+      else {
+        throw ServerException('Failed to add reaction: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw NotFoundException(e.response?.data?['message']?.toString() ?? e.message ?? 'Message not found (Dio). Status: ${e.response?.statusCode}');
+      }
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during addReaction. Status: ${e.response?.statusCode}');
+    } catch (e) {
+      if (e is NotFoundException) rethrow;
+      throw ServerException('Unknown error during addReaction: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<List<ReactionModel>> removeReaction(String messageId, String emoji) async {
+    try {
+      final response = await _dio.delete(
+        '$serverBaseUrl$_messagesPath/$messageId/reactions',
+        data: {'emoji': emoji}, // Emoji передается в теле запроса
+      );
+      if (response.statusCode == 200 && response.data != null) {
+        final List<dynamic> data = response.data as List<dynamic>;
+        return data.map((item) => ReactionModel.fromJson(item as Map<String, dynamic>)).toList();
+      } else if (response.statusCode == 404) {
+         throw NotFoundException('Message or reaction not found when removing reaction. Status: ${response.statusCode}');
+      }
+      else {
+        throw ServerException('Failed to remove reaction: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw NotFoundException(e.response?.data?['message']?.toString() ?? e.message ?? 'Message or reaction not found (Dio). Status: ${e.response?.statusCode}');
+      }
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during removeReaction. Status: ${e.response?.statusCode}');
+    } catch (e) {
+      if (e is NotFoundException) rethrow;
+      throw ServerException('Unknown error during removeReaction: ${e.toString()}');
+    }
+  }
+
+  // Метод для пометки сообщений как прочитанных
+  @override
+  Future<void> markMessagesAsRead(String chatId) async {
+    try {
+      final response = await _dio.post(
+        '$serverBaseUrl$_chatsPath/$chatId/read',
+      );
+      // Ожидаем успешный статус, например 204 No Content или 200 OK
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        throw ServerException('Failed to mark messages as read: ${response.statusCode}');
+      }
+      // Для void методов обычно ничего не возвращаем
+    } on DioException catch (e) {
+      throw ServerException(e.response?.data?['message']?.toString() ?? e.message ?? 'Dio error during markMessagesAsRead. Status: ${e.response?.statusCode}');
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Unknown error during markMessagesAsRead: ${e.toString()}');
     }
   }
 } 

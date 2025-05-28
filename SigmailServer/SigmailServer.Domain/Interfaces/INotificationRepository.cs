@@ -1,6 +1,6 @@
-﻿using SigmailClient.Domain.Models;
+﻿using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Domain.Interfaces;
+namespace SigmailServer.Domain.Interfaces;
 
 public interface INotificationRepository
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SigmailClient.Domain.Models;
+namespace SigmailServer.Domain.Models;
 
 public class User {
     [Key]
@@ -8,16 +8,16 @@ public class User {
 
     [Required]
     [MaxLength(50)]
-    public string Username { get; private set; }
+    public string Username { get; private set; } = null!;
 
     [Required]
     [EmailAddress]
     [MaxLength(100)]
-    public string Email { get; private set; }
+    public string Email { get; private set; } = null!;
 
     [Required]
     [MaxLength(256)] // Убедитесь, что достаточно для хеша
-    public string PasswordHash { get; private set; }
+    public string PasswordHash { get; private set; } = null!;
 
     [Phone] // Атрибут для валидации номера телефона
     [MaxLength(20)] // Максимальная длина для номера телефона (с учетом международного формата)

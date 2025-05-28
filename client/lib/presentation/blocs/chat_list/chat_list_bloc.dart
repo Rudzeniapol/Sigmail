@@ -5,6 +5,7 @@ import 'package:sigmail_client/data/models/chat/chat_model.dart';
 import 'package:sigmail_client/domain/use_cases/chat/create_chat_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/get_chats_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/observe_chat_details_use_case.dart';
+// import 'package:sigmail_client/domain/use_cases/chat/mark_chat_as_read_use_case.dart'; // TODO: Добавить, когда будет UseCase
 import 'package:sigmail_client/presentation/blocs/chat_list/chat_list_event.dart';
 import 'package:sigmail_client/presentation/blocs/chat_list/chat_list_state.dart';
 
@@ -12,6 +13,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final GetChatsUseCase _getChatsUseCase;
   final CreateChatUseCase _createChatUseCase;
   final ObserveChatDetailsUseCase _observeChatDetailsUseCase;
+  // final MarkChatAsReadUseCase _markChatAsReadUseCase; // TODO: Добавить, когда будет UseCase
 
   // Для отслеживания подписок на обновления чатов, чтобы их можно было отменить
   final Map<String, StreamSubscription> _chatUpdateSubscriptions = {};
@@ -20,13 +22,16 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     required GetChatsUseCase getChatsUseCase,
     required CreateChatUseCase createChatUseCase,
     required ObserveChatDetailsUseCase observeChatDetailsUseCase,
+    // required MarkChatAsReadUseCase markChatAsReadUseCase, // TODO: Добавить, когда будет UseCase
   })  : _getChatsUseCase = getChatsUseCase,
         _createChatUseCase = createChatUseCase,
         _observeChatDetailsUseCase = observeChatDetailsUseCase,
+        // _markChatAsReadUseCase = markChatAsReadUseCase, // TODO: Добавить, когда будет UseCase
         super(ChatListInitial()) {
     on<LoadChatList>(_onLoadChatList);
     on<CreateNewChat>(_onCreateNewChat);
     on<InternalChatUpdated>(_onInternalChatUpdated);
+    on<MarkChatAsReadEvent>(_onMarkChatAsRead); // ADDED
   }
 
   Future<void> _onLoadChatList(LoadChatList event, Emitter<ChatListState> emit) async {
@@ -68,15 +73,45 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       final index = currentChats.indexWhere((chat) => chat.id == event.updatedChat.id);
       if (index != -1) {
         final updatedChats = List<ChatModel>.from(currentChats);
+        // Убедимся, что unreadCount обнуляется, если это обновление пришло после MarkChatAsRead
+        // Это временное решение, лучше чтобы сервер возвращал актуальный unreadCount
+        // if (event.updatedChat.unreadCount == 0) { // Проверяем, если unreadCount уже 0
+        //   updatedChats[index] = event.updatedChat;
+        // } else {
+        //   updatedChats[index] = event.updatedChat.copyWith(unreadCount: currentChats[index].unreadCount); 
+        // }
         updatedChats[index] = event.updatedChat;
         emit(ChatListLoaded(updatedChats));
       } else {
         // Если чат не найден (маловероятно, но возможно), добавляем его
         final updatedChats = List<ChatModel>.from(currentChats)..insert(0, event.updatedChat);
          emit(ChatListLoaded(updatedChats));
-        _subscribeToChatUpdates([event.updatedChat], emit); // И подписываемся
+        _subscribeToChatUpdates([event.updatedChat], emit);
       }
     }
+  }
+
+  Future<void> _onMarkChatAsRead(MarkChatAsReadEvent event, Emitter<ChatListState> emit) async {
+    // TODO: Вызвать _markChatAsReadUseCase, когда он будет создан и добавлен в DI
+    // final result = await _markChatAsReadUseCase.call(MarkChatAsReadParams(event.chatId));
+    // result.fold(
+    //   (failure) => print('[ChatListBloc] Failed to mark chat as read: ${failure.message}'),
+    //   (_) {
+        if (state is ChatListLoaded) {
+          final currentChats = (state as ChatListLoaded).chats;
+          final chatIndex = currentChats.indexWhere((chat) => chat.id == event.chatId);
+          if (chatIndex != -1) {
+            final chatToUpdate = currentChats[chatIndex];
+            if (chatToUpdate.unreadCount > 0) { // Обновляем, только если есть непрочитанные
+              final updatedChat = chatToUpdate.copyWith(unreadCount: 0);
+              final updatedChats = List<ChatModel>.from(currentChats);
+              updatedChats[chatIndex] = updatedChat;
+              emit(ChatListLoaded(updatedChats));
+            }
+          }
+        }
+    //   },
+    // );
   }
 
   void _subscribeToChatUpdates(List<ChatModel> chats, Emitter<ChatListState> emit) {

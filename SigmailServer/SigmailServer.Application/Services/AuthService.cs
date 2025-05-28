@@ -2,10 +2,10 @@
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SigmailClient.Domain.Interfaces;
-using SigmailClient.Domain.Models;
 using SigmailServer.Application.DTOs;
 using SigmailServer.Application.Services.Interfaces;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Domain.Models;
 
 namespace SigmailServer.Application.Services;
 

@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace SigmailClient.Domain.Interfaces;
+﻿namespace SigmailServer.Domain.Interfaces;
 
 public interface IRepository<T> where T : class
 {

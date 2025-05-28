@@ -50,5 +50,15 @@ class InternalChatUpdated extends ChatListEvent {
   List<Object?> get props => [updatedChat];
 }
 
+// Событие для отметки чата как прочитанного
+class MarkChatAsReadEvent extends ChatListEvent {
+  final String chatId;
+
+  const MarkChatAsReadEvent(this.chatId);
+
+  @override
+  List<Object?> get props => [chatId];
+}
+
 // TODO: Добавить события для пагинации (загрузить следующую страницу), 
 // обновления (pull-to-refresh) и т.д., если это необходимо. 

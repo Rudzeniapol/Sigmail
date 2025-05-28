@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using SigmailClient.Domain.Enums;
-using SigmailClient.Domain.Interfaces;
+using SigmailServer.Domain.Enums;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Domain.Models;
 
-namespace SigmailClient.Domain.Models;
+namespace SigmailServer.Domain.Models;
 
 public class Message : ISoftDeletable // Реализуем интерфейс
 {
@@ -61,7 +62,7 @@ public class Message : ISoftDeletable // Реализуем интерфейс
 
 
     [BsonElement("reactions")] // Список реакций
-    public List<MessageReactionEntry> Reactions { get; set; } = new();
+    public List<Reaction> Reactions { get; set; } = new();
 
     // ISoftDeletable
     [BsonElement("isDeleted")]

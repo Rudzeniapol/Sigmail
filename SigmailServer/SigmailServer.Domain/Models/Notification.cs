@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using SigmailClient.Domain.Enums;
+using SigmailServer.Domain.Enums;
 
-namespace SigmailClient.Domain.Models;
+namespace SigmailServer.Domain.Models;
 
 public class Notification
 {
@@ -21,7 +21,7 @@ public class Notification
     public string? Title { get; set; }
 
     [BsonElement("message")]
-    public string Message { get; set; } // Текст уведомления
+    public string Message { get; set; } = null!; // Текст уведомления
 
     [BsonElement("relatedEntityId")] // Может быть ChatId (Guid) или MessageId (string)
     public string? RelatedEntityId { get; set; } // Сделаем строкой для универсальности

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.SignalR; // Для IUserIdProvider
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -9,18 +8,19 @@ using System.Security.Claims; // Для ClaimTypes
 using System.Text.Json.Serialization; // <--- Добавляем этот using
 
 // Ваши пространства имен
-using SigmailClient.Domain.Interfaces;
 using SigmailClient.Persistence;
-using SigmailClient.Persistence.MongoDB;
-using SigmailClient.Persistence.PostgreSQL;
-using SigmailClient.Persistence.FileStorage;
 using SigmailServer.Application.Services.Interfaces;
 using SigmailServer.Application.Services;
 using SigmailServer.Application.DTOs.MappingProfiles; // Для регистрации AutoMapper профилей
 using Amazon.S3; // Для IAmazonS3
 using Amazon.Runtime; // Для BasicAWSCredentials
 using Amazon;
-using SigmailServer; // Для RegionEndpoint
+using SigmailServer;
+using SigmailServer.Domain.Interfaces;
+using SigmailServer.Persistence;
+using SigmailServer.Persistence.FileStorage;
+using SigmailServer.Persistence.MongoDB;
+using SigmailServer.Persistence.PostgreSQL; // Для RegionEndpoint
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +61,7 @@ builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 builder.Services.AddScoped<IRealTimeNotifier, SignalRNotifier>();
+builder.Services.AddScoped<IMessageReactionService, MessageReactionService>();
 
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
@@ -126,7 +127,8 @@ builder.Services.AddAuthentication(options =>
         {
             var accessToken = context.Request.Query["access_token"];
             var path = context.HttpContext.Request.Path;
-            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub")) // Путь к вашему SignalR хабу
+            if (!string.IsNullOrEmpty(accessToken) && 
+                (path.StartsWithSegments("/chathub") || path.StartsWithSegments("/userHub"))) // ИЗМЕНЕНО
             {
                 context.Token = accessToken;
             }
@@ -245,11 +247,8 @@ if (app.Environment.IsDevelopment())
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"CRITICAL ERROR: An error occurred while migrating the database: {ex.Message}");
-        Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-        throw;
-        // ВАЖНО: Рассмотрите возможность остановки приложения здесь, если миграции обязательны
-        // throw; // Можно раскомментировать, чтобы приложение упало и ошибка была очевидна
+        Console.Error.WriteLine($"Error applying migrations: {ex.Message}");
+        // В зависимости от критичности, можно решить, останавливать ли приложение
     }
     app.UseDeveloperExceptionPage(); // Более детальные ошибки в разработке
 }
@@ -259,22 +258,25 @@ else
     app.UseHsts(); // HTTP Strict Transport Security
 }
 
-app.UseHttpsRedirection(); // Перенаправляет HTTP на HTTPS
+// app.UseHttpsRedirection(); // Перенаправляет HTTP на HTTPS  <--- ЗАКОММЕНТИРОВАНО
 
 app.UseRouting(); // Важно, чтобы был перед CORS, Auth и Endpoints
 
 app.UseCors("AllowMyClient"); // Применяем политику CORS
 
-app.UseAuthentication(); // Middleware аутентификации
-app.UseAuthorization(); // Middleware авторизации
+app.UseAuthentication(); // Сначала аутентификация
+app.UseAuthorization();  // Затем авторизация
 
-// Маппинг контроллеров
-app.MapControllers();
+app.MapControllers(); // Маппинг контроллеров API
 
-// Маппинг SignalR хаба
-app.MapHub<SignalRChatHub>("/chathub"); // Укажите путь к вашему хабу
+// Маппинг хабов SignalR
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<SignalRChatHub>("/chatHub");
+    endpoints.MapHub<UserHub>("/userHub");
+    // Можно добавить health checks или другие эндпоинты здесь
+    endpoints.MapControllers(); // Повторный вызов MapControllers здесь не нужен, если он есть выше без UseEndpoints
+});
 
-
-// Запуск приложения
 app.Run();
 

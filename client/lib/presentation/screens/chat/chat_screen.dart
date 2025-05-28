@@ -3,14 +3,20 @@ import 'dart:async'; // Для Timer
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sigmail_client/core/injection_container.dart';
+import 'package:sigmail_client/data/models/chat/chat_model.dart'; // <--- ДОБАВЛЕН ИМПОРТ CHATMODEL
 import 'package:sigmail_client/data/models/message/create_message_model.dart';
 import 'package:sigmail_client/data/models/message/message_model.dart';
+import 'package:sigmail_client/data/models/user/user_simple_model.dart'; // <--- ДОБАВЛЕН ИМПОРТ UserSimpleModel
+import 'package:sigmail_client/data/models/reaction/reaction_model.dart'; // ДОБАВЛЕНО ЕСЛИ НЕТ
 import 'package:sigmail_client/domain/use_cases/chat/get_chat_messages_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/observe_messages_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/send_message_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/attachment/get_presigned_upload_url_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/attachment/upload_file_to_s3_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/attachment/send_message_with_attachment_use_case.dart';
+import 'package:sigmail_client/domain/use_cases/message/add_reaction_use_case.dart';
+import 'package:sigmail_client/domain/use_cases/message/remove_reaction_use_case.dart';
+import 'package:sigmail_client/domain/repositories/chat_repository.dart';
 
 // Для выбора файлов и работы с ними
 import 'package:file_picker/file_picker.dart';
@@ -24,11 +30,15 @@ import 'package:sigmail_client/presentation/bloc/typing_status_bloc/typing_statu
 import 'package:sigmail_client/presentation/global_blocs/auth/auth_bloc.dart';
 import 'package:sigmail_client/presentation/global_blocs/auth/auth_state.dart';
 import 'package:flutter/foundation.dart'; // Для kDebugMode
+// TODO: Импортировать экран списка участников, когда он будет создан
+// import 'chat_participants_screen.dart'; 
+import 'package:sigmail_client/presentation/screens/chat/chat_participants_screen.dart'; // <--- ДОБАВЛЕН ИМПОРТ
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as emoji_picker; // ИЗМЕНЕНО: добавлен префикс
 
 class ChatScreen extends StatefulWidget {
-  final String chatId;
-  // TODO: Возможно, передавать сюда имя чата для AppBar
-  const ChatScreen({super.key, required this.chatId});
+  // final String chatId; // Заменяем на chatModel
+  final ChatModel chat;
+  const ChatScreen({super.key, required this.chat});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -49,17 +59,20 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _messageBloc = MessageBloc(
-      chatId: widget.chatId,
+      chatId: widget.chat.id, // Используем ID из chatModel
       getChatMessagesUseCase: sl<GetChatMessagesUseCase>(),
       sendMessageUseCase: sl<SendMessageUseCase>(),
       observeMessagesUseCase: sl<ObserveMessagesUseCase>(),
       getPresignedUploadUrlUseCase: sl<GetPresignedUploadUrlUseCase>(),
       uploadFileToS3UseCase: sl<UploadFileToS3UseCase>(),
       sendMessageWithAttachmentUseCase: sl<SendMessageWithAttachmentUseCase>(),
+      addReactionUseCase: sl<AddReactionUseCase>(),
+      removeReactionUseCase: sl<RemoveReactionUseCase>(),
+      chatRepository: sl<ChatRepository>(),
     );
     _typingStatusBloc = sl<TypingStatusBloc>(); // Используем GetIt
 
-    _messageBloc.add(LoadMessages(widget.chatId));
+    _messageBloc.add(LoadMessages(widget.chat.id)); // Используем ID из chatModel
 
     // Получаем ID текущего пользователя для определения "своих" сообщений
     final authState = BlocProvider.of<AuthBloc>(context, listen: false).state;
@@ -77,18 +90,18 @@ class _ChatScreenState extends State<ChatScreen> {
 
     if (_messageTextController.text.isNotEmpty) {
       if (!_isCurrentlyTyping) {
-        _typingStatusBloc.add(LocalUserStartedTyping(widget.chatId));
+        _typingStatusBloc.add(LocalUserStartedTyping(widget.chat.id)); // Используем ID из chatModel
         _isCurrentlyTyping = true; // Устанавливаем флаг
       }
       _typingTimer?.cancel(); // Отменяем предыдущий таймер
       _typingTimer = Timer(const Duration(seconds: 2), () { // 2 секунды неактивности
-        _typingStatusBloc.add(LocalUserStoppedTyping(widget.chatId));
+        _typingStatusBloc.add(LocalUserStoppedTyping(widget.chat.id)); // Используем ID из chatModel
         _isCurrentlyTyping = false; // Сбрасываем флаг
       });
     } else {
       if (_isCurrentlyTyping) { // Если текст стал пустым и мы ранее отправляли "is typing"
         _typingTimer?.cancel();
-        _typingStatusBloc.add(LocalUserStoppedTyping(widget.chatId));
+        _typingStatusBloc.add(LocalUserStoppedTyping(widget.chat.id)); // Используем ID из chatModel
         _isCurrentlyTyping = false;
       }
     }
@@ -130,7 +143,7 @@ class _ChatScreenState extends State<ChatScreen> {
         // Нужно передавать корректный page number.
 
         // int currentPage = (state.messages.length / _defaultPageSize).ceil() + 1;
-        // _messageBloc.add(LoadMessages(widget.chatId, pageNumber: currentPage));
+        // _messageBloc.add(LoadMessages(widget.chat.id, pageNumber: currentPage));
         // print("Attempting to load more messages, current count: ${state.messages.length}");
       }
     }
@@ -167,7 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
       _messageBloc.add(
         SendNewMessage(
           CreateMessageModel(
-            chatId: widget.chatId,
+            chatId: widget.chat.id, // Используем ID из chatModel
             text: text,
           ),
         ),
@@ -176,7 +189,7 @@ class _ChatScreenState extends State<ChatScreen> {
       // После отправки текстового сообщения, если мы печатали, нужно остановить таймер и отправить stoppedTyping
       if (_isCurrentlyTyping) {
         _typingTimer?.cancel();
-        _typingStatusBloc.add(LocalUserStoppedTyping(widget.chatId));
+        _typingStatusBloc.add(LocalUserStoppedTyping(widget.chat.id)); // Используем ID из chatModel
         _isCurrentlyTyping = false;
       }
     } else {
@@ -217,7 +230,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
         _messageBloc.add(SendAttachmentEvent(
           file: xFile,
-          chatId: widget.chatId,
+          chatId: widget.chat.id, // Используем ID из chatModel
           attachmentType: attachmentType,
         ));
       } else {
@@ -235,52 +248,106 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  void _showEmojiPicker(BuildContext context, MessageModel message) {
+    final authState = BlocProvider.of<AuthBloc>(context, listen: false).state;
+    String? currentUserId;
+    if (authState is Authenticated) {
+      currentUserId = authState.user.id;
+    }
+
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return emoji_picker.EmojiPicker(
+            onEmojiSelected: (emoji_picker.Category? category, emoji_picker.Emoji emoji) {
+              Navigator.pop(context); // Закрываем BottomSheet
+              if (currentUserId == null) return;
+
+              final existingReaction = message.reactions.firstWhere(
+                (r) => r.emoji == emoji.emoji && r.userIds.contains(currentUserId),
+                // Возвращаем null, если не найдено, чтобы не создавать пустую ReactionModel
+                // orElse: () => const ReactionModel(emoji: '', userIds: []), 
+                orElse: () => ReactionModel.empty(), // Используем статический конструктор для "пустой" реакции
+              );
+
+              if (existingReaction.emoji.isNotEmpty) {
+                _messageBloc.add(RemoveReactionRequested(
+                  messageId: message.id,
+                  emoji: emoji.emoji,
+                ));
+              } else {
+                _messageBloc.add(AddReactionRequested(
+                  messageId: message.id,
+                  emoji: emoji.emoji,
+                ));
+              }
+            },
+            config: emoji_picker.Config(
+              height: 256,
+              checkPlatformCompatibility: true,
+              emojiViewConfig: emoji_picker.EmojiViewConfig(
+                // emojiSizeMax: 28 * (defaultTargetPlatform == TargetPlatform.iOS ? 1.20 : 1.0), // Пример для iOS
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              // swapCategoryAndBottomBar: false, // Параметра нет
+              skinToneConfig: const emoji_picker.SkinToneConfig(),
+              categoryViewConfig: emoji_picker.CategoryViewConfig(
+                backgroundColor: Theme.of(context).cardColor,
+                indicatorColor: Theme.of(context).primaryColor,
+                iconColorSelected: Theme.of(context).primaryColor,
+              ),
+              bottomActionBarConfig: const emoji_picker.BottomActionBarConfig(
+                enabled: false, // Убираем нижнюю панель, если не нужна
+              ),
+              searchViewConfig: const emoji_picker.SearchViewConfig(), // Можно настроить или оставить по умолчанию
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    String appBarTitle = 'Чат'; // Дефолтный заголовок
-    // Попробуем получить имя чата из ChatListBloc или другого источника, если доступно
-    // Это просто пример, как можно было бы это сделать, если ChatModel доступен здесь
-    // final chatListState = context.watch<ChatListBloc>().state;
-    // if (chatListState is ChatListLoaded) {
-    //   final currentChat = chatListState.chats.firstWhereOrNull((chat) => chat.id == widget.chatId);
-    //   if (currentChat != null) {
-    //      appBarTitle = currentChat.displayName(BlocProvider.of<AuthBloc>(context).state.user?.id ?? '');
-    //   }
-    // }
+    // Определяем заголовок AppBar на основе типа чата и его имени
+    String appBarTitle;
+    if (widget.chat.type == ChatTypeModel.private) {
+      // Для приватных чатов, если есть имя (например, у контакта), используем его.
+      // Или можно получить имя другого участника из widget.chat.members, если оно там есть.
+      // Сейчас просто:
+      final authState = BlocProvider.of<AuthBloc>(context, listen: false).state;
+      String currentUsernameDisplay = "";
+       if (authState is Authenticated) {
+        currentUsernameDisplay = authState.user.username ?? "Я";
+      }
+      
+      final otherMember = widget.chat.members?.firstWhere(
+        (member) => member.id != (authState is Authenticated ? authState.user.id : ""),
+        orElse: () => widget.chat.members?.isNotEmpty == true ? widget.chat.members!.first : UserSimpleModel(id: '', username: 'Неизвестно') // Заглушка
+      );
+      appBarTitle = otherMember?.username ?? 'Приватный чат';
+
+    } else if (widget.chat.name != null && widget.chat.name!.isNotEmpty) {
+      appBarTitle = widget.chat.name!;
+    } else {
+      appBarTitle = 'Групповой чат'; // Дефолт для группы без имени
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: BlocBuilder<TypingStatusBloc, TypingStatusState>(
-          bloc: _typingStatusBloc, // Явно указываем bloc
-          builder: (context, typingState) {
-            if (typingState is TypingStatusUpdated) {
-              final displayMessage = typingState.getTypingDisplayMessage(widget.chatId, _currentUsername ?? 'Пользователь');
-              if (displayMessage.isNotEmpty) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(appBarTitle, style: const TextStyle(fontSize: 18)), 
-                    Text(displayMessage, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
-                  ],
-                );
-              }
-            }
-            return Text(appBarTitle);
-          },
-        ),
+        title: Text(appBarTitle),
         actions: [
-          BlocBuilder<MessageBloc, MessageState>(
-            bloc: _messageBloc, // Явно указываем bloc, если он не через Provider.of получается
-            builder: (context, state) {
-              if (state is MessageSendingAttachment) {
-                return const Padding(
-                  padding: EdgeInsets.only(right: 16.0),
-                  child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)),
+          if (widget.chat.type == ChatTypeModel.group) // Показываем кнопку только для групповых чатов
+            IconButton(
+              icon: const Icon(Icons.group),
+              onPressed: () {
+                // Навигация на экран участников чата
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChatParticipantsScreen(chat: widget.chat),
+                  ),
                 );
-              }
-              return const SizedBox.shrink(); // Ничего не показываем, если не загрузка
-            },
-          )
+              },
+            ),
         ],
       ),
       body: MultiBlocProvider(
@@ -347,7 +414,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                     Text('Ошибка загрузки: ${state.message}'),
                     ElevatedButton(
-                        onPressed: () => _messageBloc.add(LoadMessages(widget.chatId)),
+                        onPressed: () => _messageBloc.add(LoadMessages(widget.chat.id)),
                         child: const Text('Повторить'),
                     )
                     ],
@@ -362,100 +429,157 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageItem(MessageModel message, bool isMyMessage, BuildContext context) {
-    return Align(
-      key: ValueKey(message.id),
-      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
-        decoration: BoxDecoration(
-          color: isMyMessage ? Theme.of(context).primaryColorLight : Colors.grey[300],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        child: Column(
-          crossAxisAlignment: isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (message.sender?.username != null && !isMyMessage) // Показываем имя отправителя для чужих сообщений
+    // Получаем текущего пользователя для проверки, ставил ли он уже реакцию
+    final currentUserId = context.read<AuthBloc>().state is Authenticated 
+        ? (context.read<AuthBloc>().state as Authenticated).user.id 
+        : null;
+
+    return GestureDetector(
+      onLongPress: () {
+        // Показываем выбор эмодзи
+        _showEmojiPicker(context, message);
+      },
+      child: Align(
+        key: ValueKey(message.id),
+        alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+          decoration: BoxDecoration(
+            color: isMyMessage ? Theme.of(context).primaryColorLight : Colors.grey[300],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          child: Column(
+            crossAxisAlignment: isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              if (message.sender?.username != null && !isMyMessage) // Показываем имя отправителя для чужих сообщений
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Text(
+                    message.sender!.username,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: isMyMessage ? Colors.white70 : Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+              if (message.text != null && message.text!.isNotEmpty)
+                Text(message.text!),
+              
+              // Отображение вложений
+              if (message.attachments != null && message.attachments!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: message.attachments!.map((att) {
+                      // TODO: Сделать более красивое отображение вложений
+                      // Иконка + имя файла, превью для картинок и т.д.
+                      IconData iconData = Icons.insert_drive_file;
+                      switch (att.type) {
+                        case AttachmentType.image:
+                          iconData = Icons.image;
+                          break;
+                        case AttachmentType.video:
+                          iconData = Icons.videocam;
+                          break;
+                        case AttachmentType.audio:
+                          iconData = Icons.audiotrack;
+                          break;
+                        case AttachmentType.document:
+                          iconData = Icons.article;
+                          break;
+                        default:
+                          iconData = Icons.insert_drive_file;
+                      }
+                      return InkWell(
+                        onTap: () {
+                          // TODO: Реализовать скачивание/открытие файла
+                          if (kDebugMode) {
+                            print('Tapped on attachment: ${att.fileName}, key: ${att.fileKey}, url: ${att.presignedUrl}');
+                          }
+                          // Нужно будет запросить presignedDownloadUrl и открыть его
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(iconData, size: 18, color: isMyMessage ? Colors.black87 : Colors.black54),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                att.fileName,
+                                style: TextStyle(decoration: TextDecoration.underline, color: isMyMessage ? Colors.black : Colors.blue.shade800),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              
               Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
+                padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
-                  message.sender!.username,
+                  // TODO: Форматировать время TimeOfDay.fromDateTime(message.timestamp.toLocal()).format(context)
+                  message.timestamp.toLocal().toString().substring(11, 16), // Простое отображение времени HH:MM
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: isMyMessage ? Colors.white70 : Theme.of(context).primaryColor,
+                    fontSize: 10,
+                    color: isMyMessage ? Colors.white70 : Colors.grey[600],
                   ),
                 ),
               ),
-            if (message.text != null && message.text!.isNotEmpty)
-              Text(message.text!),
-            
-            // Отображение вложений
-            if (message.attachments != null && message.attachments!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: message.attachments!.map((att) {
-                    // TODO: Сделать более красивое отображение вложений
-                    // Иконка + имя файла, превью для картинок и т.д.
-                    IconData iconData = Icons.insert_drive_file;
-                    switch (att.type) {
-                      case AttachmentType.image:
-                        iconData = Icons.image;
-                        break;
-                      case AttachmentType.video:
-                        iconData = Icons.videocam;
-                        break;
-                      case AttachmentType.audio:
-                        iconData = Icons.audiotrack;
-                        break;
-                      case AttachmentType.document:
-                        iconData = Icons.article;
-                        break;
-                      default:
-                        iconData = Icons.insert_drive_file;
-                    }
-                    return InkWell(
-                      onTap: () {
-                        // TODO: Реализовать скачивание/открытие файла
-                        if (kDebugMode) {
-                          print('Tapped on attachment: ${att.fileName}, key: ${att.fileKey}, url: ${att.presignedUrl}');
-                        }
-                        // Нужно будет запросить presignedDownloadUrl и открыть его
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(iconData, size: 18, color: isMyMessage ? Colors.black87 : Colors.black54),
-                          const SizedBox(width: 8),
-                          Flexible(
-                            child: Text(
-                              att.fileName,
-                              style: TextStyle(decoration: TextDecoration.underline, color: isMyMessage ? Colors.black : Colors.blue.shade800),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+              // Отображение реакций
+              if (message.reactions.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Wrap(
+                    spacing: 6.0, // Горизонтальный отступ между реакциями
+                    runSpacing: 4.0, // Вертикальный отступ, если реакции переносятся на новую строку
+                    alignment: isMyMessage ? WrapAlignment.end : WrapAlignment.start,
+                    children: message.reactions.map((reaction) {
+                      // Пропускаем реакции без пользователей (на всякий случай)
+                      if (reaction.userIds.isEmpty) return const SizedBox.shrink();
+
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: isMyMessage 
+                              ? Colors.blue.shade700.withOpacity(0.8) 
+                              : Colors.grey.shade400.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                            color: isMyMessage ? Colors.blue.shade300 : Colors.grey.shade500,
+                            width: 0.5,
+                          )
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min, // Чтобы контейнер не растягивался
+                          children: [
+                            Text(reaction.emoji, style: const TextStyle(fontSize: 12)),
+                            if (reaction.userIds.length > 1) // Показываем количество, только если оно больше 1
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Text(
+                                  reaction.userIds.length.toString(),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: isMyMessage ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
-            
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                // TODO: Форматировать время TimeOfDay.fromDateTime(message.timestamp.toLocal()).format(context)
-                message.timestamp.toLocal().toString().substring(11, 16), // Простое отображение времени HH:MM
-                style: TextStyle(
-                  fontSize: 10,
-                  color: isMyMessage ? Colors.white70 : Colors.grey[600],
-                ),
-              ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
