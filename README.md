@@ -63,7 +63,7 @@ A modern cross-platform chat application with real-time messaging, file attachme
 - Docker Compose
 
 ## License
-MIT (or specify your license)
+MIT
 
 ---
 **Course Project, 2nd Year, 2025**
