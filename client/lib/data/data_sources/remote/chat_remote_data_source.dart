@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http_parser/http_parser.dart';
 // import 'package:image_picker/image_picker.dart'; // XFile уже импортируется через cross_file
 import 'package:cross_file/cross_file.dart';
 
-import 'package:sigmail_client/core/constants.dart';
-// import 'package:sigmail_client/core/error/exceptions.dart'; // УДАЛЯЕМ ЭТОТ ИМПОРТ
+import 'package:sigmail_client/core/config/app_config.dart';
+// import 'package:sigmail_client/core/constants.dart'; // УДАЛЯЕМ ЭТОТ ИМПОРТ
 import 'package:sigmail_client/core/exceptions.dart';
 // import 'package:sigmail_client/data/data_sources/remote/auth_remote_data_source.dart'; // Старый импорт ServerException - УДАЛЯЕМ или комментируем
 import 'package:sigmail_client/data/models/chat/chat_model.dart';
@@ -62,7 +60,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<List<ChatModel>> getChats({int pageNumber = 1, int pageSize = 20}) async {
     try {
       final response = await _dio.get(
-        '$serverBaseUrl$_myChatsPath', // Исправлено
+        '${AppConfig.baseUrl}$_myChatsPath',
         queryParameters: {'page': pageNumber, 'pageSize': pageSize},
       );
       if (response.statusCode == 200 && response.data != null) {
@@ -81,7 +79,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   @override
   Future<ChatModel> getChatById(String chatId) async {
     try {
-      final response = await _dio.get('$serverBaseUrl$_chatsPath/$chatId'); // Исправлено
+      final response = await _dio.get('${AppConfig.baseUrl}$_chatsPath/$chatId');
       if (response.statusCode == 200 && response.data != null) {
         return ChatModel.fromJson(response.data as Map<String, dynamic>);
       } else {
@@ -98,7 +96,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<ChatModel> createChat(CreateChatModel createChatModel) async {
     try {
       final response = await _dio.post(
-        '$serverBaseUrl$_chatsPath', // Исправлено
+        '${AppConfig.baseUrl}$_chatsPath',
         data: createChatModel.toJson(),
       );
       if (response.statusCode == 201 && response.data != null) { 
@@ -117,7 +115,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<List<MessageModel>> getChatMessages(String chatId, {int pageNumber = 1, int pageSize = 50}) async {
     try {
       final response = await _dio.get(
-        '$serverBaseUrl$_messagesPath/chat/$chatId', // Исправлено
+        '${AppConfig.baseUrl}$_messagesPath/chat/$chatId',
         queryParameters: {
           'page': pageNumber, 
           'pageSize': pageSize,
@@ -142,7 +140,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<MessageModel> sendMessage(CreateMessageModel messageModel) async {
     try {
       final response = await _dio.post(
-        '$serverBaseUrl$_messagesPath', // Исправлено
+        '${AppConfig.baseUrl}$_messagesPath',
         data: messageModel.toJson(),
       );
       if (response.statusCode == 201 && response.data != null) { 
@@ -162,7 +160,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<PresignedUrlResponseModel> getPresignedUploadUrl(PresignedUrlRequestModel request) async {
     try {
       final response = await _dio.post(
-        '$serverBaseUrl$_attachmentsPath/upload-url',
+        '${AppConfig.baseUrl}$_attachmentsPath/upload-url',
         data: request.toJson(),
       );
       if (response.statusCode == 200 && response.data != null) {
@@ -182,36 +180,15 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   @override
   Future<void> uploadFileToS3(String presignedUrl, XFile file, String? contentType) async {
     try {
-      String effectiveUrl = presignedUrl;
-
-      // Определяем, какой хост и схема должны быть для MinIO
-      const String targetMinioHostPort = '10.0.2.2:9000';
-      const String targetMinioScheme = 'http';
-
-      // Разбираем полученный URL на компоненты
-      Uri parsedSdkUrl = Uri.parse(presignedUrl);
-
-      // Собираем новый URL с целевой схемой и хостом/портом,
-      // но сохраняем путь и параметры запроса из оригинального URL
-      effectiveUrl = Uri(
-        scheme: targetMinioScheme, // Всегда используем http для MinIO в данном случае
-        host: targetMinioHostPort.split(':')[0], // 10.0.2.2
-        port: int.parse(targetMinioHostPort.split(':')[1]), // 9000
-        path: parsedSdkUrl.path,
-        query: parsedSdkUrl.query, // Важно сохранить все оригинальные query параметры, включая подпись!
-      ).toString();
-
-      if (kDebugMode) {
-           print('[ChatRemoteDataSource] Original presigned URL from server: $presignedUrl');
-           print('[ChatRemoteDataSource] Effective presigned URL for S3 upload: $effectiveUrl');
-      }
-
+      // Используем presignedUrl ровно в том виде, как его вернул сервер!
+      // Если сервер возвращает URL с недоступным хостом (например, minio:9000),
+      // сервер должен возвращать URL с хостом, доступным с устройства (например, 10.0.2.2:9000 для эмулятора).
       final dio = Dio(); 
       final stream = file.openRead();
       final length = await file.length();
 
       final response = await dio.put(
-        effectiveUrl,
+        presignedUrl,
         data: stream,
         options: Options(
           headers: {
@@ -220,17 +197,15 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           },
         ),
       );
-
       if (response.statusCode != 200 && response.statusCode != 201) {
-        String errorMessage = 'S3 Upload Error: Status code ${response.statusCode}';
+        String errorMessage = 'S3 Upload Error: Status code {response.statusCode}';
         if (response.data != null) {
           if (response.data is String) {
-            errorMessage += ' - ${response.data}';
+            errorMessage += ' - {response.data}';
           } else if (response.data is Map) {
-            errorMessage += ' - ${jsonEncode(response.data)}';
+            errorMessage += ' - {jsonEncode(response.data)}';
           } else {
             try {
-              // Попытка декодирования, если это байты (например, XML ошибка от S3)
               final responseBody = utf8.decode(response.data as List<int>, allowMalformed: true);
               errorMessage += ' - $responseBody';
             } catch (_) {
@@ -240,11 +215,11 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         }
         throw ServerException(errorMessage);
       }
-       if (kDebugMode) {
+      if (kDebugMode) {
         print('[ChatRemoteDataSource] File uploaded successfully to S3. Status: ${response.statusCode}');
       }
     } on DioException catch (e) {
-       throw ServerException(
+      throw ServerException(
         e.response?.data?.toString() ?? e.message ?? 'Dio error during S3 upload. Status: ${e.response?.statusCode}',
       );
     } catch (e) {
@@ -256,7 +231,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<MessageModel> sendMessageWithAttachment(CreateMessageWithAttachmentClientDto dto) async {
     try {
       final response = await _dio.post(
-        '$serverBaseUrl$_messagesPath/with-attachment',
+        '${AppConfig.baseUrl}$_messagesPath/with-attachment',
         data: dto.toJson(),
       );
       if (response.statusCode == 201 && response.data != null) {
@@ -276,7 +251,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<List<ReactionModel>> addReaction(String messageId, String emoji) async {
     try {
       final response = await _dio.post(
-        '$serverBaseUrl$_messagesPath/$messageId/reactions',
+        '${AppConfig.baseUrl}$_messagesPath/$messageId/reactions',
         data: {'emoji': emoji},
       );
       if (response.statusCode == 200 && response.data != null) {
@@ -303,8 +278,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<List<ReactionModel>> removeReaction(String messageId, String emoji) async {
     try {
       final response = await _dio.delete(
-        '$serverBaseUrl$_messagesPath/$messageId/reactions',
-        data: {'emoji': emoji}, // Emoji передается в теле запроса
+        '${AppConfig.baseUrl}$_messagesPath/$messageId/reactions',
+        data: {'emoji': emoji},
       );
       if (response.statusCode == 200 && response.data != null) {
         final List<dynamic> data = response.data as List<dynamic>;
@@ -331,7 +306,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<void> markMessagesAsRead(String chatId) async {
     try {
       final response = await _dio.post(
-        '$serverBaseUrl$_chatsPath/$chatId/read',
+        '${AppConfig.baseUrl}$_chatsPath/$chatId/read',
       );
       // Ожидаем успешный статус, например 204 No Content или 200 OK
       if (response.statusCode != 200 && response.statusCode != 204) {
@@ -345,4 +320,4 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw ServerException('Unknown error during markMessagesAsRead: ${e.toString()}');
     }
   }
-} 
+}

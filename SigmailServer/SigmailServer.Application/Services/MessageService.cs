@@ -17,6 +17,7 @@ public class MessageService : IMessageService
     private readonly ILogger<MessageService> _logger;
     private readonly INotificationService _notificationService;
     private readonly IUserService _userService;
+    private readonly IAttachmentService _attachmentService;
 
     public MessageService(
         IMessageRepository messageRepository,
@@ -25,7 +26,8 @@ public class MessageService : IMessageService
         IRealTimeNotifier realTimeNotifier,
         ILogger<MessageService> logger,
         INotificationService notificationService,
-        IUserService userService) // Добавлен INotificationService и IUserService
+        IUserService userService,
+        IAttachmentService attachmentService) // <--- add this
     {
         _messageRepository = messageRepository;
         _unitOfWork = unitOfWork;
@@ -34,6 +36,7 @@ public class MessageService : IMessageService
         _logger = logger;
         _notificationService = notificationService;
         _userService = userService;
+        _attachmentService = attachmentService;
     }
 
     public async Task<MessageDto?> SendMessageAsync(Guid senderId, CreateMessageDto dto)
@@ -318,17 +321,33 @@ public class MessageService : IMessageService
                 dto.Sender = await _userService.MapUserToSimpleDtoWithAvatarUrlAsync(sender); 
             }
         }
-        // Маппинг вложений и реакций обычно делается AutoMapper'ом, если профили настроены
+        // Populate PresignedUrl for each attachment
+        if (dto.Attachments != null)
+        {
+            foreach (var attachment in dto.Attachments)
+            {
+                if (!string.IsNullOrEmpty(attachment.FileKey))
+                {
+                    try
+                    {
+                        attachment.PresignedUrl = await _attachmentService.GetPresignedDownloadUrlAsync(attachment.FileKey, currentUserId);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to generate presigned URL for attachment {FileKey}", attachment.FileKey);
+                        attachment.PresignedUrl = null;
+                    }
+                }
+            }
+        }
         return dto;
     }
-    
+
     private async Task<IEnumerable<MessageDto>> MapMessagesToDtoAsync(IEnumerable<Message> messages, Guid currentUserId)
     {
         if (messages == null || !messages.Any()) return Enumerable.Empty<MessageDto>();
-        
         var senderIds = messages.Select(m => m.SenderId).Where(id => id != Guid.Empty).Distinct().ToList();
         var sendersWithPresignedUrls = new Dictionary<Guid, UserSimpleDto>();
-
         if(senderIds.Any())
         {
             var senderUsers = await _unitOfWork.Users.GetManyByIdsAsync(senderIds);
@@ -340,16 +359,33 @@ public class MessageService : IMessageService
                 }
             }
         }
-
         var dtos = new List<MessageDto>();
         foreach(var message in messages)
         {
             var dto = _mapper.Map<MessageDto>(message);
             dto.IsRead = message.ReadBy.Contains(currentUserId);
-
             if (message.SenderId != Guid.Empty && sendersWithPresignedUrls.TryGetValue(message.SenderId, out var senderDto))
             {
                 dto.Sender = senderDto;
+            }
+            // Populate PresignedUrl for each attachment
+            if (dto.Attachments != null)
+            {
+                foreach (var attachment in dto.Attachments)
+                {
+                    if (!string.IsNullOrEmpty(attachment.FileKey))
+                    {
+                        try
+                        {
+                            attachment.PresignedUrl = await _attachmentService.GetPresignedDownloadUrlAsync(attachment.FileKey, currentUserId);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to generate presigned URL for attachment {FileKey}", attachment.FileKey);
+                            attachment.PresignedUrl = null;
+                        }
+                    }
+                }
             }
             dtos.Add(dto);
         }

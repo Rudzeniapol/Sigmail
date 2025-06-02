@@ -1,4 +1,5 @@
 import 'dart:async'; // Для Timer
+import 'dart:io'; // Для File
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:sigmail_client/domain/use_cases/attachment/upload_file_to_s3_use
 import 'package:sigmail_client/domain/use_cases/attachment/send_message_with_attachment_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/message/add_reaction_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/message/remove_reaction_use_case.dart';
+import 'package:sigmail_client/domain/use_cases/chat/mark_messages_as_read_use_case.dart'; // <--- добавлено
 import 'package:sigmail_client/domain/repositories/chat_repository.dart';
 
 // Для выбора файлов и работы с ними
@@ -34,6 +36,9 @@ import 'package:flutter/foundation.dart'; // Для kDebugMode
 // import 'chat_participants_screen.dart'; 
 import 'package:sigmail_client/presentation/screens/chat/chat_participants_screen.dart'; // <--- ДОБАВЛЕН ИМПОРТ
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as emoji_picker; // ИЗМЕНЕНО: добавлен префикс
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
 
 class ChatScreen extends StatefulWidget {
   // final String chatId; // Заменяем на chatModel
@@ -68,6 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
       sendMessageWithAttachmentUseCase: sl<SendMessageWithAttachmentUseCase>(),
       addReactionUseCase: sl<AddReactionUseCase>(),
       removeReactionUseCase: sl<RemoveReactionUseCase>(),
+      markMessagesAsReadUseCase: sl<MarkMessagesAsReadUseCase>(), // <--- добавлено
       chatRepository: sl<ChatRepository>(),
     );
     _typingStatusBloc = sl<TypingStatusBloc>(); // Используем GetIt
@@ -160,7 +166,6 @@ class _ChatScreenState extends State<ChatScreen> {
     if (!_scrollController.hasClients) return false;
     // Когда reverse = true, maxScrollExtent это "верх" списка (самые старые сообщения).
     // Мы хотим загружать больше, когда доскроллили до самого "верха".
-    // offset будет близок к position.maxScrollExtent когда мы в самом верху.
     final currentScroll = _scrollController.offset;
     final maxScroll = _scrollController.position.maxScrollExtent;
     // print("Scroll: $currentScroll, MaxScroll: $maxScroll");
@@ -390,7 +395,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   Expanded(
                     child: messagesToShow.isEmpty
-                        ? const Center(child: Text('Сообщений пока нет.')) 
+                        ? const Center(child: Text('No messages yet.')) 
                         : ListView.builder(
                             controller: _scrollController,
                             itemCount: messagesToShow.length,
@@ -412,16 +417,16 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                    Text('Ошибка загрузки: ${state.message}'),
+                    Text('Failed to load: ${state.message}'),
                     ElevatedButton(
                         onPressed: () => _messageBloc.add(LoadMessages(widget.chat.id)),
-                        child: const Text('Повторить'),
+                        child: const Text('Retry'),
                     )
                     ],
                 ),
                 );
             }
-            return bodyContent ?? const Center(child: Text('Неизвестное состояние.'));
+            return bodyContent ?? const Center(child: Text('Unknown state.'));
           },
         ),
       ),
@@ -429,14 +434,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageItem(MessageModel message, bool isMyMessage, BuildContext context) {
-    // Получаем текущего пользователя для проверки, ставил ли он уже реакцию
     final currentUserId = context.read<AuthBloc>().state is Authenticated 
         ? (context.read<AuthBloc>().state as Authenticated).user.id 
         : null;
 
     return GestureDetector(
       onLongPress: () {
-        // Показываем выбор эмодзи
         _showEmojiPicker(context, message);
       },
       child: Align(
@@ -453,7 +456,7 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Column(
             crossAxisAlignment: isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              if (message.sender?.username != null && !isMyMessage) // Показываем имя отправителя для чужих сообщений
+              if (message.sender?.username != null && !isMyMessage)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 4.0),
                   child: Text(
@@ -461,20 +464,28 @@ class _ChatScreenState extends State<ChatScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
-                      color: isMyMessage ? Colors.white70 : Theme.of(context).primaryColor,
+                      color: Colors.blueGrey.shade700,
                     ),
                   ),
                 ),
               if (message.text != null && message.text!.isNotEmpty)
-                Text(message.text!),
+                Text(
+                  message.text!,
+                  style: TextStyle(
+                    color: isMyMessage ? Colors.black : Colors.black87,
+                  ),
+                ),
               
               // Отображение вложений
-              if (message.attachments != null && message.attachments!.isNotEmpty)
+              if (message.attachments.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: message.attachments!.map((att) {
+                    children: message.attachments.map((att) {
+                      if (kDebugMode) {
+                        print('[Attachment] Full attachment object: ' + att.toString());
+                      }
                       // TODO: Сделать более красивое отображение вложений
                       // Иконка + имя файла, превью для картинок и т.д.
                       IconData iconData = Icons.insert_drive_file;
@@ -495,12 +506,38 @@ class _ChatScreenState extends State<ChatScreen> {
                           iconData = Icons.insert_drive_file;
                       }
                       return InkWell(
-                        onTap: () {
-                          // TODO: Реализовать скачивание/открытие файла
+                        onTap: () async {
+                          final url = att.presignedUrl;
                           if (kDebugMode) {
-                            print('Tapped on attachment: ${att.fileName}, key: ${att.fileKey}, url: ${att.presignedUrl}');
+                            print('[Attachment] Tap: presignedUrl=${url ?? 'null'} (fileName: ${att.fileName})');
                           }
-                          // Нужно будет запросить presignedDownloadUrl и открыть его
+                          if (url != null && url.isNotEmpty) {
+                            try {
+                              final response = await http.get(Uri.parse(url));
+                              if (response.statusCode == 200) {
+                                final bytes = response.bodyBytes;
+                                final dir = await getTemporaryDirectory();
+                                final filePath = '${dir.path}/${att.fileName}';
+                                final file = File(filePath);
+                                await file.writeAsBytes(bytes);
+                                await OpenFile.open(filePath);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Ошибка скачивания файла: ${response.statusCode}')),
+                                );
+                              }
+                            } catch (e) {
+                              if (kDebugMode) print('[Attachment] Ошибка скачивания/открытия: $e');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Ошибка открытия файла: ${e.toString()}')),
+                              );
+                            }
+                          } else {
+                            if (kDebugMode) print('[Attachment] presignedUrl is null or empty (fileName: ${att.fileName})');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('No download link available.')),
+                            );
+                          }
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -624,4 +661,4 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-} 
+}

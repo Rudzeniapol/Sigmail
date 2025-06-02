@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart'; // Для kDebugMode
+// import 'package:flutter/foundation.dart'; // Для kDebugMode
 // import 'package:logging/logging.dart'; // Удаляем этот импорт
 // import 'package:signalr_netcore/signalr_client.dart'; // УДАЛЯЕМ ЭТОТ ИМПОРТ
 import 'package:signalr_core/signalr_core.dart'; // ИСПОЛЬЗУЕМ ЭТОТ ПАКЕТ
@@ -25,6 +25,10 @@ abstract class ChatRealtimeDataSource {
 
   bool isConnected(String chatId);
   Future<void> dispose();
+
+  // --- Добавлено для поддержки глобального SignalR и новых чатов ---
+  Future<void> connectGlobal();
+  Stream<ChatModel> get newChatsStream;
 }
 
 class ChatRealtimeDataSourceImpl implements ChatRealtimeDataSource {
@@ -41,6 +45,10 @@ class ChatRealtimeDataSourceImpl implements ChatRealtimeDataSource {
   final Logger _logger = Logger(); // Используем Logger из package:logger/logger.dart
 
   static const String _chatHubUrl = '/chatHub';
+
+  // Глобальный SignalR-хаб для событий, не привязанных к конкретному чату (например, ChatCreated)
+  HubConnection? _globalHubConnection;
+  final StreamController<ChatModel> _newChatStreamController = StreamController<ChatModel>.broadcast();
 
   ChatRealtimeDataSourceImpl() {
     // Настройка уровня логирования для экземпляра _logger, если нужно
@@ -258,6 +266,53 @@ class ChatRealtimeDataSourceImpl implements ChatRealtimeDataSource {
   }
 
   @override
+  Future<void> connectGlobal() async {
+    if (_globalHubConnection != null &&
+        (_globalHubConnection!.state == HubConnectionState.connected ||
+         _globalHubConnection!.state == HubConnectionState.connecting)) {
+      return;
+    }
+    final hubUrl = AppConfig.signalRBaseUrl + _chatHubUrl;
+    final hubConnection = HubConnectionBuilder()
+        .withUrl(hubUrl, HttpConnectionOptions(
+          accessTokenFactory: () async {
+            final token = await _getAccessToken();
+            return token ?? "";
+          },
+        ))
+        .withAutomaticReconnect()
+        .build();
+    _globalHubConnection = hubConnection;
+
+    hubConnection.on('ChatCreated', (List<Object?>? arguments) {
+      if (arguments != null && arguments.isNotEmpty) {
+        try {
+          final chatData = arguments[0] as Map<String, dynamic>?;
+          if (chatData != null) {
+            final chat = ChatModel.fromJson(chatData);
+            _newChatStreamController.add(chat);
+            _logger.i('[SignalR] ChatCreated: Новый чат ${chat.id}');
+          } else {
+            _logger.w('[SignalR] ChatCreated: пустые данные чата');
+          }
+        } catch (e, stackTrace) {
+          _logger.e('[SignalR] Ошибка обработки ChatCreated: $e\n$stackTrace, args: $arguments');
+        }
+      }
+    });
+
+    try {
+      await hubConnection.start();
+      _logger.i('[SignalR] Глобальное соединение установлено для ChatCreated');
+    } catch (e) {
+      _logger.e('[SignalR] Ошибка подключения глобального SignalR: $e');
+    }
+  }
+
+  @override
+  Stream<ChatModel> get newChatsStream => _newChatStreamController.stream;
+
+  @override
   Stream<MessageModel> observeMessages(String chatId) {
     // Гарантируем, что StreamController существует
     _messageStreamControllers.putIfAbsent(chatId, () => StreamController<MessageModel>.broadcast());
@@ -303,7 +358,6 @@ class ChatRealtimeDataSourceImpl implements ChatRealtimeDataSource {
     // Его закрытие должно происходить, когда весь ChatRealtimeDataSourceImpl больше не нужен.
   }
 
-  // Реализация новых методов
   @override
   Future<void> sendUserIsTyping(String chatId) async {
     if (isConnected(chatId)) {
@@ -333,7 +387,7 @@ class ChatRealtimeDataSourceImpl implements ChatRealtimeDataSource {
     }
   }
 
-  // Метод для очистки всех ресурсов, если это необходимо при выходе из приложения или разлогине
+  @override
   Future<void> dispose() async {
     _logger.i('Disposing ChatRealtimeDataSourceImpl...');
     for (var chatId in _hubConnections.keys.toList()) { // toList() для избежания изменения коллекции во время итерации
@@ -349,6 +403,7 @@ class ChatRealtimeDataSourceImpl implements ChatRealtimeDataSource {
     _logger.i('ChatRealtimeDataSourceImpl disposed.');
   }
 
+  // Вспомогательный метод для гарантии подключения
   Future<void> ensureConnection(String chatId) async {
     if (!(_hubConnections.containsKey(chatId) &&
         (_hubConnections[chatId]?.state == HubConnectionState.connected ||
@@ -356,4 +411,4 @@ class ChatRealtimeDataSourceImpl implements ChatRealtimeDataSource {
       await connect(chatId);
     }
   }
-} 
+}

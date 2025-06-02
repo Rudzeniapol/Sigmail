@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sigmail_client/core/use_case.dart';
+import 'package:sigmail_client/core/injection_container.dart';
+import 'package:sigmail_client/data/data_sources/realtime/chat_realtime_data_source.dart';
 import 'package:sigmail_client/data/models/chat/chat_model.dart';
 import 'package:sigmail_client/domain/use_cases/chat/create_chat_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/get_chats_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/chat/observe_chat_details_use_case.dart';
-// import 'package:sigmail_client/domain/use_cases/chat/mark_chat_as_read_use_case.dart'; // TODO: Добавить, когда будет UseCase
 import 'package:sigmail_client/presentation/blocs/chat_list/chat_list_event.dart';
 import 'package:sigmail_client/presentation/blocs/chat_list/chat_list_state.dart';
 
@@ -13,7 +13,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final GetChatsUseCase _getChatsUseCase;
   final CreateChatUseCase _createChatUseCase;
   final ObserveChatDetailsUseCase _observeChatDetailsUseCase;
-  // final MarkChatAsReadUseCase _markChatAsReadUseCase; // TODO: Добавить, когда будет UseCase
+  StreamSubscription<ChatModel>? _newChatSubscription;
 
   // Для отслеживания подписок на обновления чатов, чтобы их можно было отменить
   final Map<String, StreamSubscription> _chatUpdateSubscriptions = {};
@@ -22,16 +22,22 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     required GetChatsUseCase getChatsUseCase,
     required CreateChatUseCase createChatUseCase,
     required ObserveChatDetailsUseCase observeChatDetailsUseCase,
-    // required MarkChatAsReadUseCase markChatAsReadUseCase, // TODO: Добавить, когда будет UseCase
   })  : _getChatsUseCase = getChatsUseCase,
         _createChatUseCase = createChatUseCase,
         _observeChatDetailsUseCase = observeChatDetailsUseCase,
-        // _markChatAsReadUseCase = markChatAsReadUseCase, // TODO: Добавить, когда будет UseCase
         super(ChatListInitial()) {
     on<LoadChatList>(_onLoadChatList);
     on<CreateNewChat>(_onCreateNewChat);
     on<InternalChatUpdated>(_onInternalChatUpdated);
-    on<MarkChatAsReadEvent>(_onMarkChatAsRead); // ADDED
+    on<MarkChatAsReadEvent>(_onMarkChatAsRead);
+    // Подключаем глобальный SignalR и подписываемся на новые чаты
+    final chatRealtime = sl<ChatRealtimeDataSource>();
+    chatRealtime.connectGlobal();
+    _newChatSubscription = chatRealtime.newChatsStream.listen((newChat) async {
+      // Подключаемся к SignalR для нового чата
+      await chatRealtime.connect(newChat.id);
+      add(InternalChatUpdated(newChat));
+    });
   }
 
   Future<void> _onLoadChatList(LoadChatList event, Emitter<ChatListState> emit) async {
@@ -133,8 +139,9 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
 
   @override
   Future<void> close() {
+    _newChatSubscription?.cancel();
     _chatUpdateSubscriptions.values.forEach((sub) => sub.cancel());
     _chatUpdateSubscriptions.clear();
     return super.close();
   }
-} 
+}

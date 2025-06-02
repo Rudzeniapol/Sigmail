@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart'; // Для kDebugMode
+// import 'package:flutter/foundation.dart'; // Для kDebugMode
 // import 'package:logging/logging.dart'; // Удаляем этот импорт
 // import 'package:signalr_netcore/signalr_client.dart'; // УДАЛЯЕМ ЭТОТ ИМПОРТ
 import 'package:signalr_core/signalr_core.dart'; // ИСПОЛЬЗУЕМ ЭТОТ ПАКЕТ
@@ -10,7 +10,7 @@ import 'package:sigmail_client/core/injection_container.dart';
 import 'package:sigmail_client/data/data_sources/local/auth_local_data_source.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart'; // Кажется, не используется здесь напрямую
 // import 'package:sigmail_client/core/constants.dart'; // Кажется, не используется здесь напрямую
-import 'package:sigmail_client/core/exceptions.dart'; // Раскомментировано
+// import 'package:sigmail_client/core/exceptions.dart'; // Раскомментировано, но не используется
 import 'package:logger/logger.dart'; // Оставляем этот логгер
 
 // Определяем новый тип для события обновления аватара
@@ -36,8 +36,6 @@ class UserRealtimeDataSourceImpl implements UserRealtimeDataSource {
   final String _hubUrl;
   final StreamController<UserModel> _userStatusController = StreamController.broadcast();
   final StreamController<UserAvatarUpdate> _userAvatarUpdateController = StreamController.broadcast();
-
-  Timer? _reconnectTimer;
 
   UserRealtimeDataSourceImpl({
     required String hubUrl,
@@ -179,4 +177,4 @@ class UserRealtimeDataSourceImpl implements UserRealtimeDataSource {
       _logger.i('User status SignalR connection already stopped or not initialized.');
     }
   }
-} 
+}

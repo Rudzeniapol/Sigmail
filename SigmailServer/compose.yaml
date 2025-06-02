@@ -38,7 +38,7 @@ services:
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
-      - MINIO_SERVER_URL=http://10.0.2.2:9000
+      - MINIO_SERVER_URL=http://172.17.80.111:9000
     ports:
       - "9000:9000" # API порт
       - "9001:9001" # Консоль MinIO
@@ -65,7 +65,7 @@ services:
       - S3StorageSettings__AWSAccessKeyId=minioadmin
       - S3StorageSettings__AWSSecretAccessKey=minioadmin
       - S3StorageSettings__Region=us-east-1 # Формальный регион для MinIO
-      - S3StorageSettings__ServiceURL=http://minio:9000 # URL для MinIO внутри Docker сети
+      - S3StorageSettings__ServiceURL=http://172.17.80.111:9000 # URL для MinIO внутри Docker сети
       # Настройки JWT (ОБЯЗАТЕЛЬНО ЗАМЕНИТЕ НА СВОИ СЕКРЕТЫ!)
       - JwtSettings__Secret=super_mega_secret_key_1234567890
       - JwtSettings__Issuer=SigmailApp

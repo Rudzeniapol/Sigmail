@@ -123,6 +123,10 @@ public class AttachmentService : IAttachmentService
         
         var uniqueFileKey = $"uploads/{uploaderId}/{Guid.NewGuid()}{fileExtension}";
         var presignedUrl = await _fileStorageRepository.GeneratePresignedUrlAsync(uniqueFileKey, TimeSpan.FromMinutes(15));
+        // ВАЖНО: Не изменяйте host/port/scheme у presignedUrl!
+        // Presigned URL должен быть сгенерирован сразу с правильным endpoint (реальный IP сервера MinIO/S3),
+        // который задаётся в конфиге S3StorageSettings (например, http://192.168.1.100:9000)
+        // Если вы работаете на реальном устройстве, endpoint должен быть доступен с телефона.
 
         _logger.LogInformation("Presigned URL generated for {FileKey}", uniqueFileKey);
         return new UploadAttachmentResponseDto

@@ -11,15 +11,15 @@ class ChatParticipantsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Отфильтровываем null участников, если вдруг такие есть
     final List<UserSimpleModel> participants = chat.members?.where((member) => member != null).toList() ?? [];
-    final String chatName = chat.name ?? 'Групповой чат';
+    final String chatName = chat.name ?? 'Group chat';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Участники: $chatName'),
+        title: Text('Participants: $chatName'),
       ),
       body: participants.isEmpty
           ? const Center(
-              child: Text('В этом чате нет участников или информация недоступна.'),
+              child: Text('Information about participants is not available.'),
             )
           : ListView.builder(
               itemCount: participants.length,

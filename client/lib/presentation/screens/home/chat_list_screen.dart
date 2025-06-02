@@ -52,14 +52,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Чаты'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              _showCreateChatDialog(context);
-            },
-          ),
-        ],
+        // Удаляем верхнюю кнопку добавления чата
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.add),
+        //     onPressed: () {
+        //       _showCreateChatDialog(context);
+        //     },
+        //   ),
+        // ],
       ),
       body: BlocConsumer<ChatListBloc, ChatListState>(
         bloc: _chatListBloc,
@@ -132,12 +133,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       
                       if (otherMember != null) {
                         if (otherMember.id == currentUserId) { // Случай "заметок себе" или единственного участника
-                           displayName = otherMember.username != null && otherMember.username!.isNotEmpty
-                                         ? 'Заметки (${otherMember.username})'
-                                         : 'Мой чат';
+                           displayName = otherMember.username.isNotEmpty
+  ? 'Заметки (${otherMember.username})'
+  : 'Мой чат';
                            print('[ChatListScreen] Private chat ${chat.id} is with self: "${displayName}"');
-                        } else if (otherMember.username != null && otherMember.username!.isNotEmpty) {
-                        displayName = 'Чат с ${otherMember.username}';
+                        } else if (otherMember.username.isNotEmpty) {
+                          displayName = 'Чат с ${otherMember.username}';
                            print('[ChatListScreen] Private chat ${chat.id} with ${otherMember.username}: "${displayName}"');
                         } else {
                           displayName = 'Приватный чат';
@@ -174,7 +175,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 
                 // Финальная проверка, если вдруг displayName остался неинициализированным (маловероятно с новой логикой)
                 // Но для безопасности, если предыдущие условия не сработали
-                if (displayName == null || displayName.isEmpty) {
+                if (displayName.isEmpty) {
                     print('[ChatListScreen] Chat ${chat.id} displayName ended up null or empty. Fallback to "Чат (ошибка)". Original name: "${chat.name}", type: ${chat.type}');
                     displayName = 'Чат (ошибка)';
                 }
@@ -184,39 +185,39 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   lastMessageText = chat.lastMessage!.text!;
                 } else if (chat.lastMessage?.attachments != null && chat.lastMessage!.attachments.isNotEmpty) {
                   final attachment = chat.lastMessage!.attachments.first;
-                  String attachmentDescription = attachment.fileName ?? "Вложение"; // Изначально просто имя файла или "Вложение"
+                  String attachmentDescription = attachment.fileName;
                   
                   // Проверяем тип вложения и формируем более описательный текст
                   // Предполагается, что у вас есть AttachmentType в attachment.type
-                  if (attachment.type != null) {
-                      switch (attachment.type!) {
+                  if (true) { // type не может быть null
+                      switch (attachment.type) {
                           case AttachmentType.image:
                             attachmentDescription = "[Изображение]";
-                            if (attachment.fileName != null && attachment.fileName!.isNotEmpty) {
+                            if (attachment.fileName.isNotEmpty) {
                                 attachmentDescription += " ${attachment.fileName}";
                             }
                             break;
                           case AttachmentType.video:
                             attachmentDescription = "[Видео]";
-                             if (attachment.fileName != null && attachment.fileName!.isNotEmpty) {
+                             if (attachment.fileName.isNotEmpty) {
                                 attachmentDescription += " ${attachment.fileName}";
                             }
                             break;
                           case AttachmentType.audio:
                             attachmentDescription = "[Аудио]";
-                             if (attachment.fileName != null && attachment.fileName!.isNotEmpty) {
+                             if (attachment.fileName.isNotEmpty) {
                                 attachmentDescription += " ${attachment.fileName}";
                             }
                             break;
                           case AttachmentType.document:
                             attachmentDescription = "[Документ]";
-                             if (attachment.fileName != null && attachment.fileName!.isNotEmpty) {
+                             if (attachment.fileName.isNotEmpty) {
                                 attachmentDescription += " ${attachment.fileName}";
                             }
                             break;
                           case AttachmentType.otherFile:
                             attachmentDescription = "[Файл]"; // Для otherFile используем "[Файл]"
-                             if (attachment.fileName != null && attachment.fileName!.isNotEmpty) {
+                             if (attachment.fileName.isNotEmpty) {
                                 attachmentDescription += " ${attachment.fileName}";
                             }
                             break;
@@ -227,7 +228,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   lastMessageText = 'Нет сообщений';
                 }
 
-                final lastMessageTime = chat.lastMessage?.timestamp?.toLocal().toString().substring(0, 16) ?? ''; 
+                final lastMessageTime = chat.lastMessage?.timestamp != null
+    ? chat.lastMessage!.timestamp.toLocal().toString().substring(0, 16)
+    : ''; 
 
                 // Финальный отладочный print перед ListTile
                 print('[ChatListScreen] FINAL for chat ${chat.id}: displayName="$displayName", otherParticipantId="$otherParticipantId", type=${chat.type}, chat.name="${chat.name}", membersCount=${chat.members?.length}');
@@ -573,8 +576,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
             ),
             TextButton(
               child: const Text('Создать'),
-                        onPressed: (_selectedChatType == ChatTypeModel.private && selectedUserForDialog != null) ||
-                                   (_selectedChatType == ChatTypeModel.group && selectedGroupMembers.isNotEmpty && _chatNameController.text.trim().isNotEmpty)
+                        onPressed: (
+                          (_selectedChatType == ChatTypeModel.private && selectedUserForDialog != null && selectedUserForDialog!.id != currentUserId) ||
+                          (_selectedChatType == ChatTypeModel.group && selectedGroupMembers.isNotEmpty && _chatNameController.text.trim().isNotEmpty && selectedGroupMembers.any((u) => u.id != currentUserId))
+                        )
                           ? () {
                               if (_selectedChatType == ChatTypeModel.private && selectedUserForDialog != null) {
                                 final createChatModel = CreateChatModel(
@@ -618,4 +623,4 @@ class _ChatListScreenState extends State<ChatListScreen> {
     // _chatListBloc.dispose(); // Bloc обычно не нужно диспозить здесь, если он управляется DI или деревом виджетов
     super.dispose();
   }
-} 
+}

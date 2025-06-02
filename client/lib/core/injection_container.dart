@@ -41,6 +41,7 @@ import 'package:sigmail_client/domain/use_cases/user/observe_user_status_use_cas
 import 'package:sigmail_client/domain/use_cases/attachment/get_presigned_upload_url_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/attachment/upload_file_to_s3_use_case.dart';
 import 'package:sigmail_client/domain/use_cases/attachment/send_message_with_attachment_use_case.dart';
+import 'package:sigmail_client/domain/use_cases/chat/mark_messages_as_read_use_case.dart';
 import 'package:sigmail_client/presentation/blocs/chat_list/chat_list_bloc.dart';
 import 'package:sigmail_client/presentation/blocs/message/message_bloc.dart';
 import 'package:sigmail_client/presentation/blocs/user_status/user_status_bloc.dart';
@@ -80,6 +81,7 @@ Future<void> init() async {
           sendMessageWithAttachmentUseCase: sl(),
           addReactionUseCase: sl(),
           removeReactionUseCase: sl(),
+          markMessagesAsReadUseCase: sl(), // добавлено для корректной инициализации
           chatRepository: sl(),
       ));
   sl.registerFactory(() => ThemeBloc(sl())); 
@@ -106,6 +108,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetPresignedUploadUrlUseCase(sl()));
   sl.registerLazySingleton(() => UploadFileToS3UseCase(sl()));
   sl.registerLazySingleton(() => SendMessageWithAttachmentUseCase(sl()));
+  sl.registerLazySingleton(() => MarkMessagesAsReadUseCase(sl()));
 
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -142,4 +145,4 @@ Future<void> init() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => Connectivity());
-} 
+}

@@ -60,23 +60,9 @@ public class S3FileStorageRepository : IFileStorageRepository
             Expires = DateTime.UtcNow.Add(duration),
             Verb = HttpVerb.PUT,
         };
-
-        // Если PublicPresignedUrlHostPort задан, добавляем его как заголовок Host
-        // Это повлияет на то, как SDK генерирует подпись.
-        if (!string.IsNullOrEmpty(_settings.PublicPresignedUrlHostPort))
-        {
-            request.Headers["Host"] = _settings.PublicPresignedUrlHostPort;
-            Console.WriteLine($"[S3FileStorageRepository] Added 'Host' header for presigning: {_settings.PublicPresignedUrlHostPort}");
-        }
-
+        // Не добавляем никаких Host-заголовков и не модифицируем URL!
+        // Presigned URL будет сгенерирован с endpoint, который задан в ServiceURL (appsettings.json)
         string generatedUrlBySdk = _s3Client.GetPreSignedURL(request);
-        
-        Console.WriteLine($"[S3FileStorageRepository] SDK Generated Presigned URL (with potential Host header): {generatedUrlBySdk}");
-        Console.WriteLine($"[S3FileStorageRepository] Query parameters of generated URL: {new Uri(generatedUrlBySdk).Query}");
-
-        // Важно: Логику модификации URL здесь оставляем УДАЛЕННОЙ.
-        // Клиент должен будет заменить minio:9000 на 10.0.2.2:9000 в этом URL.
-
         return Task.FromResult(generatedUrlBySdk);
     }
 
