@@ -10,7 +10,7 @@ public class Attachment
     [BsonRepresentation(BsonType.String)] // MongoDB хранит как строку, но в коде используем enum
     public AttachmentType Type { get; set; }
 
-    [BsonElement("url")] // Это должен быть ключ файла в S3, а не полный URL, если используете presigned URLs
+    [BsonElement("url")]  // Это должен быть ключ файла в S3, а не полный URL, если используете presigned URLs
     public string FileKey { get; set; } = null!; // Переименовано для ясности
 
     [BsonElement("fileName")] // Исходное имя файла

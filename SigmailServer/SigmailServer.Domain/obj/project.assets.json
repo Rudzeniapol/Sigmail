@@ -131,11 +131,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\SigmailServer.Domain.csproj",
+      "projectUniqueName": "D:\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\SigmailServer.Domain.csproj",
       "projectName": "SigmailServer.Domain",
-      "projectPath": "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\SigmailServer.Domain.csproj",
+      "projectPath": "D:\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\SigmailServer.Domain.csproj",
       "packagesPath": "C:\\Users\\ffgg9\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ffgg9\\OneDrive\\Desktop\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\obj\\",
+      "outputPath": "D:\\Infinite Learning\\Students package\\CourseProject4Sem\\SigmailServer\\SigmailServer.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
