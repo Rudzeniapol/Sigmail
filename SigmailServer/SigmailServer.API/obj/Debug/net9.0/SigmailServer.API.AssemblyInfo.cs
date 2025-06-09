@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SigmailServer.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f1d94d8290eb2cea3a3bf7007e848be03dc79514")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f50d3d68e14e1134dbf1a3d86157b9035e53c50")]
 [assembly: System.Reflection.AssemblyProductAttribute("SigmailServer.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SigmailServer.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
